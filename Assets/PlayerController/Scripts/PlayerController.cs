@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-public class PlayerCore : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
@@ -14,6 +15,7 @@ public class PlayerCore : MonoBehaviour
     [SerializeField] private float jumpForce = 13f;
     [SerializeField] private float fallMultiplier = 6.2f;
     [SerializeField] private float lowJumpMultiplier = 1.7f;
+    private bool isJumping;
 
     [Header("Ground")]
     [SerializeField] private LayerMask groundLayer;
@@ -30,7 +32,7 @@ public class PlayerCore : MonoBehaviour
     private Rigidbody _rb;
     private Animator _anim;
 
-    private int movement, jump;
+    private int movement, jump, jumpGrounded;
 
     private void Awake()
     {
@@ -39,6 +41,7 @@ public class PlayerCore : MonoBehaviour
         _anim = GetComponentInChildren<Animator>();
 
         jump = Animator.StringToHash("Jump");
+        jumpGrounded = Animator.StringToHash("JumpGrounded");
         movement = Animator.StringToHash("Movement");
     }
 
@@ -63,6 +66,12 @@ public class PlayerCore : MonoBehaviour
 
         if (isGround)
         {
+            if (isJumping)
+            {
+                isJumping = false;
+                _anim.ResetTrigger(jump);
+                _anim.SetTrigger(jumpGrounded);
+            }
             _rb.drag = moveDrag;
         }
         else
@@ -131,22 +140,30 @@ public class PlayerCore : MonoBehaviour
         {
             _rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
-        else if (_rb.velocity.y > 0)
+        else if (_rb.velocity.y > 0.5f)
         {
             _rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
 
-        if (_input.jump)
+        if (_input.jump && !isJumping)
         {
             _input.jump = false;
 
             if (isGround)
             {
+                StartCoroutine(SetJump());
+                _anim.ResetTrigger(jumpGrounded);
                 _anim.SetTrigger(jump);
                 _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
                 _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             }
         }
+    }
+
+    IEnumerator SetJump()
+    {
+        yield return new WaitForSeconds(0.1f);
+        isJumping = true;
     }
 
     private void OnDrawGizmosSelected()
