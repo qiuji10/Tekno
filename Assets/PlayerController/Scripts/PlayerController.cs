@@ -145,11 +145,11 @@ public class PlayerController : MonoBehaviour
             _rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
 
-        if (_input.jump && !isJumping)
+        if (_input.jump)
         {
             _input.jump = false;
 
-            if (isGround)
+            if (isGround && !isJumping)
             {
                 StartCoroutine(SetJump());
                 _anim.ResetTrigger(jumpGrounded);

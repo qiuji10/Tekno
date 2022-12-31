@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Parenter : MonoBehaviour
+public class PlatformPlayerPosChecker : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
