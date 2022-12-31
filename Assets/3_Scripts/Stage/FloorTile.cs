@@ -1,4 +1,5 @@
 using NaughtyAttributes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,36 +17,31 @@ public class FloorTile : MonoBehaviour
     [SerializeField] private AnimationCurve dropCurve;
 
     private FloorState state = FloorState.None;
+    public FloorState State { get { return state; } }
     private float _timer = 0f;
 
-    private MeshRenderer mesh;
+    private MeshRenderer _mesh;
 
     private void Awake()
     {
-        mesh = GetComponent<MeshRenderer>();
+        _mesh = GetComponent<MeshRenderer>();
     }
 
     [Button]
     public void Lift()
     {
-        if (state == FloorState.None)
-        {
-            state = FloorState.Lifting;
-            StartCoroutine(Lerp_Logic(liftTimer, liftCurve));
-        }
+        state = FloorState.Lifting;
+        StartCoroutine(Lerp_Logic(liftTimer, liftCurve, null));
     }
 
     [Button]
     public void Drop()
     {
-        if (state == FloorState.None)
-        {
-            state = FloorState.Dropping;
-            StartCoroutine(Lerp_Logic(dropTimer, dropCurve));
-        }
+        state = FloorState.Dropping;
+        StartCoroutine(Lerp_Logic(dropTimer, dropCurve, Lift));
     }
 
-    IEnumerator Lerp_Logic(float lerpTimer, AnimationCurve curve)
+    IEnumerator Lerp_Logic(float lerpTimer, AnimationCurve curve, Action callback)
     {
         float finalYPos = 0;
         while (_timer < lerpTimer)
@@ -56,14 +52,20 @@ public class FloorTile : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, yPos, transform.position.z), lerpRatio);
             yield return null;
         }
+
         int yPosInt = Mathf.RoundToInt(finalYPos);
         transform.position = new Vector3(transform.position.x, yPosInt, transform.position.z);
         _timer = 0;
         state = FloorState.None;
+
+        if (callback != null)
+        {
+            callback();
+        }
     }
 
     public void SetMat(Material newMat)
     {
-        mesh.material = newMat;
+        _mesh.material = newMat;
     }
 }
