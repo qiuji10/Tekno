@@ -27,9 +27,5 @@ public class SpotlightEditorEditor : Editor
             EditorGUILayout.HelpBox("No child 'Cone' was found.", MessageType.Error);
             return;
         }
-
-        // Update the cone scale and position when the inner spot angle or range is changed
-        cone.localScale = new Vector3(spotlight.spotAngle * targetScript.innerSpotAngleRatio, 1, spotlight.spotAngle * targetScript.innerSpotAngleRatio);
-        cone.localPosition = new Vector3(0, spotlight.range * targetScript.rangeRatio, 0);
     }
 }
