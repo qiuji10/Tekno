@@ -3,6 +3,8 @@ using UnityEngine;
 [ExecuteAlways]
 public class SpotlightEditor : MonoBehaviour
 {
+    [SerializeField] private Transform lookTarget;
+
     public float innerSpotAngleRatio = 0.005f;
     public float rangeRatio = 0.5f;
 
@@ -22,5 +24,10 @@ public class SpotlightEditor : MonoBehaviour
 
         // Update cone height when range changes
         cone.localPosition = new Vector3(cone.localPosition.x, cone.localPosition.z, cone.localPosition.z);
+
+        if (lookTarget)
+        {
+            transform.LookAt(lookTarget);
+        }
     }
 }
