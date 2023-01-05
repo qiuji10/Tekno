@@ -9,11 +9,11 @@ public enum FloorState { None = 0, Lifting, Dropping }
 public class FloorTile : MonoBehaviour
 {
     [Header("Lift Y Position")]
-    [SerializeField] private float liftTimer = 3f;
+    public float liftTimer = 3f;
     [SerializeField] private AnimationCurve liftCurve;
 
     [Header("Drop Y Position")]
-    [SerializeField] private float dropTimer = 3f;
+    public float dropTimer = 3f;
     [SerializeField] private AnimationCurve dropCurve;
 
     private FloorState state = FloorState.None;

@@ -10,6 +10,7 @@ public enum BossColor { Red, Blue, Green }
 public class StageManager : MonoBehaviour
 {
     [Header("Floor Materials")]
+    [SerializeField] private Material Mat_default;
     [SerializeField] private Material Mat_Red;
     [SerializeField] private Material Mat_Blue;
     [SerializeField] private Material Mat_Green;
