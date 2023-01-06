@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
-public class EnemyBaseState : MonoBehaviour
+public abstract class EnemyBaseState : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public virtual void Construct() { Debug.Log("Enemy is in  " + this.ToString()); } 
+    public virtual void Destruct() { }
+    public virtual void Transition() { }
+
+    // can modify the return to anything you see fit
+    public virtual Vector3 ImplementMovement() 
     {
-        
+        Debug.Log("Movement Is not implemented in " + this.ToString());
+        return Vector3.zero;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -2,17 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAttack : MonoBehaviour
+public class EnemyAttack : EnemyBaseState
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void Construct()
     {
-        
+        base.Construct();
     }
 
-    // Update is called once per frame
-    void Update()
+    public override Vector3 ImplementMovement()
     {
-        
+        return base.ImplementMovement();
+    }
+
+    public override void Transition()
+    {
+        base.Transition();
+    }
+
+    public override void Destruct()
+    {
+        base.Destruct();
     }
 }
