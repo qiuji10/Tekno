@@ -166,7 +166,6 @@ public class StageManager : MonoBehaviour
 
         for (int i = 1; i <= totalTileLine; i++)
         {
-            Debug.Log($"{i}, {firstFloorInLine} / {i * totalTileLine}");
             List<FloorTile> lineFloors = floorList.GetRange(firstFloorInLine, totalTileLine);
 
             SetFloorsMaterial(lineFloors, Mat_Red);
