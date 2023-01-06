@@ -64,38 +64,29 @@ public class StageManager : MonoBehaviour
         redFloorList = floorList.GetRange(0, redChunkSize);
         blueFloorList = floorList.GetRange(redChunkSize, blueChunkSize);
         greenFloorList = floorList.GetRange(redChunkSize + blueChunkSize, greenChunkSize);
-        //Debug.Log($"total: {redFloorList.Count + blueFloorList.Count + greenFloorList.Count} red: {redFloorList.Count}, blue: {blueFloorList.Count}, green: {greenFloorList.Count}");
-        /*
-        //with specific ratio on specific type
-        int redChunkSize = floorList.Count * 2 / 10;
-        int remainder = floorList.Count % 10;
 
-        int blueChunkSize = (floorList.Count - redChunkSize) / 2;
-        int greenChunkSize = floorList.Count - redChunkSize - blueChunkSize;
+        #region with specific ratio on specific type
+        //int redChunkSize = floorList.Count * 2 / 10;
+        //int remainder = floorList.Count % 10;
 
-        // Adjust the sizes of the second and third chunks if necessary
-        if (remainder > 2)
-        {
-            blueChunkSize++;
-            greenChunkSize++;
-        }
-        else if (remainder > 0)
-        {
-            greenChunkSize++;
-        }
-        */
+        //int blueChunkSize = (floorList.Count - redChunkSize) / 2;
+        //int greenChunkSize = floorList.Count - redChunkSize - blueChunkSize;
+
+        //// Adjust the sizes of the second and third chunks if necessary
+        //if (remainder > 2)
+        //{
+        //    blueChunkSize++;
+        //    greenChunkSize++;
+        //}
+        //else if (remainder > 0)
+        //{
+        //    greenChunkSize++;
+        //}
+        #endregion
 
         SetFloorsMaterial(redFloorList, Mat_Red);
         SetFloorsMaterial(blueFloorList, Mat_Blue);
         SetFloorsMaterial(greenFloorList, Mat_Green);
-    }
-
-    private void SetFloorsMaterial(List<FloorTile> chunk, Material mat)
-    {
-        foreach (FloorTile floor in chunk)
-        {
-            floor.SetMat(mat);
-        }
     }
 
     [Button]
@@ -118,6 +109,8 @@ public class StageManager : MonoBehaviour
 
     private IEnumerator DropFloor(BossColor type, float delay)
     {
+        SetTileTimer(3, 3);
+
         shuffle = false;
         yield return new WaitForSeconds(delay);
 
@@ -144,5 +137,78 @@ public class StageManager : MonoBehaviour
 
         yield return new WaitForSeconds(7f);
         shuffle = true;
+    }
+    [Button]
+    private void asas()
+    {
+        //int totalTileLine = Mathf.RoundToInt(Mathf.Sqrt((float)floorList.Count));
+        //int firstFloorInLine= 0;
+
+        //for (int i = 1; i <= totalTileLine; i++)
+        //{
+        //    Debug.Log($"{i}, {firstFloorInLine} / {i * totalTileLine}");
+        //    firstFloorInLine = (i * totalTileLine) + 1;
+        //}
+
+        StartCoroutine(LineTileDrop(0.1f));
+    }
+
+    private IEnumerator LineTileDrop(float delay)
+    {
+        SetTileTimer(0.7f, 1f);
+        SetFloorsMaterial(floorList, Mat_default);
+        shuffle = false;
+        floorList = floorList.OrderBy(x => x.transform.position.x).ToList();
+        yield return new WaitForSeconds(delay);
+
+        int totalTileLine = Mathf.RoundToInt(Mathf.Sqrt((float)floorList.Count));
+        int firstFloorInLine = 0;
+
+        for (int i = 1; i <= totalTileLine; i++)
+        {
+            Debug.Log($"{i}, {firstFloorInLine} / {i * totalTileLine}");
+            List<FloorTile> lineFloors = floorList.GetRange(firstFloorInLine, totalTileLine);
+
+            SetFloorsMaterial(lineFloors, Mat_Red);
+
+            firstFloorInLine += totalTileLine;
+
+            yield return new WaitForSeconds(0.35f);
+
+            foreach (FloorTile floor in lineFloors)
+            {
+                floor.Drop();
+            }
+
+            SetFloorsMaterial(lineFloors, Mat_default);
+        }
+
+        
+    }
+
+    private void SetTileTimer(float downTime, float upTime)
+    {
+        foreach (FloorTile floor in floorList)
+        { 
+            floor.dropTimer = downTime;
+            floor.liftTimer = upTime;
+        }
+    }
+
+    private void SetTileTimer(float downTime, float upTime, List<FloorTile> floorList)
+    {
+        foreach (FloorTile floor in floorList)
+        {
+            floor.dropTimer = downTime;
+            floor.liftTimer = upTime;
+        }
+    }
+
+    private void SetFloorsMaterial(List<FloorTile> chunk, Material mat)
+    {
+        foreach (FloorTile floor in chunk)
+        {
+            floor.SetMat(mat);
+        }
     }
 }
