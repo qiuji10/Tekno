@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using NaughtyAttributes;
+using System;
+using Random = UnityEngine.Random;
 
 public enum StageState { Shuffle, Drop }
 public enum BossColor { Red, Blue, Green }
@@ -10,10 +12,10 @@ public enum BossColor { Red, Blue, Green }
 public class StageManager : MonoBehaviour
 {
     [Header("Floor Materials")]
-    [SerializeField] private Material Mat_default;
-    [SerializeField] private Material Mat_Red;
-    [SerializeField] private Material Mat_Blue;
-    [SerializeField] private Material Mat_Green;
+    public Material Mat_default;
+    public Material Mat_Red;
+    public Material Mat_Blue;
+    public Material Mat_Green;
 
     [Header("Floor Tiles")]
     [SerializeField] private List<FloorTile> floorList;
@@ -24,14 +26,14 @@ public class StageManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float shufflePerSec = 3f;
 
-    private bool shuffle;
+    [SerializeField] private bool shuffle;
     private float _timer;
     private float _nextShuffleTime;
 
     private void Start()
     {
-        ShuffleFloor();
-        shuffle = true;
+        //ShuffleFloor();
+        //shuffle = true;
     }
 
     private void Update()
@@ -138,8 +140,16 @@ public class StageManager : MonoBehaviour
         yield return new WaitForSeconds(7f);
         shuffle = true;
     }
+
     [Button]
-    private void asas()
+    private void Clear()
+    {
+        SetFloorsMaterial(floorList, Mat_default);
+        line.Clear();
+    }
+
+    [Button]
+    private void Test()
     {
         //int totalTileLine = Mathf.RoundToInt(Mathf.Sqrt((float)floorList.Count));
         //int firstFloorInLine= 0;
@@ -149,8 +159,29 @@ public class StageManager : MonoBehaviour
         //    Debug.Log($"{i}, {firstFloorInLine} / {i * totalTileLine}");
         //    firstFloorInLine = (i * totalTileLine) + 1;
         //}
+        //GetColumnInLine(test);
 
         StartCoroutine(LineTileDrop(0.1f));
+    }
+    [SerializeField] int test;
+    [SerializeField] private List<int> line;
+    private int rows = 13;
+    private int cols = 13;
+
+    /// <summary>
+    /// The Line Count Start from 1 to 13
+    /// </summary>
+    /// <param name="lineCol"></param>
+    private void GetColumnInLine(int lineCol)
+    {
+        lineCol -= 1;
+
+        for (int i = lineCol; i < rows * cols; i += cols)
+        {
+            line.Add(i);
+
+            floorList[i].SetMat(Mat_Green);
+        }
     }
 
     private IEnumerator LineTileDrop(float delay)
@@ -158,7 +189,8 @@ public class StageManager : MonoBehaviour
         SetTileTimer(0.7f, 1f);
         SetFloorsMaterial(floorList, Mat_default);
         shuffle = false;
-        floorList = floorList.OrderBy(x => x.transform.position.x).ToList();
+        floorList = floorList.OrderBy(x => x.transform.position.x).ThenByDescending(x => x.transform.position.z).ToList();
+
         yield return new WaitForSeconds(delay);
 
         int totalTileLine = Mathf.RoundToInt(Mathf.Sqrt((float)floorList.Count));
@@ -210,4 +242,6 @@ public class StageManager : MonoBehaviour
             floor.SetMat(mat);
         }
     }
+
+    
 }
