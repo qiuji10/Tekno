@@ -16,21 +16,29 @@ public class LineTileDropTrigger : MonoBehaviour
         public Vector3 endPos;
     }
 
-    [SerializeField] private StageManager stageManager;
-
     [Header("Moving Data")]
     [SerializeField] private int index;
     [SerializeField] private List<MovingPathData> movingData;
 
     [Header("Moving Settings")]
-    [SerializeField] private Transform startPos;
-    [SerializeField] private Transform endPos;
+    [SerializeField] private Vector3 startPos;
+    [SerializeField] private Vector3 endPos;
     [SerializeField] private float movingTime;
 
     private float dropDelay = 0.5f, dropTime = 0.7f, liftTime = 1f;
 
-    private Material matColorer;
+    public float DropDelay { get => dropDelay; set => value = dropDelay; }
+    public float DropTime { get => dropTime; }
+
+    public Material matColorer { get; set; }
+    public Material finalMat { get; set; }
+    public Collider trigger { get; set; }
     private int lastRandom;
+
+    private void Awake()
+    {
+        trigger = GetComponent<Collider>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -40,56 +48,54 @@ public class LineTileDropTrigger : MonoBehaviour
             floorTile.liftTimer = liftTime;
             floorTile.SetMat(matColorer);
             floorTile.DropWithAlert(dropDelay);
-            StartCoroutine(SwitchDefaultMat(floorTile, stageManager.Mat_default));
+            StartCoroutine(SwitchDefaultMat(floorTile, finalMat));
         }
     }
 
-    private void RandomMat()
-    {
-        int rand = Random.Range(0, 3);
+    //private void RandomMat()
+    //{
+    //    int rand = Random.Range(0, 3);
 
-        while (rand == lastRandom)
-        {
-            rand = Random.Range(0, 3);
-        }
+    //    while (rand == lastRandom)
+    //    {
+    //        rand = Random.Range(0, 3);
+    //    }
 
-        switch (rand)
-        {
-            case 0:
-                matColorer = stageManager.Mat_Red;
-                break;
-            case 1:
-                matColorer = stageManager.Mat_Blue;
-                break;
-            case 2:
-                matColorer = stageManager.Mat_Green;
-                break;
-        }
+    //    switch (rand)
+    //    {
+    //        case 0:
+    //            matColorer = stageManager.Mat_Red;
+    //            break;
+    //        case 1:
+    //            matColorer = stageManager.Mat_Blue;
+    //            break;
+    //        case 2:
+    //            matColorer = stageManager.Mat_Green;
+    //            break;
+    //    }
 
-        lastRandom = rand;
-    }
+    //    lastRandom = rand;
+    //}
 
-    [Button]
-    private void Move()
+    public void Move(int index)
     {
         movingTime = movingData[index].lerpTime;
-        startPos.position = movingData[index].startPos;
-        endPos.position = movingData[index].endPos;
+        startPos = movingData[index].startPos;
+        endPos = movingData[index].endPos;
 
         StartCoroutine(Moving_Logic());
     }
 
     private IEnumerator Moving_Logic()
     {
-        RandomMat();
         float timer = 0;
 
-        transform.position = startPos.position;
+        transform.position = startPos;
         transform.LookAt(endPos);
 
         while (timer < movingTime)
         {    
-            transform.position = Vector3.Lerp(startPos.position, endPos.position, timer / movingTime);
+            transform.position = Vector3.Lerp(startPos, endPos, timer / movingTime);
             timer += Time.deltaTime;
             yield return null;
         }
