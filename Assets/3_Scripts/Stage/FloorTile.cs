@@ -9,11 +9,11 @@ public enum FloorState { None = 0, Lifting, Dropping }
 public class FloorTile : MonoBehaviour
 {
     [Header("Lift Y Position")]
-    [SerializeField] private float liftTimer = 3f;
+    public float liftTimer = 3f;
     [SerializeField] private AnimationCurve liftCurve;
 
     [Header("Drop Y Position")]
-    [SerializeField] private float dropTimer = 3f;
+    public float dropTimer = 3f;
     [SerializeField] private AnimationCurve dropCurve;
 
     private FloorState state = FloorState.None;
@@ -28,21 +28,35 @@ public class FloorTile : MonoBehaviour
     }
 
     [Button]
-    public void Lift()
-    {
-        state = FloorState.Lifting;
-        StartCoroutine(Lerp_Logic(liftTimer, liftCurve, null));
-    }
-
-    [Button]
     public void Drop()
     {
         state = FloorState.Dropping;
-        StartCoroutine(Lerp_Logic(dropTimer, dropCurve, Lift));
+        StartCoroutine(Lerp_Logic(0, dropTimer, dropCurve, Lift));
     }
 
-    IEnumerator Lerp_Logic(float lerpTimer, AnimationCurve curve, Action callback)
+    [Button]
+    public void Lift()
     {
+        state = FloorState.Lifting;
+        StartCoroutine(Lerp_Logic(0, liftTimer, liftCurve, null));
+    }
+
+    public void DropWithAlert(float delay)
+    {
+        state = FloorState.Dropping;
+        StartCoroutine(Lerp_Logic(delay, dropTimer, dropCurve, LiftFromAlertDrop));
+    }
+
+    public void LiftFromAlertDrop()
+    {
+        state = FloorState.Lifting;
+        StartCoroutine(Lerp_Logic(0, liftTimer, liftCurve, null));
+    }
+
+    IEnumerator Lerp_Logic(float delay, float lerpTimer, AnimationCurve curve, Action callback)
+    {
+        yield return new WaitForSeconds(delay);
+
         float finalYPos = 0;
         while (_timer < lerpTimer)
         {
