@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using NaughtyAttributes;
-using System;
 using Random = UnityEngine.Random;
-using UnityEditor.Rendering;
 
 public enum StageState { Shuffle, Drop }
 public enum BossColor { Red, Blue, Green }
