@@ -78,43 +78,57 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    int movesetCounter = 1;
     public void RandomMoveset()
     {
         topViewVcam.Priority = 9;
-        playerVcam.MoveToTopOfPrioritySubqueue();
-        int rand = Random.Range(0, 5);
 
-        switch (rand)
+        int rand = Random.Range(0, 3);
+
+        if (movesetCounter == 1)
         {
-            case 0:
-                IterateMovingTile();
-                break;
-            case 1:
-                Test_LinesGapDrop();
-                break;
-            case 2:
-                RedDropFloorCall();
-                break;
-            case 3:
-                BlueDropFloorCall();
-                break;
-            case 4:
-                GreenDropFloorCall();
-                break;
+            switch (rand)
+            {
+                case 0:
+                    RedDropFloorCall();
+                    break;
+                case 1:
+                    BlueDropFloorCall();
+                    break;
+                case 2:
+                    GreenDropFloorCall();
+                    break;
+
+            }
+
+            movesetCounter++;
         }
+        else if (movesetCounter == 2)
+        {
+            IterateMovingTile();
+            movesetCounter++;
+        }
+        else if (movesetCounter == 3)
+        {
+            Test_LinesGapDrop();
+            movesetCounter = 1;
+        }
+
+        
     }
 
     private int moveIterateCount;
 
     private void IterateMovingTile()
     {
-        if (moveIterateCount < 5)
+        if (moveIterateCount < 3)
         {
             moveIterateCount++;
             MoveTileLineDropTrigger();
         }
         else
         {
+            moveIterateCount = 0;
             RandomMoveset();
         }
     }

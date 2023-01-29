@@ -55,4 +55,9 @@ public class InputReceiver : MonoBehaviour
     {
         jump = newJump;
     }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
 }
