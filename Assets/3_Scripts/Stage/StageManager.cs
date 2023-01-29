@@ -4,12 +4,17 @@ using UnityEngine;
 using System.Linq;
 using NaughtyAttributes;
 using Random = UnityEngine.Random;
+using System;
+using Cinemachine;
 
 public enum StageState { Shuffle, Drop }
 public enum BossColor { Red, Blue, Green }
 
 public class StageManager : MonoBehaviour
 {
+    [Header("Temporary Reference")]
+    [SerializeField] MeshRenderer bossMesh;
+
     [Header("Floor Materials")]
     public Material Mat_default;
     public Material Mat_Red;
@@ -34,10 +39,20 @@ public class StageManager : MonoBehaviour
     [SerializeField] private LineTileDropTrigger moveTileDropTrigger;
     public enum TileLine { Horizontal, Vertical }
 
+    [Header("Camera Settings")]
+    [SerializeField] private CinemachineVirtualCameraBase playerVcam;
+    [SerializeField] private CinemachineVirtualCameraBase topViewVcam;
+
     private void Start()
     {
-        //ShuffleFloor();
+        LineTileDropTrigger.OnTileMoveEnd += IterateMovingTile;
+        ShuffleFloor();
         //shuffle = true;
+    }
+
+    private void OnDestroy()
+    {
+        LineTileDropTrigger.OnTileMoveEnd -= IterateMovingTile;
     }
 
     private void Update()
@@ -51,6 +66,56 @@ public class StageManager : MonoBehaviour
                 ShuffleFloor();
                 _nextShuffleTime = Time.time + shufflePerSec;
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            RandomMoveset();
+            GetComponent<Collider>().enabled = false;
+        }
+    }
+
+    public void RandomMoveset()
+    {
+        topViewVcam.Priority = 9;
+        playerVcam.MoveToTopOfPrioritySubqueue();
+        int rand = Random.Range(0, 5);
+
+        switch (rand)
+        {
+            case 0:
+                IterateMovingTile();
+                break;
+            case 1:
+                Test_LinesGapDrop();
+                break;
+            case 2:
+                RedDropFloorCall();
+                break;
+            case 3:
+                BlueDropFloorCall();
+                break;
+            case 4:
+                GreenDropFloorCall();
+                break;
+        }
+    }
+
+    private int moveIterateCount;
+
+    private void IterateMovingTile()
+    {
+        if (moveIterateCount < 5)
+        {
+            moveIterateCount++;
+            MoveTileLineDropTrigger();
+        }
+        else
+        {
+            RandomMoveset();
         }
     }
 
@@ -118,6 +183,22 @@ public class StageManager : MonoBehaviour
     private IEnumerator DropSpecificColorFloor(BossColor type, float delay)
     {
         SetTileTimer(3, 3);
+        ShuffleFloor();
+        shuffle = true;
+        yield return new WaitForSeconds(delay);
+        
+        switch (type)
+        {
+            case BossColor.Red:
+                bossMesh.material = Mat_Red;
+                break;
+            case BossColor.Blue:
+                bossMesh.material = Mat_Blue;
+                break;
+            case BossColor.Green:
+                bossMesh.material = Mat_Green;
+                break;
+        }
 
         shuffle = false;
         yield return new WaitForSeconds(delay);
@@ -144,7 +225,8 @@ public class StageManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(7f);
-        shuffle = true;
+        bossMesh.material = Mat_default;
+        RandomMoveset();
     }
 
     //[Button]
@@ -222,10 +304,13 @@ public class StageManager : MonoBehaviour
 
 
     //}
-    [SerializeField] int tileIndex;
     [Button]
     public void MoveTileLineDropTrigger()
     {
+        int tileIndex = Random.Range(0, 8);
+        topViewVcam.Priority = 11;
+        SetFloorsMaterial(floorList, Mat_default);
+
         moveTileDropTrigger.matColorer = RandomMat();
         moveTileDropTrigger.finalMat = Mat_default;
         moveTileDropTrigger.Move(tileIndex);
@@ -237,43 +322,83 @@ public class StageManager : MonoBehaviour
     [Button]
     public void Test_LinesGapDrop()
     {
+        isOdd = Random.value > 0.5f;
+        bool randDir = false;
+        randDir = Random.value > 0.5f;
+        if (randDir)
+        {
+            dir = TileLine.Horizontal;
+        }
+        else
+        {
+            dir = TileLine.Vertical;
+        }
+
         LinesGapDrop(dir, isOdd, 2);
     }
 
     public void LinesGapDrop(TileLine direction, bool isOdd, float delay)
     {
-        int remainder = isOdd ? remainder = 1 : remainder = 0;
+        SetFloorsMaterial(floorList, RandomMat());
 
-        for (int i = 0; i < 13; i++)
+        int remainder = isOdd ? 1 : 0;
+        Material randMat = RandomMat();
+        for (int i = 0; i < Mathf.Sqrt(floorList.Count); i++)
         {
             if (i % 2 == remainder)
-                StartCoroutine(MoveTileLine(direction, i, delay));
+            {
+                //Debug.Log(i);
+                //switch (direction)
+                //{
+                //    case TileLine.Horizontal:
+                //        horiLineTrigger[i].matColorer = Mat_default;
+                //        continue;
+                //    case TileLine.Vertical:
+                //        vertLineTrigger[i].matColorer = Mat_default;
+                //        continue;
+                //}
+            }
+            else
+            {
+                StartCoroutine(EnableTileLine(direction, i, delay, randMat));
+            }
         }
+
+        StartCoroutine(EnableTileLineReset());
     }
 
-    private IEnumerator MoveTileLine(TileLine direction, int index, float delay)
+    private IEnumerator EnableTileLine(TileLine direction, int index, float delay, Material mat)
     {
-        
+        SetTileTimer(1, 1);
+        //SetFloorsMaterial(floorList, Mat_default);
 
         switch (direction)
         {
             case TileLine.Horizontal:
-                horiLineTrigger[index].matColorer = RandomMat();
+                horiLineTrigger[index].matColorer = Mat_default;
                 horiLineTrigger[index].finalMat = Mat_default;
-                horiLineTrigger[index].DropDelay = 1f;
+                horiLineTrigger[index].DropDelay = 2f;
                 horiLineTrigger[index].gameObject.SetActive(true);
-                yield return new WaitForSeconds(horiLineTrigger[index].DropTime + horiLineTrigger[index].DropDelay);
+                yield return new WaitForSeconds(0.25f);
                 horiLineTrigger[index].gameObject.SetActive(false);
                 break;
             case TileLine.Vertical:
-                vertLineTrigger[index].matColorer = RandomMat();
+                vertLineTrigger[index].matColorer = Mat_default;
                 vertLineTrigger[index].finalMat = Mat_default;
-                vertLineTrigger[index].DropDelay = 1f;
+                vertLineTrigger[index].DropDelay = 2f;
                 vertLineTrigger[index].gameObject.SetActive(true);
-                yield return new WaitForSeconds(vertLineTrigger[index].DropTime + vertLineTrigger[index].DropDelay);
+                yield return new WaitForSeconds(0.25f);
                 vertLineTrigger[index].gameObject.SetActive(false);
                 break;
         }
+    }
+
+    private IEnumerator EnableTileLineReset()
+    {
+        yield return new WaitForSeconds(3f);
+        SetFloorsMaterial(floorList, Mat_default);
+        yield return new WaitForSeconds(1.8f);
+        RandomMoveset();
     }
 
     private int lastRandomMat;

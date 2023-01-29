@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class LineTileDropTrigger : MonoBehaviour
 {
@@ -27,13 +26,14 @@ public class LineTileDropTrigger : MonoBehaviour
 
     private float dropDelay = 0.5f, dropTime = 0.7f, liftTime = 1f;
 
-    public float DropDelay { get => dropDelay; set => value = dropDelay; }
+    public float DropDelay { get => dropDelay; set => dropDelay = value; }
     public float DropTime { get => dropTime; }
 
     public Material matColorer { get; set; }
     public Material finalMat { get; set; }
     public Collider trigger { get; set; }
-    private int lastRandom;
+
+    public static event Action OnTileMoveEnd;
 
     private void Awake()
     {
@@ -88,6 +88,8 @@ public class LineTileDropTrigger : MonoBehaviour
 
     private IEnumerator Moving_Logic()
     {
+        yield return new WaitForSeconds(1.5f);
+
         float timer = 0;
 
         transform.position = startPos;
@@ -99,6 +101,10 @@ public class LineTileDropTrigger : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
+
+        yield return new WaitForSeconds(3f);
+
+        OnTileMoveEnd?.Invoke();
     }
 
     private IEnumerator SwitchDefaultMat(FloorTile tile, Material mat)
@@ -106,6 +112,4 @@ public class LineTileDropTrigger : MonoBehaviour
         yield return new WaitForSeconds(dropTime);
         tile.SetMat(mat);
     }
-
-    
 }
