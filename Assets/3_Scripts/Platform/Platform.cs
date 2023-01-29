@@ -12,7 +12,7 @@ public class Platform: MonoBehaviour
 
     [Header("Moving Platform settings")]
     public Transform[] points;
-    private int currentPoint = 0, prevPoint;
+    private int currentPoint = 0;
     public float timeToPoint = 7f;
     
     [Header("Shake and Drop Settings")]
@@ -40,8 +40,6 @@ public class Platform: MonoBehaviour
         platformCollider = GetComponent<Collider>();
         parental = transform.GetChild(0).gameObject;
         originalY = transform.position.y;
-
-        prevPoint = points.Length - 1;
     }
 
     void Update()
@@ -56,25 +54,16 @@ public class Platform: MonoBehaviour
         MovePlatform();
     }
 
-    float timer = 0;
-
     public void MovePlatform()
     {
         if(isMoveable || isMoveable && isDropable)
         {
-
-
-            //float movePercent = timer / timeToPoint;
-            //movePercent = Mathf.SmoothStep(0, 1, movePercent);
-            //transform.position = Vector3.Lerp(points[prevPoint].position, points[currentPoint].position, movePercent);
-            Vector3 dir = (points[currentPoint].position - points[prevPoint].position).normalized;
+            Vector3 dir = (points[currentPoint].position - transform.position).normalized;
             transform.position = transform.position + dir * dropDistance * Time.deltaTime;
-            //  timer += Time.fixedDeltaTime;
+
             if (Vector3.Distance(transform.position, points[currentPoint].position) < 0.1f)
             {
-                prevPoint = currentPoint;
                 currentPoint++;
-                timer = 0;
 
                 if (currentPoint >= points.Length)
                 {

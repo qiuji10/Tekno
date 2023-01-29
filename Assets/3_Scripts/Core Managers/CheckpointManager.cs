@@ -11,13 +11,13 @@ public class CheckpointManager : MonoBehaviour {
     {
         for (int i = 0; i < checkpoints.Count; i++)
         {
-            if (checkpoints[i + 1] != null && checkpoints[i].pass && !checkpoints[i + 1].pass)
+            if (i + 1 != checkpoints.Count && checkpoints[i].pass && !checkpoints[i + 1].pass)
             {
                 return checkpoints[i];
             }
         }
 
-        return checkpoints[checkpoints.Count];
+        return checkpoints[checkpoints.Count - 1];
     }
 
     /// This may be no needed based on certain situation
