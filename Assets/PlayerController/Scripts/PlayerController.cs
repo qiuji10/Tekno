@@ -87,11 +87,10 @@ public class PlayerController : MonoBehaviour
         if (_moveDir == Vector3.zero)
         {
             _rb.angularVelocity = Vector3.zero;
-
             // velocity for animation blend
             if (velocity > 0)
             {
-                velocity -= Time.deltaTime * deceleration;
+                velocity -= Time.fixedDeltaTime * deceleration;
             }
             else
             {
@@ -107,7 +106,7 @@ public class PlayerController : MonoBehaviour
                 // velocity for animation blend
                 if (velocity < 1f)
                 {
-                    velocity += Time.deltaTime * acceleration;
+                    velocity += Time.fixedDeltaTime * acceleration;
                 }
                 else
                 {
