@@ -104,7 +104,8 @@ public class Platform: MonoBehaviour
                 isDropping = false;
                 platformCollider.enabled = true;
                 transform.position = new Vector3(transform.position.x, originalY, transform.position.z);
-                
+                if (shakeTimer != 0) shakeTimer = 0;
+
             }
 
             if (shakeTimer >= shakeDuration)
