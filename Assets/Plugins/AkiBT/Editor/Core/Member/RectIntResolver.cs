@@ -1,18 +1,18 @@
 using System;
 using System.Reflection;
-
+using UnityEditor.UIElements;
 using UnityEngine;
 
 namespace Kurisu.AkiBT.Editor
 {
-    public class RectIntResolver : FieldResolver<UnityEngine.UIElements.RectIntField,RectInt>
+    public class RectIntResolver : FieldResolver<RectIntField,RectInt>
     {
         public RectIntResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
         }
-        protected override UnityEngine.UIElements.RectIntField CreateEditorField(FieldInfo fieldInfo)
+        protected override RectIntField CreateEditorField(FieldInfo fieldInfo)
         {
-            return new UnityEngine.UIElements.RectIntField(fieldInfo.Name);
+            return new RectIntField(fieldInfo.Name);
         }
         public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(RectInt);
     }

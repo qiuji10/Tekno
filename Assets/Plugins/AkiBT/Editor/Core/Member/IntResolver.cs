@@ -1,16 +1,16 @@
 using System;
 using System.Reflection;
-
+using UnityEditor.UIElements;
 namespace Kurisu.AkiBT.Editor
 {
-    public class IntResolver : FieldResolver<UnityEngine.UIElements.IntegerField,int>
+    public class IntResolver : FieldResolver<IntegerField,int>
     {
         public IntResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
         }
-        protected override UnityEngine.UIElements.IntegerField CreateEditorField(FieldInfo fieldInfo)
+        protected override IntegerField CreateEditorField(FieldInfo fieldInfo)
         {
-            return new UnityEngine.UIElements.IntegerField(fieldInfo.Name);
+            return new IntegerField(fieldInfo.Name);
         }
         public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(int);
     }

@@ -34,8 +34,6 @@ public class PlayerController : MonoBehaviour
 
     private int movement, jump, jumpGrounded;
 
-    private bool cursorIsOn = false;
-
     private void Awake()
     {
         _input = GetComponent<InputReceiver>();
@@ -50,20 +48,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         IsGround();
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (cursorIsOn)
-            {
-                cursorIsOn = false;
-                _input.CursorOff();
-            }
-            else
-            {
-                cursorIsOn = true;
-                _input.CursorOn();
-            }
-        }
     }
 
     private void FixedUpdate()

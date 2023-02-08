@@ -104,7 +104,7 @@ NavMeshSettings:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_BuildSettings:
-    serializedVersion: 3
+    serializedVersion: 2
     agentTypeID: 0
     agentRadius: 0.5
     agentHeight: 2
@@ -117,7 +117,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualTileSize: 0
     tileSize: 256
-    buildHeightMesh: 0
+    accuratePlacement: 0
     maxJobWorkers: 0
     preserveTilesOutsideBounds: 0
     debug:
@@ -261,17 +261,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Version: 2
+  m_Version: 1
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
   m_LightLayerMask: 1
-  m_RenderingLayers: 1
   m_CustomShadowLayers: 0
   m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 1
 --- !u!1 &754640373
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,17 +299,8 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 754640373}
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
@@ -404,7 +392,6 @@ MonoBehaviour:
   externalBehaviorTree: {fileID: 0}
   autoSave: 1
   savePath: Assets
-  blockData: []
   references:
     version: 2
     RefIds:
@@ -436,7 +423,6 @@ MonoBehaviour:
           width: 80
           height: 77
         description: 
-        guid: 
         child:
           rid: 7851556643135291450
     - rid: 7851556643135291450
@@ -449,7 +435,6 @@ MonoBehaviour:
           width: 154
           height: 167
         description: 
-        guid: 
         children:
         - rid: 7851556643135291451
         - rid: 7851556643135291452
@@ -465,7 +450,6 @@ MonoBehaviour:
           width: 154
           height: 143
         description: "\u83B7\u53D6\u4F4D\u7F6E"
-        guid: 
         children:
         - rid: 7851556643135291454
         - rid: 7851556643135291455
@@ -480,7 +464,6 @@ MonoBehaviour:
           width: 164
           height: 222
         description: "\u8BA1\u7B97\u8DDD\u79BB"
-        guid: 
         firstVector3:
           isShared: 1
           mName: enemyPos
@@ -503,7 +486,6 @@ MonoBehaviour:
           width: 154
           height: 143
         description: 
-        guid: 
         children:
         - rid: 7851556643135291456
         - rid: 7851556643135291457
@@ -518,7 +500,6 @@ MonoBehaviour:
           width: 206
           height: 161
         description: 
-        guid: 
         target: {fileID: 754640377}
         result:
           isShared: 1
@@ -534,7 +515,6 @@ MonoBehaviour:
           width: 201
           height: 161
         description: "\u6837\u4F8B\u7ED3\u70B9"
-        guid: 
         target: {fileID: 1504724517}
         result:
           isShared: 1
@@ -550,7 +530,6 @@ MonoBehaviour:
           width: 231
           height: 119
         description: 
-        guid: 
         evaluateOnRunning: 0
         child:
           rid: 7851556643135291458
@@ -564,7 +543,6 @@ MonoBehaviour:
           width: 190
           height: 140
         description: "\u505C\u6B62\u79FB\u52A8"
-        guid: 
         isStopped:
           isShared: 0
           mName: 
@@ -579,7 +557,6 @@ MonoBehaviour:
           width: 208
           height: 223
         description: "\u5224\u65AD\u8DDD\u79BB>4"
-        guid: 
         evaluateOnRunning: 0
         child:
           rid: 7851556643135291459
@@ -602,7 +579,6 @@ MonoBehaviour:
           width: 154
           height: 143
         description: "\u79FB\u52A8\u5E8F\u5217"
-        guid: 
         children:
         - rid: 7851556643135291460
         - rid: 7851556643135291461
@@ -617,7 +593,6 @@ MonoBehaviour:
           width: 190
           height: 140
         description: "\u5173\u95ED\u505C\u6B62"
-        guid: 
         isStopped:
           isShared: 0
           mName: 
@@ -632,7 +607,6 @@ MonoBehaviour:
           width: 220
           height: 140
         description: "\u79FB\u52A8\u5230enemyPos"
-        guid: 
         destination:
           isShared: 1
           mName: enemyPos
@@ -794,17 +768,8 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1504724517}
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
@@ -920,7 +885,6 @@ MonoBehaviour:
   externalBehaviorTree: {fileID: 0}
   autoSave: 1
   savePath: Assets
-  blockData: []
   references:
     version: 2
     RefIds:
@@ -958,7 +922,6 @@ MonoBehaviour:
           width: 80
           height: 77
         description: 
-        guid: 
         child:
           rid: 7851556643135291554
     - rid: 7851556643135291553
@@ -977,7 +940,6 @@ MonoBehaviour:
           width: 154
           height: 143
         description: 
-        guid: 
         children:
         - rid: 7851556643135291555
         - rid: 7851556643135291556
@@ -992,7 +954,6 @@ MonoBehaviour:
           width: 210
           height: 99
         description: 
-        guid: 
         child:
           rid: 7851556643135291557
     - rid: 7851556643135291556
@@ -1005,7 +966,6 @@ MonoBehaviour:
           width: 154
           height: 143
         description: 
-        guid: 
         children:
         - rid: 7851556643135291558
         - rid: 7851556643135291559
@@ -1020,7 +980,6 @@ MonoBehaviour:
           width: 205
           height: 223
         description: "\u68C0\u6D4B\u662F\u5426\u62B5\u8FBE"
-        guid: 
         evaluateOnRunning: 0
         child:
           rid: 7851556643135291560
@@ -1043,7 +1002,6 @@ MonoBehaviour:
           width: 154
           height: 167
         description: "\u8BA1\u7B97\u5E8F\u5217"
-        guid: 
         children:
         - rid: 7851556643135291561
         - rid: 7851556643135291562
@@ -1059,7 +1017,6 @@ MonoBehaviour:
           width: 154
           height: 143
         description: 
-        guid: 
         children:
         - rid: 7851556643135291564
         - rid: 7851556643135291565
@@ -1074,7 +1031,6 @@ MonoBehaviour:
           width: 154
           height: 143
         description: 
-        guid: 
         children:
         - rid: 7851556643135291566
         - rid: 7851556643135291567
@@ -1089,7 +1045,6 @@ MonoBehaviour:
           width: 206
           height: 161
         description: "\u83B7\u53D6\u81EA\u8EAB\u4F4D\u7F6E"
-        guid: 
         target: {fileID: 1504724521}
         result:
           isShared: 1
@@ -1105,7 +1060,6 @@ MonoBehaviour:
           width: 167
           height: 244
         description: "\u4F4D\u7F6E\u76F8\u51CF\u5B58\u5230substract"
-        guid: 
         operation: 1
         firstVector3:
           isShared: 1
@@ -1129,7 +1083,6 @@ MonoBehaviour:
           width: 228
           height: 181
         description: "\u83B7\u53D6substract\u6A21\u7684\u5E73\u65B9"
-        guid: 
         vector3:
           isShared: 1
           mName: substract
@@ -1148,7 +1101,6 @@ MonoBehaviour:
           width: 208
           height: 223
         description: "\u5224\u65ADdistance\u7684\u5E73\u65B9>16\u5373\u8DDD\u79BB>4"
-        guid: 
         evaluateOnRunning: 0
         child:
           rid: 7851556643135291568
@@ -1171,7 +1123,6 @@ MonoBehaviour:
           width: 154
           height: 167
         description: "\u5230\u8FBE\u540E\u7EE7\u7EED\u6267\u884C"
-        guid: 
         children:
         - rid: 7851556643135291569
         - rid: 7851556643135291570
@@ -1187,7 +1138,6 @@ MonoBehaviour:
           width: 142
           height: 160
         description: "\u6807\u8BB0\u62B5\u8FBE\u4E3AFalse"
-        guid: 
         boolToSet:
           isShared: 1
           mName: already
@@ -1203,7 +1153,6 @@ MonoBehaviour:
           width: 218
           height: 228
         description: "\u83B7\u53D6\u5F53\u524D\u4F4D\u7F6E\u8303\u56F4\u5185\u968F\u673A\u4F4D\u7F6E"
-        guid: 
         randomVector3:
           isShared: 1
           mName: destination
@@ -1222,7 +1171,6 @@ MonoBehaviour:
           width: 154
           height: 143
         description: "\u79FB\u52A8\u5E8F\u5217"
-        guid: 
         children:
         - rid: 7851556643135291572
         - rid: 7851556643135291573
@@ -1237,7 +1185,6 @@ MonoBehaviour:
           width: 190
           height: 140
         description: "\u505C\u6B62\u79FB\u52A8"
-        guid: 
         isStopped:
           isShared: 0
           mName: 
@@ -1252,7 +1199,6 @@ MonoBehaviour:
           width: 142
           height: 160
         description: "\u6807\u8BB0\u62B5\u8FBE"
-        guid: 
         boolToSet:
           isShared: 1
           mName: already
@@ -1268,7 +1214,6 @@ MonoBehaviour:
           width: 147
           height: 140
         description: "\u7B495\u79D2\u91CD\u65B0\u968F\u673A\u83B7\u53D6\u4F4D\u7F6E"
-        guid: 
         waitTime:
           isShared: 0
           mName: 
@@ -1283,7 +1228,6 @@ MonoBehaviour:
           width: 190
           height: 140
         description: "\u5173\u95ED\u505C\u6B62"
-        guid: 
         isStopped:
           isShared: 0
           mName: 
@@ -1298,7 +1242,6 @@ MonoBehaviour:
           width: 220
           height: 140
         description: "\u79FB\u52A8\u5230destination"
-        guid: 
         destination:
           isShared: 1
           mName: destination
@@ -1369,7 +1312,6 @@ MonoBehaviour:
   externalBehaviorTree: {fileID: 0}
   autoSave: 1
   savePath: Assets
-  blockData: []
   references:
     version: 2
     RefIds:
@@ -1407,7 +1349,6 @@ MonoBehaviour:
           width: 80
           height: 77
         description: 
-        guid: 
         child:
           rid: 7851556781192904726
     - rid: 7851556781192904726
@@ -1420,7 +1361,6 @@ MonoBehaviour:
           width: 135
           height: 123
         description: 
-        guid: 
         children:
         - rid: 7851556781192904727
         - rid: 7851556781192904728
@@ -1434,7 +1374,6 @@ MonoBehaviour:
           width: 154
           height: 167
         description: 
-        guid: 
         children:
         - rid: 7851556781192904729
         - rid: 7851556781192904730
@@ -1450,7 +1389,6 @@ MonoBehaviour:
           width: 154
           height: 143
         description: 
-        guid: 
         children:
         - rid: 7851556781192904732
         - rid: 7851556781192904733
@@ -1465,7 +1403,6 @@ MonoBehaviour:
           width: 218
           height: 228
         description: "\u83B7\u53D6\u5F53\u524D\u4F4D\u7F6E\u8303\u56F4\u5185\u968F\u673A\u4F4D\u7F6E"
-        guid: 
         randomVector3:
           isShared: 1
           mName: destination
@@ -1484,7 +1421,6 @@ MonoBehaviour:
           width: 214
           height: 121
         description: "Patrol\u83B7\u53D6\u4E86\u65B0\u4F4D\u7F6E"
-        guid: 
         logText: "Patrol\u83B7\u53D6\u4E86\u65B0\u4F4D\u7F6E"
     - rid: 7851556781192904731
       type: {class: TimeWait, ns: Kurisu.AkiBT.Extend, asm: Kurisu.AkiBT}
@@ -1496,7 +1432,6 @@ MonoBehaviour:
           width: 118
           height: 140
         description: "10\u79D2"
-        guid: 
         waitTime:
           isShared: 0
           mName: 
@@ -1511,7 +1446,6 @@ MonoBehaviour:
           width: 154
           height: 167
         description: "\u8BA1\u7B97\u5E8F\u5217"
-        guid: 
         children:
         - rid: 7851556781192904734
         - rid: 7851556781192904735
@@ -1527,7 +1461,6 @@ MonoBehaviour:
           width: 154
           height: 143
         description: 
-        guid: 
         children:
         - rid: 7851556781192904737
         - rid: 7851556781192904738
@@ -1542,7 +1475,6 @@ MonoBehaviour:
           width: 206
           height: 161
         description: "\u83B7\u53D6\u81EA\u8EAB\u4F4D\u7F6E"
-        guid: 
         target: {fileID: 1521665832}
         result:
           isShared: 1
@@ -1558,7 +1490,6 @@ MonoBehaviour:
           width: 167
           height: 244
         description: "\u4F4D\u7F6E\u76F8\u51CF\u5B58\u5230subtract\u4E2D"
-        guid: 
         operation: 1
         firstVector3:
           isShared: 1
@@ -1582,7 +1513,6 @@ MonoBehaviour:
           width: 228
           height: 181
         description: "\u83B7\u53D6subtract\u6A21\u7684\u5E73\u65B9\u5B58\u5230distance"
-        guid: 
         vector3:
           isShared: 1
           mName: subtract
@@ -1601,7 +1531,6 @@ MonoBehaviour:
           width: 208
           height: 223
         description: "\u5224\u65ADdistance>4\u5373\u8DDD\u79BB>2"
-        guid: 
         evaluateOnRunning: 0
         child:
           rid: 7851556781192904739
@@ -1624,7 +1553,6 @@ MonoBehaviour:
           width: 190
           height: 140
         description: "\u505C\u6B62\u79FB\u52A8"
-        guid: 
         isStopped:
           isShared: 0
           mName: 
@@ -1639,7 +1567,6 @@ MonoBehaviour:
           width: 154
           height: 143
         description: "\u79FB\u52A8\u5E8F\u5217"
-        guid: 
         children:
         - rid: 7851556781192904740
         - rid: 7851556781192904741
@@ -1654,7 +1581,6 @@ MonoBehaviour:
           width: 190
           height: 140
         description: "\u5173\u95ED\u505C\u6B62"
-        guid: 
         isStopped:
           isShared: 0
           mName: 
@@ -1669,7 +1595,6 @@ MonoBehaviour:
           width: 220
           height: 140
         description: "\u79FB\u52A8\u5230destination"
-        guid: 
         destination:
           isShared: 1
           mName: destination
@@ -1682,17 +1607,8 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521665826}
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
@@ -1947,17 +1863,9 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1969741445}
   m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
+  serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
@@ -1981,7 +1889,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 27257edcdffadfd4fab6727b488e1eb0, type: 2}
+  - {fileID: 2100000, guid: 80a9a4fd52d66dc419a23c07bb40946b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2098,17 +2006,9 @@ Camera:
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
-  m_Iso: 200
-  m_ShutterSpeed: 0.005
-  m_Aperture: 16
-  m_FocusDistance: 10
-  m_FocalLength: 50
-  m_BladeCount: 5
-  m_Curvature: {x: 2, y: 11}
-  m_BarrelClipping: 0.25
-  m_Anamorphism: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -2180,9 +2080,6 @@ MonoBehaviour:
   m_Dithering: 0
   m_ClearDepth: 1
   m_AllowXRRendering: 1
-  m_UseScreenCoordOverride: 0
-  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2

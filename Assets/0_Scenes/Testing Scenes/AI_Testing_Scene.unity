@@ -241,7 +241,7 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
---- !u!1 &1090849927
+--- !u!1 &1205326566
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -249,25 +249,25 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1090849931}
-  - component: {fileID: 1090849930}
-  - component: {fileID: 1090849929}
-  - component: {fileID: 1090849928}
-  - component: {fileID: 1090849932}
+  - component: {fileID: 1205326570}
+  - component: {fileID: 1205326569}
+  - component: {fileID: 1205326568}
+  - component: {fileID: 1205326567}
+  - component: {fileID: 1205326571}
   m_Layer: 0
-  m_Name: Enemy_Grunt
+  m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &1090849928
+--- !u!136 &1205326567
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1090849927}
+  m_GameObject: {fileID: 1205326566}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -284,13 +284,13 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &1090849929
+--- !u!23 &1205326568
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1090849927}
+  m_GameObject: {fileID: 1205326566}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -326,47 +326,48 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1090849930
+--- !u!33 &1205326569
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1090849927}
+  m_GameObject: {fileID: 1205326566}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1090849931
+--- !u!4 &1205326570
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1090849927}
+  m_GameObject: {fileID: 1205326566}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.455, z: 0}
+  m_LocalPosition: {x: 4.200774, y: 6.591563, z: -9.327391}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1090849932
+--- !u!114 &1205326571
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1090849927}
+  m_GameObject: {fileID: 1205326566}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbdc14eea9651417792898b3298a5cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   root:
-    rid: 6653085668412751877
-  sharedVariables: []
+    rid: 6653085668832444442
+  sharedVariables:
+  - rid: 6653085668832444443
   updateType: 0
   externalBehaviorTree: {fileID: 0}
-  autoSave: 1
+  autoSave: 0
   savePath: Assets
   blockData: []
   references:
@@ -374,7 +375,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 6653085668412751877
+    - rid: 6653085668832444442
       type: {class: Root, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
       data:
         graphPosition:
@@ -384,9 +385,15 @@ MonoBehaviour:
           width: 80
           height: 77
         description: 
-        guid: 955d05a8-e7d5-4557-b1ba-b16fedf3498b
+        guid: 09e08b20-d93d-44be-a8c3-a0243dd356c8
         child:
           rid: -2
+    - rid: 6653085668832444443
+      type: {class: SharedVector3, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        isShared: 0
+        mName: PlayerPosition
+        value: {x: 0, y: 0, z: 0}
 --- !u!1 &1434098026
 GameObject:
   m_ObjectHideFlags: 0

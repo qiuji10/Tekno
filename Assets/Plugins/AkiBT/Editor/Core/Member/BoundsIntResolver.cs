@@ -1,17 +1,17 @@
 using System;
 using System.Reflection;
-
+using UnityEditor.UIElements;
 using UnityEngine;
 namespace Kurisu.AkiBT.Editor
 {
-    public class BoundsIntResolver : FieldResolver<UnityEngine.UIElements.BoundsIntField,BoundsInt>
+    public class BoundsIntResolver : FieldResolver<BoundsIntField,BoundsInt>
     {
         public BoundsIntResolver(FieldInfo fieldInfo) : base(fieldInfo)
         {
         }
-        protected override UnityEngine.UIElements.BoundsIntField CreateEditorField(FieldInfo fieldInfo)
+        protected override BoundsIntField CreateEditorField(FieldInfo fieldInfo)
         {
-            return new UnityEngine.UIElements.BoundsIntField(fieldInfo.Name);
+            return new BoundsIntField(fieldInfo.Name);
         }
         public static bool IsAcceptable(Type infoType,FieldInfo info)=>infoType == typeof(BoundsInt);
     }
