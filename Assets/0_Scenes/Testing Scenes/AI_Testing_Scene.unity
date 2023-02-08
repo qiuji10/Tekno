@@ -253,6 +253,7 @@ GameObject:
   - component: {fileID: 1090849930}
   - component: {fileID: 1090849929}
   - component: {fileID: 1090849928}
+  - component: {fileID: 1090849932}
   m_Layer: 0
   m_Name: Enemy_Grunt
   m_TagString: Untagged
@@ -348,6 +349,44 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1090849932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090849927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbdc14eea9651417792898b3298a5cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  root:
+    rid: 6653085668412751877
+  sharedVariables: []
+  updateType: 0
+  externalBehaviorTree: {fileID: 0}
+  autoSave: 1
+  savePath: Assets
+  blockData: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 6653085668412751877
+      type: {class: Root, ns: Kurisu.AkiBT, asm: Kurisu.AkiBT}
+      data:
+        graphPosition:
+          serializedVersion: 2
+          x: 400
+          y: 300
+          width: 80
+          height: 77
+        description: 
+        guid: 955d05a8-e7d5-4557-b1ba-b16fedf3498b
+        child:
+          rid: -2
 --- !u!1 &1434098026
 GameObject:
   m_ObjectHideFlags: 0
