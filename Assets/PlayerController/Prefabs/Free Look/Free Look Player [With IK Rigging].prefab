@@ -1611,7 +1611,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!96 &8309491967467114955
 TrailRenderer:
-  serializedVersion: 3
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1652,7 +1652,6 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Time: 3
-  m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -1698,21 +1697,17 @@ TrailRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
     textureMode: 0
-    textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
   m_MinVertexDistance: 0.1
-  m_MaskInteraction: 0
   m_Autodestruct: 0
   m_Emitting: 1
-  m_ApplyActiveColorSpace: 0
 --- !u!1 &8412387119378527610
 GameObject:
   m_ObjectHideFlags: 0
@@ -3189,7 +3184,7 @@ GameObject:
   - component: {fileID: 8682839279938589876}
   - component: {fileID: 8682839279938589882}
   m_Layer: 6
-  m_Name: Player [With IK Rigging]
+  m_Name: Free Look Player [With IK Rigging]
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3211,7 +3206,7 @@ Transform:
   - {fileID: 8682839279514822746}
   - {fileID: 8309491967467114954}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8682839279938589878
 MonoBehaviour:
@@ -3252,17 +3247,8 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8682839279938589873}
   m_Material: {fileID: 13400000, guid: 6af926b246c2a064e92da170cb369b94, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2.05
   m_Direction: 1
@@ -3274,21 +3260,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8682839279938589873}
-  serializedVersion: 4
+  serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
@@ -3307,19 +3282,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orientation: {fileID: 8682839279514822746}
-  moveSpeed: 9
-  airSpeed: 0.4
+  moveSpeed: 11
+  airSpeed: 0.5
   moveDrag: 4
-  jumpForce: 20
-  fallMultiplier: 4
+  rotationSpeed: 7
+  jumpForce: 23
+  fallMultiplier: 10
   lowJumpMultiplier: 4
   groundLayer:
     serializedVersion: 2
     m_Bits: 9
   groundedRadius: 0.28
-  groundedOffset: -0.14
+  groundedOffset: -0.17
   isGround: 0
-  acceleration: 5
+  acceleration: 20
   deceleration: 5
 --- !u!114 &8682839279938589876
 MonoBehaviour:
@@ -3825,7 +3801,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &7211020881129086834
 Animator:
-  serializedVersion: 5
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3842,7 +3818,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &7211020881129086833
 MonoBehaviour:
   m_ObjectHideFlags: 0

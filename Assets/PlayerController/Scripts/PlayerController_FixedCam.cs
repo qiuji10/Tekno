@@ -1,15 +1,18 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Windows;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController_FixedCam : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
+    private Transform _playerObj;
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 7;
     [SerializeField] private float airSpeed = 0.4f;
     [SerializeField] private float moveDrag = 4;
+    [SerializeField] private float rotationSpeed = 7f;
 
     [Header("Jump Settings")]
     [SerializeField] private float jumpForce = 13f;
@@ -39,6 +42,7 @@ public class PlayerController : MonoBehaviour
         _input = GetComponent<InputReceiver>();
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponentInChildren<Animator>();
+        _playerObj = transform.GetChild(0);
 
         jump = Animator.StringToHash("Jump");
         jumpGrounded = Animator.StringToHash("JumpGrounded");
@@ -47,6 +51,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        Rotation();
         IsGround();
     }
 
@@ -120,6 +125,14 @@ public class PlayerController : MonoBehaviour
         }
 
         _anim.SetFloat(movement, velocity);
+    }
+
+    private void Rotation()
+    {
+        Vector3 inputDir = new Vector3(_input.move.x, 0, _input.move.y);
+
+        if (inputDir != Vector3.zero)
+            _playerObj.forward = Vector3.Slerp(_playerObj.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
     }
 
     private void SpeedLimiter()
