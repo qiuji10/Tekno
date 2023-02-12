@@ -44,7 +44,6 @@ public class Platform: MonoBehaviour
 
     void Update()
     {
-       
         DropPlatform();
         FlipPlatform();
     }
