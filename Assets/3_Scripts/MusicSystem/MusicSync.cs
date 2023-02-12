@@ -21,7 +21,7 @@ public class MusicSync : MonoBehaviour
         // Register the MusicSync instance to receive events.
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicScale);
         //Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicSpeed);
-        Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicRotate);
+       // Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicRotate);
     }
 
     private void OnMusicScale(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
