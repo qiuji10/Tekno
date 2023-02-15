@@ -14,7 +14,6 @@ public class PlatformMove : MonoBehaviour
     [Header("Platform Settings")]
     [EventID]
     public string eventID;
-    public KoreographyTrack Track;
     public Transform[] points;
     private Transform objTransform;
     private float movementSpeed;
