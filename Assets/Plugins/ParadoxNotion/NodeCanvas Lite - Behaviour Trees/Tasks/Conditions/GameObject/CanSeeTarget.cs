@@ -49,13 +49,13 @@ namespace NodeCanvas.Tasks.Conditions
             if ( Vector3.Distance(agent.position, t.position) > maxDistance.value ) {
                 return false;
             }
-
-            if ( Vector3.Angle(t.position - agent.position, agent.forward) > viewAngle.value ) {
+            float angle = Vector3.Angle(t.position - agent.position, agent.forward);
+            if (angle > viewAngle.value ) {
                 return false;
             }
 
-            if ( Physics.Linecast(agent.position + offset, t.position + offset, out hit, layerMask.value) ) {
-                if ( hit.collider != t.GetComponent<Collider>() ) {
+            if (Physics.Linecast(agent.position + offset, t.position + offset, out hit, layerMask.value)) {
+                if (hit.collider != t.GetComponent<Collider>() ) {
                     return false;
                 }
             }
@@ -74,13 +74,13 @@ namespace NodeCanvas.Tasks.Conditions
 
                 Matrix4x4 previousMatrix = Gizmos.matrix;
                 Gizmos.DrawLine(agent.position + offset, agent.position + offset + (agent.forward * maxDistance.value));
-
+                Gizmos.DrawWireSphere(agent.position, awarnessDistance.value);
                 Gizmos.matrix = Matrix4x4.TRS(agent.position + offset, agent.rotation, Vector3.one);
 
                 Gizmos.DrawLine(agent.position, agent.position + offset);
                 
                 Gizmos.DrawWireSphere(agent.position + offset + (agent.forward * maxDistance.value), 0.1f);
-                Gizmos.DrawWireSphere(agent.position, awarnessDistance.value);
+                
                 Gizmos.DrawFrustum(Vector3.zero, viewAngle.value, 5, 0, 1f);
 
                 Gizmos.matrix = previousMatrix;

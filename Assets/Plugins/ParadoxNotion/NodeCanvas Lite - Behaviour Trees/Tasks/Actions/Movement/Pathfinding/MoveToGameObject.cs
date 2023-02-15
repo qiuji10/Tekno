@@ -1,6 +1,7 @@
 ﻿using NodeCanvas.Framework;
 using ParadoxNotion.Design;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 using NavMeshAgent = UnityEngine.AI.NavMeshAgent;
 
 namespace NodeCanvas.Tasks.Actions
@@ -41,9 +42,12 @@ namespace NodeCanvas.Tasks.Actions
                 }
             }
 
+            // Currently ensure it will get path
+            agent.SetDestination(pos);
             lastRequest = pos;
 
             if ( !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + keepDistance.value ) {
+                //Debug.Log($"remain dist: {agent.remainingDistance}\n stop dist: {agent.stoppingDistance} keep dist: {keepDistance.value} = {agent.stoppingDistance + keepDistance.value}");
                 EndAction(true);
             }
         }
