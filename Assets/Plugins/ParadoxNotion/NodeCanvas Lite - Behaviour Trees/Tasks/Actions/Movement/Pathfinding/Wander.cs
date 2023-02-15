@@ -27,6 +27,7 @@ namespace NodeCanvas.Tasks.Actions
 
         protected override void OnExecute() {
             agent.speed = speed.value;
+            Debug.Log("enter");
             DoWander();
         }
 
@@ -40,19 +41,26 @@ namespace NodeCanvas.Tasks.Actions
             }
         }
 
-        void DoWander() {
+        void DoWander(){
             var min = minWanderDistance.value;
             var max = maxWanderDistance.value;
             min = Mathf.Clamp(min, 0.01f, max);
             max = Mathf.Clamp(max, min, max);
             var wanderPos = agent.transform.position;
-            while ( ( wanderPos - agent.transform.position ).magnitude < min ) {
-                wanderPos = ( Random.insideUnitSphere * max ) + agent.transform.position;
+            while ((wanderPos - agent.transform.position).magnitude < min)
+            {
+                wanderPos = (Random.insideUnitSphere * max) + agent.transform.position;
             }
 
             NavMeshHit hit;
-            if ( NavMesh.SamplePosition(wanderPos, out hit, agent.height * 2, NavMesh.AllAreas) ) {
+            if (NavMesh.SamplePosition(wanderPos, out hit, agent.height * 2, NavMesh.AllAreas))
+            {
                 agent.SetDestination(hit.position);
+            }
+            else
+            {
+                // Make it into recursive, but ideally pls fking prevent it in future if possible
+                DoWander();
             }
         }
 
