@@ -8,12 +8,19 @@ public class MusicSync : MonoBehaviour
     [Header("Selected Beat Data")]
     [EventID]
     public string eventID;
-    private float scaleFactor; // Scale
+    private Vector3 scale = Vector3.one;
     private float speed; // movement speed 
-    private float rotation; //rotation
     [Header("How Do you want your Gameobject React To The Music")]
     public bool ScaleSelection;
     public bool RotationSelection;
+    [Header("Scale Settings")]
+    public bool ScaleX;
+    public bool ScaleY;
+    public bool ScaleZ;
+    [Header("Rotation Options")]
+    public bool RotateX;
+    public bool RotateY;
+    public bool RotateZ;
 
     private void Awake()
     {
@@ -25,8 +32,11 @@ public class MusicSync : MonoBehaviour
     {
        if (ScaleSelection)
         {
-                scaleFactor = evt.GetValueOfCurveAtTime(sampleTime) * 2.0f;
-                transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+            scale.x = ScaleX ? evt.GetValueOfCurveAtTime(sampleTime) * 2.0f : scale.x;
+            scale.y = ScaleY ? evt.GetValueOfCurveAtTime(sampleTime) * 2.0f : scale.y;
+            scale.z = ScaleZ ? evt.GetValueOfCurveAtTime(sampleTime) * 2.0f : scale.z;
+
+            transform.localScale = scale;
         }
       
     }
@@ -34,8 +44,13 @@ public class MusicSync : MonoBehaviour
     {
         if (RotationSelection)
         {
-                rotation = evt.GetValueOfCurveAtTime(sampleTime) * 360.0f;
-                transform.localRotation = Quaternion.Euler(0.0f, 0.0f, rotation);
+            
+
+            float x = RotateX ? evt.GetValueOfCurveAtTime(sampleTime) * 360.0f: 0.0f;
+            float y = RotateY ? evt.GetValueOfCurveAtTime(sampleTime) * 360.0f : 0.0f;
+            float z = RotateZ ? evt.GetValueOfCurveAtTime(sampleTime) * 360.0f : 0.0f;
+
+            transform.localRotation = Quaternion.Euler(x, y, z);
         }
     }
 }
