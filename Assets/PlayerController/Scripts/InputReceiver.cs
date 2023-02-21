@@ -7,7 +7,7 @@ public class InputReceiver : MonoBehaviour
 {
     public Vector2 move;
     public Vector2 look;
-    public bool jump;
+    public bool jump, attack;
 
     private void Start()
     {
@@ -41,6 +41,11 @@ public class InputReceiver : MonoBehaviour
         JumpInput(value.isPressed);
     }
 
+    public void OnAttack(InputValue value)
+    {
+        AttackInput(value.isPressed);
+    }
+
     public void MoveInput(Vector2 newMoveDirection)
     {
         move = newMoveDirection;
@@ -56,8 +61,8 @@ public class InputReceiver : MonoBehaviour
         jump = newJump;
     }
 
-    public void Quit()
+    public void AttackInput(bool attack)
     {
-        Application.Quit();
+        this.attack = attack;
     }
 }
