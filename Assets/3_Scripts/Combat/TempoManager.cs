@@ -54,6 +54,11 @@ public class TempoManager : MonoBehaviour
         return Time.time - (_lastSyncTime + BeatsPerMinuteToDelay(staticBPM) * _beatsSinceSync);
     }
 
+    public static float GetTimeToBeatCount(int beatCount)
+    {
+        return (BeatsPerMinuteToDelay(staticBPM) * beatCount) - (BeatsPerMinuteToDelay(staticBPM) / 2.0f);
+    }
+
     private void Beat()
     {
         _beatsSinceSync++;

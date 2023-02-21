@@ -1,4 +1,4 @@
-public interface IDamagaeble
+public interface IDamagable
 {
     bool IsAlive { get; }
 
