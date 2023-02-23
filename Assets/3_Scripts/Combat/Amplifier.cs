@@ -170,9 +170,4 @@ public class Amplifier : MonoBehaviour, IDamagable
             }
         }
     }
-
-    //private IEnumerator Success()
-    //{
-
-    //}
 }
