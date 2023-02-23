@@ -65,7 +65,7 @@ public class Amplifier : MonoBehaviour, IDamagable
             beats[i].end = true;
         }
 
-
+        health = 100;
         StartCoroutine(Fail(beat));
         
     }
@@ -105,6 +105,8 @@ public class Amplifier : MonoBehaviour, IDamagable
 
         if (beatCanvas.transform.childCount > 0)
         {
+            DOTween.KillAll();
+
             for (int i = 0; i < beatCanvas.transform.childCount; i++)
             {
                 Destroy(beatCanvas.transform.GetChild(i).gameObject);
@@ -142,14 +144,17 @@ public class Amplifier : MonoBehaviour, IDamagable
         float timeToBeat = TempoManager.GetTimeToBeatCount(1);
         float d_timeToBeat = timeToBeat * 2;
 
+        Sequence sequence = DOTween.Sequence();
         foreach (CircleBeat b in beats)
         {
             if (b.Equals(beat)) continue;
 
-            b.rect.DOScale(Vector2.zero, timeToBeat);
+            sequence.Join(b.rect.DOScale(Vector2.zero, timeToBeat));
         }
 
-        beatRect.DOAnchorPos(Vector2.zero, timeToBeat);
+        sequence.Join(beatRect.DOAnchorPos(Vector2.zero, timeToBeat));
+        sequence.SetUpdate(UpdateType.Fixed);
+
         yield return new WaitForSeconds(d_timeToBeat);
         Vector3 largeScale = new Vector3(4, 4, 0);
         beatRect.DOScale(largeScale, timeToBeat);
