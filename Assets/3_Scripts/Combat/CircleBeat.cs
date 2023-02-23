@@ -121,6 +121,14 @@ public class CircleBeat : MonoBehaviour
                     failCallback?.Invoke(this);
                 }
             }
+
+            if (timer > timeToBeatCount + bufferMargin)
+            {
+                outerImg.color = Color.red;
+                end = true;
+
+                failCallback?.Invoke(this);
+            }
         }
 
         if (!end)

@@ -6,6 +6,7 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
     [Header("References")]
     [SerializeField] private Transform orientation;
     private Transform _playerObj;
+    public bool allowedInput = true;
     public bool allowedAction { get; set; } = true;
 
     [Header("Movement Settings")]
@@ -51,12 +52,16 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
 
     private void Update()
     {
+        if (!allowedInput) return;
+
         Rotation();
         IsGround();
     }
 
     private void FixedUpdate()
     {
+        if (!allowedInput) return;
+
         Jump();
         SpeedLimiter();
         Movement();
@@ -174,15 +179,23 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
         }
     }
 
-    IEnumerator SetJump()
+    private IEnumerator SetJump()
     {
         yield return new WaitForSeconds(0.1f);
         isJumping = true;
     }
 
-    public void Knock(Vector3 direction)
+    public void Knock(Vector3 direction, float power)
     {
+        StartCoroutine(KnockBack(direction, power));
+    }
 
+    private IEnumerator KnockBack(Vector3 direction, float power)
+    {
+        allowedInput = false;
+        _rb.AddForce(direction * power, ForceMode.Impulse);
+        yield return new WaitForSeconds(1.1f);
+        allowedInput = true;
     }
 
     private void OnDrawGizmosSelected()
