@@ -1,12 +1,12 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Windows;
 
-public class PlayerController_FixedCam : MonoBehaviour
+public class PlayerController_FixedCam : MonoBehaviour, IKnockable
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
     private Transform _playerObj;
+    public bool allowedAction { get; set; } = true;
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 7;
@@ -157,6 +157,8 @@ public class PlayerController_FixedCam : MonoBehaviour
             _rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
 
+        if (!allowedAction) return;
+
         if (_input.jump)
         {
             _input.jump = false;
@@ -176,6 +178,11 @@ public class PlayerController_FixedCam : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         isJumping = true;
+    }
+
+    public void Knock(Vector3 direction)
+    {
+
     }
 
     private void OnDrawGizmosSelected()
