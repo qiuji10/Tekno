@@ -56,6 +56,14 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
 
         Rotation();
         IsGround();
+
+        if (!allowedAction) return;
+        if (_input.attack)
+            _input.attack = false;
+        if (_input.heavyAttack)
+            _input.heavyAttack = false;
+        if (_input.square)
+            _input.square = false;
     }
 
     private void FixedUpdate()

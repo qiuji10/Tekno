@@ -34,7 +34,13 @@ public class CircleBeat : MonoBehaviour
 
         TempoManager.OnBeat += TempoManager_OnBeat;
 
-        StartCoroutine(FadeIn());
+        innerImg.color = new Color(innerImg.color.r, innerImg.color.g, innerImg.color.b, 0);
+        outerImg.color = new Color(0, 1, 0, 0);
+        inputImage.color = new Color(1, 1, 1, 0);
+
+        LeanTween.color(innerImg.rectTransform, new Color(innerImg.color.r, innerImg.color.g, innerImg.color.b, 1), 1f);
+        LeanTween.color(outerImg.rectTransform, new Color(0, 1, 0, 1), 1f);
+        LeanTween.color(inputImage.rectTransform, new Color(1, 1, 1, 1), 1f);
     }
 
     private void OnDisable()
@@ -65,10 +71,6 @@ public class CircleBeat : MonoBehaviour
                 break;
         }
 
-        innerImg.color = new Color (innerImg.color.r, innerImg.color.g, innerImg.color.b, 0);
-        outerImg.color = new Color(0, 1, 0, 0);
-        inputImage.color = new Color(1, 1, 1, 0);
-
         timeToBeatCount = TempoManager.GetTimeToBeatCount(onBeatCount);
     }
 
@@ -93,6 +95,7 @@ public class CircleBeat : MonoBehaviour
 
             if (InputReceiver.ReceiveInput(key))
             {
+                Debug.Log("YO");
                 InputReceiver.ToggleOffInput(key);
 
                 if (timer > timeToBeatCount + bufferMargin)
@@ -160,13 +163,5 @@ public class CircleBeat : MonoBehaviour
                 outerImg.rectTransform.sizeDelta = targetSize;
             }
         }
-    }
-
-    private IEnumerator FadeIn()
-    {
-        innerImg.DOColor(new Color(innerImg.color.r, innerImg.color.g, innerImg.color.b, 1), 1f);
-        outerImg.DOColor(new Color(0, 1, 0, 1), 1f);
-        inputImage.DOColor(new Color(1, 1, 1, 1), 1f);
-        yield return null;
     }
 }

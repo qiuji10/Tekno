@@ -1,5 +1,4 @@
 using Cinemachine;
-using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +19,7 @@ public class Amplifier : MonoBehaviour, IDamagable
     [Header("Combat")]
     [SerializeField] private int health = 100;
     [SerializeField] private List<EnemyBase> enemiesInControl;
+    [SerializeField] private float knockBackRange = 10;
     [SerializeField] private float knockBackPower = 75;
 
     [Header("Beat Settings")]
@@ -32,10 +32,18 @@ public class Amplifier : MonoBehaviour, IDamagable
     [SerializeField] private ParticleSystem particle;
     [SerializeField] private CinemachineVirtualCameraBase vcam;
 
+    private PlayerController_FixedCam player;
+
     public bool IsAlive => health > 0;
+
+    private void Awake()
+    {
+        player = FindObjectOfType<PlayerController_FixedCam>();
+    }
 
     void OnEnable()
     {
+        LeanTween.reset();
         ResetAmplifier();
     }
 
@@ -53,6 +61,8 @@ public class Amplifier : MonoBehaviour, IDamagable
         if (other.CompareTag("Player"))
         {
             ResetAmplifier();
+            vcam.Priority = 11;
+            player.allowedAction = false;
             beatCanvas.gameObject.SetActive(true);
             beats[0].startTrace = true;
         }
@@ -65,6 +75,9 @@ public class Amplifier : MonoBehaviour, IDamagable
             beats[i].end = true;
         }
 
+        vcam.Priority = 9;
+        player.allowedAction = true;
+
         health = 100;
         StartCoroutine(Fail(beat));
         
@@ -72,7 +85,8 @@ public class Amplifier : MonoBehaviour, IDamagable
 
     private void SuccessStreak(CircleBeat beat)
     {
-        beat.rect.DOScale(Vector2.zero, TempoManager.GetTimeToBeatCount(1));
+        //beat.rect.DOScale(Vector2.zero, TempoManager.GetTimeToBeatCount(1));
+        LeanTween.scale(beat.rect, Vector2.zero, TempoManager.GetTimeToBeatCount(1));
         Damage(25);
     }
 
@@ -83,7 +97,13 @@ public class Amplifier : MonoBehaviour, IDamagable
         if (health <= 0)
         {
             Debug.Log("speaker die4");
-            health = 0;
+            vcam.Priority = 9;
+            player.allowedAction = true;
+
+            // TODO: Temporary make heaoth 100 and keep canvas true to loop, in future the amplifier should 1 time destroyed
+            health = 100;
+            //beatCanvas.gameObject.SetActive(false);
+            
 
             if (enemiesInControl.Count > 0)
             {
@@ -105,8 +125,6 @@ public class Amplifier : MonoBehaviour, IDamagable
 
         if (beatCanvas.transform.childCount > 0)
         {
-            DOTween.KillAll();
-
             for (int i = 0; i < beatCanvas.transform.childCount; i++)
             {
                 Destroy(beatCanvas.transform.GetChild(i).gameObject);
@@ -144,27 +162,41 @@ public class Amplifier : MonoBehaviour, IDamagable
         float timeToBeat = TempoManager.GetTimeToBeatCount(1);
         float d_timeToBeat = timeToBeat * 2;
 
-        Sequence sequence = DOTween.Sequence();
+        //Sequence sequence = DOTween.Sequence();
+        //foreach (CircleBeat b in beats)
+        //{
+        //    if (b.Equals(beat)) continue;
+
+        //    sequence.Join(b.rect.DOScale(Vector2.zero, timeToBeat));
+        //}
+
+        //sequence.Join(beatRect.DOAnchorPos(Vector2.zero, timeToBeat));
+        //sequence.SetUpdate(UpdateType.Fixed);
+
         foreach (CircleBeat b in beats)
         {
             if (b.Equals(beat)) continue;
 
-            sequence.Join(b.rect.DOScale(Vector2.zero, timeToBeat));
+            LeanTween.scale(b.rect, Vector2.zero, timeToBeat);
         }
 
-        sequence.Join(beatRect.DOAnchorPos(Vector2.zero, timeToBeat));
-        sequence.SetUpdate(UpdateType.Fixed);
+        LeanTween.move(beatRect, Vector2.zero, timeToBeat);
 
         yield return new WaitForSeconds(d_timeToBeat);
+        
         Vector3 largeScale = new Vector3(4, 4, 0);
-        beatRect.DOScale(largeScale, timeToBeat);
+        //beatRect.DOScale(largeScale, timeToBeat);
+        LeanTween.scale(beatRect, largeScale, timeToBeat);
+        
         yield return new WaitForSeconds(d_timeToBeat);
-        beatRect.DOScale(Vector2.zero, timeToBeat);
+        //beatRect.DOScale(Vector2.zero, timeToBeat);
+        LeanTween.scale(beatRect, Vector2.zero, timeToBeat);
         yield return new WaitForSeconds(d_timeToBeat);
 
+        beatCanvas.gameObject.SetActive(false);
         particle.Play();
 
-        Collider[] collideData = Physics.OverlapSphere(transform.position, 5);
+        Collider[] collideData = Physics.OverlapSphere(transform.position, knockBackRange);
 
         for (int i = 0; i < collideData.Length; i++)
         {
@@ -174,5 +206,11 @@ public class Amplifier : MonoBehaviour, IDamagable
                 knockable.Knock(direction, knockBackPower);
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, knockBackRange);
     }
 }
