@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0988867be2b88f24c8b37e740aa0706e, type: 2}
+  - {fileID: 2100000, guid: d6b36620d0932744b80df2c308bdf5d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -256,7 +256,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0988867be2b88f24c8b37e740aa0706e, type: 2}
+  - {fileID: 2100000, guid: d6b36620d0932744b80df2c308bdf5d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -353,7 +353,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0988867be2b88f24c8b37e740aa0706e, type: 2}
+  - {fileID: 2100000, guid: d6b36620d0932744b80df2c308bdf5d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -405,6 +405,7 @@ GameObject:
   - component: {fileID: 29522365606305460}
   - component: {fileID: 29522365606305459}
   - component: {fileID: 29522365606305458}
+  - component: {fileID: 2453055566984869331}
   m_Layer: 0
   m_Name: Enemy_Grunt_Wander
   m_TagString: Untagged
@@ -445,9 +446,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _serializedExposedParameters: []
-  _boundGraphSerialization: '{"type":"NodeCanvas.BehaviourTrees.BehaviourTree","nodes":[{"dynamic":true,"_position":{"x":867.5756,"y":-8.536217},"$type":"NodeCanvas.BehaviourTrees.Selector","$id":"0"},{"_position":{"x":646.3953,"y":197.6654},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"1"},{"_condition":{"target":{"_name":"Player
-    Global Blackboard/Player","_targetVariableID":"388658b0-5d22-4680-933b-95027b95e70a"},"maxDistance":{"_value":50.0},"layerMask":{"_value":{"value":63}},"awarnessDistance":{"_name":"ChaseDistance","_targetVariableID":"fd119dc7-99ea-4c3c-82a3-c4412f7104af"},"viewAngle":{"_value":70.0},"offset":{"z":1.5},"$type":"NodeCanvas.Tasks.Conditions.CanSeeTarget"},"_position":{"x":102.9003,"y":460.8822},"$type":"NodeCanvas.BehaviourTrees.ConditionNode","$id":"2"},{"_action":{"target":{"_name":"Player
-    Global Blackboard/Player","_targetVariableID":"388658b0-5d22-4680-933b-95027b95e70a"},"speed":{"_value":4.0},"keepDistance":{"_value":2.5},"$type":"NodeCanvas.Tasks.Actions.MoveToGameObject"},"_position":{"x":408.1017,"y":469.6594},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"3"},{"_action":{"actions":[{"boolVariable":{"_name":"IsAttacking","_targetVariableID":"f9e88d3a-ecb3-4f7e-a32b-fc8f8770088a"},"$type":"NodeCanvas.Tasks.Actions.SetBoolean"},{"layerIndex":{},"stateName":{"_value":"Attack"},"waitUntilFinish":true,"$type":"NodeCanvas.Tasks.Actions.MecanimPlayAnimation"}],"$type":"NodeCanvas.Framework.ActionList"},"_position":{"x":700.4753,"y":458.5124},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"4"},{"_action":{"waitTime":{"_value":2.0},"$type":"NodeCanvas.Tasks.Actions.Wait"},"_position":{"x":884.4993,"y":461.3851},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"5"},{"_action":{"boolVariable":{"_name":"IsAttacking","_targetVariableID":"f9e88d3a-ecb3-4f7e-a32b-fc8f8770088a"},"setTo":0,"$type":"NodeCanvas.Tasks.Actions.SetBoolean"},"_position":{"x":993.3203,"y":445.3274},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"6"},{"_position":{"x":1227.549,"y":232.6316},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"7"},{"_action":{"speed":{"_value":4.0},"keepDistance":{"_value":2.0},"minWanderDistance":{"_value":5.0},"maxWanderDistance":{"_value":20.0},"repeat":false,"$type":"NodeCanvas.Tasks.Actions.Wander"},"_position":{"x":1152.234,"y":338.0368},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"8"},{"_action":{"waitTime":{"_value":2.0},"$type":"NodeCanvas.Tasks.Actions.Wait"},"_position":{"x":1289.041,"y":339.1778},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"9"}],"connections":[{"_sourceNode":{"$ref":"0"},"_targetNode":{"$ref":"1"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"0"},"_targetNode":{"$ref":"7"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"2"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"3"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"4"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"5"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"6"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"7"},"_targetNode":{"$ref":"8"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"7"},"_targetNode":{"$ref":"9"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"}],"canvasGroups":[],"localBlackboard":{"_variables":{"IsAttacking":{"_name":"IsAttacking","_id":"f9e88d3a-ecb3-4f7e-a32b-fc8f8770088a","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
+  _boundGraphSerialization: '{"type":"NodeCanvas.BehaviourTrees.BehaviourTree","nodes":[{"dynamic":true,"_position":{"x":803.6531,"y":-411.1301},"$type":"NodeCanvas.BehaviourTrees.Selector","$id":"0"},{"isDynamic":true,"_condition":{"valueA":{"_name":"FreeEnemy","_targetVariableID":"b2370ae0-a938-4f3d-a4ee-88230ff46add"},"valueB":{"_value":true},"$type":"NodeCanvas.Tasks.Conditions.CheckBoolean"},"_position":{"x":243.3393,"y":-210.6866},"$type":"NodeCanvas.BehaviourTrees.ConditionalEvaluator","$id":"1"},{"_position":{"x":274.323,"y":-33.64993},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"2"},{"_action":{"list":{"_name":"Freepoint
+    Data Global Blackboard/Freepoint","_targetVariableID":"fc197c77-b66c-4b64-838f-63b1c67e844c"},"saveAs":{"_name":"_FreePoint"},"$type":"NodeCanvas.Tasks.Actions.GetCloserGameObjectInList"},"_position":{"x":-305.1649,"y":111.0172},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"3"},{"_action":{"target":{"_name":"_FreePoint"},"speed":{"_value":4.0},"keepDistance":{"_value":0.1},"$type":"NodeCanvas.Tasks.Actions.MoveToGameObject"},"_position":{"x":238.3354,"y":112.6396},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"4"},{"_action":{"$type":"NodeCanvas.Tasks.Actions.ForceFinishGraph"},"_position":{"x":459.0063,"y":95.78293},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"5"},{"dynamic":true,"_position":{"x":696.2606,"y":150.9167},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"6"},{"_condition":{"target":{"_name":"Player
+    Global Blackboard/Player","_targetVariableID":"388658b0-5d22-4680-933b-95027b95e70a"},"maxDistance":{"_value":50.0},"layerMask":{"_value":{"value":63}},"awarnessDistance":{"_name":"ChaseDistance","_targetVariableID":"fd119dc7-99ea-4c3c-82a3-c4412f7104af"},"viewAngle":{"_value":70.0},"offset":{"z":1.5},"$type":"NodeCanvas.Tasks.Conditions.CanSeeTarget"},"_position":{"x":102.9003,"y":460.8822},"$type":"NodeCanvas.BehaviourTrees.ConditionNode","$id":"7"},{"_action":{"target":{"_name":"Player
+    Global Blackboard/Player","_targetVariableID":"388658b0-5d22-4680-933b-95027b95e70a"},"speed":{"_value":4.0},"keepDistance":{"_value":2.5},"$type":"NodeCanvas.Tasks.Actions.MoveToGameObject"},"_position":{"x":408.1017,"y":469.6594},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"8"},{"_action":{"actions":[{"boolVariable":{"_name":"IsAttacking","_targetVariableID":"f9e88d3a-ecb3-4f7e-a32b-fc8f8770088a"},"$type":"NodeCanvas.Tasks.Actions.SetBoolean"},{"layerIndex":{},"stateName":{"_value":"Attack"},"waitUntilFinish":true,"$type":"NodeCanvas.Tasks.Actions.MecanimPlayAnimation"}],"$type":"NodeCanvas.Framework.ActionList"},"_position":{"x":700.4753,"y":458.5124},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"9"},{"_action":{"waitTime":{"_value":2.0},"$type":"NodeCanvas.Tasks.Actions.Wait"},"_position":{"x":884.4993,"y":461.3851},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"10"},{"_action":{"boolVariable":{"_name":"IsAttacking","_targetVariableID":"f9e88d3a-ecb3-4f7e-a32b-fc8f8770088a"},"setTo":0,"$type":"NodeCanvas.Tasks.Actions.SetBoolean"},"_position":{"x":993.3203,"y":445.3274},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"11"},{"_position":{"x":1227.549,"y":232.6316},"$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"12"},{"_action":{"speed":{"_value":4.0},"keepDistance":{"_value":2.0},"minWanderDistance":{"_value":5.0},"maxWanderDistance":{"_value":20.0},"repeat":false,"$type":"NodeCanvas.Tasks.Actions.Wander"},"_position":{"x":1152.234,"y":338.0368},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"13"},{"_action":{"waitTime":{"_value":2.0},"$type":"NodeCanvas.Tasks.Actions.Wait"},"_position":{"x":1289.041,"y":339.1778},"$type":"NodeCanvas.BehaviourTrees.ActionNode","$id":"14"}],"connections":[{"_sourceNode":{"$ref":"0"},"_targetNode":{"$ref":"1"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"0"},"_targetNode":{"$ref":"6"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"0"},"_targetNode":{"$ref":"12"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"1"},"_targetNode":{"$ref":"2"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"2"},"_targetNode":{"$ref":"3"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"2"},"_targetNode":{"$ref":"4"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"2"},"_targetNode":{"$ref":"5"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"6"},"_targetNode":{"$ref":"7"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"6"},"_targetNode":{"$ref":"8"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"6"},"_targetNode":{"$ref":"9"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"6"},"_targetNode":{"$ref":"10"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"6"},"_targetNode":{"$ref":"11"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"12"},"_targetNode":{"$ref":"13"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"},{"_sourceNode":{"$ref":"12"},"_targetNode":{"$ref":"14"},"$type":"NodeCanvas.BehaviourTrees.BTConnection"}],"canvasGroups":[],"localBlackboard":{"_variables":{"FreeEnemy":{"_name":"FreeEnemy","_id":"b2370ae0-a938-4f3d-a4ee-88230ff46add","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"IsAttacking":{"_name":"IsAttacking","_id":"f9e88d3a-ecb3-4f7e-a32b-fc8f8770088a","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
     mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"ChaseDistance":{"_value":10.0,"_name":"ChaseDistance","_id":"fd119dc7-99ea-4c3c-82a3-c4412f7104af","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
     mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}}},"derivedData":{"repeat":true,"$type":"NodeCanvas.BehaviourTrees.BehaviourTree+DerivedSerializationData"}}'
   _boundGraphObjectReferences: []
@@ -603,6 +606,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2453055566984869331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 29522365606305456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef4db5cc05eeeff42ad3f20cd0f0e497, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &29522365732407337
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,7 +680,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0988867be2b88f24c8b37e740aa0706e, type: 2}
+  - {fileID: 2100000, guid: d6b36620d0932744b80df2c308bdf5d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
