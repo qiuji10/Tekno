@@ -7,7 +7,10 @@ public class FloatingSpeaker : MonoBehaviour
     public float verticalSpeed = 0.5f;     // Speed of floating
     public float floatHeight = 0.5f;    // Maximum height of floating
     private Vector3 startPosition;      // Starting position of the object
-    //[SerializeField] private GameObject orientation;
+    public InputReceiver receiveInput;
+    public GameObject waypoint;
+    public float moveSpeed = 5.0f;
+    [SerializeField]private Transform bulletPos;
 
     void Start()
     {
@@ -17,8 +20,28 @@ public class FloatingSpeaker : MonoBehaviour
     void Update()
     {
         float newPosition = startPosition.y + (floatHeight * Mathf.Sin(Time.time * verticalSpeed));  // Calculate new y position
-        transform.position = new Vector3(transform.position.x, newPosition, transform.position.z);   // Set new position
 
-        //transform.rotation = Quaternion.Slerp(transform.rotation, orientation.transform.rotation, verticalSpeed * Time.deltaTime);
+        transform.position = new Vector3(waypoint.transform.position.x, newPosition, waypoint.transform.position.z);   // Set new position
+
+        if(receiveInput.attack == true)
+        {
+            Debug.Log("shoot");
+            Attack();
+        }
+
+
+    }
+
+    void Attack()
+    {
+        GameObject bullet = ObjectPooling.instance.GetPooledObject();
+
+        if (bullet != null)
+        {
+            bullet.transform.position = bulletPos.position;
+            bullet.SetActive(true);
+            receiveInput.attack = false;
+        }
+
     }
 }
