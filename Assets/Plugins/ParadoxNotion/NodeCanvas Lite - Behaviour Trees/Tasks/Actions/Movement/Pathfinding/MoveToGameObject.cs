@@ -41,9 +41,12 @@ namespace NodeCanvas.Tasks.Actions
                 }
             }
 
+            // Currently ensure it will get path
+            agent.SetDestination(pos);
             lastRequest = pos;
 
             if ( !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + keepDistance.value ) {
+                //Debug.Log($"remain dist: {agent.remainingDistance}\n stop dist: {agent.stoppingDistance} keep dist: {keepDistance.value} = {agent.stoppingDistance + keepDistance.value}");
                 EndAction(true);
             }
         }

@@ -1,12 +1,13 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Windows;
 
-public class PlayerController_FixedCam : MonoBehaviour
+public class PlayerController_FixedCam : MonoBehaviour, IKnockable
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
     private Transform _playerObj;
+    public bool allowedInput = true;
+    public bool allowedAction { get; set; } = true;
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 7;
@@ -51,12 +52,24 @@ public class PlayerController_FixedCam : MonoBehaviour
 
     private void Update()
     {
+        if (!allowedInput) return;
+
         Rotation();
         IsGround();
+
+        if (!allowedAction) return;
+        if (_input.attack)
+            _input.attack = false;
+        if (_input.heavyAttack)
+            _input.heavyAttack = false;
+        if (_input.square)
+            _input.square = false;
     }
 
     private void FixedUpdate()
     {
+        if (!allowedInput) return;
+
         Jump();
         SpeedLimiter();
         Movement();
@@ -157,6 +170,8 @@ public class PlayerController_FixedCam : MonoBehaviour
             _rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
 
+        if (!allowedAction) return;
+
         if (_input.jump)
         {
             _input.jump = false;
@@ -172,10 +187,23 @@ public class PlayerController_FixedCam : MonoBehaviour
         }
     }
 
-    IEnumerator SetJump()
+    private IEnumerator SetJump()
     {
         yield return new WaitForSeconds(0.1f);
         isJumping = true;
+    }
+
+    public void Knock(Vector3 direction, float power)
+    {
+        StartCoroutine(KnockBack(direction, power));
+    }
+
+    private IEnumerator KnockBack(Vector3 direction, float power)
+    {
+        allowedInput = false;
+        _rb.AddForce(direction * power, ForceMode.Impulse);
+        yield return new WaitForSeconds(1.1f);
+        allowedInput = true;
     }
 
     private void OnDrawGizmosSelected()

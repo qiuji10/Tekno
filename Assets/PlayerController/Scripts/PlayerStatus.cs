@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerStatus : MonoBehaviour, IDamagaeble 
+public class PlayerStatus : MonoBehaviour, IDamagable 
 {
     private int health = 1000;
     public static int life = 5;
