@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class Parental : MonoBehaviour
 {
-
-    private Platform platform;
+    private PlatformDrop platform;
 
     private void Awake()
     {
-        platform = GetComponentInParent<Platform>();
-
+        platform = GetComponentInParent<PlatformDrop>();
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
