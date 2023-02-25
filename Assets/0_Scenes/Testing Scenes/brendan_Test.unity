@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1185,12 +1185,41 @@ MonoBehaviour:
   audioClip: {fileID: 8300000, guid: 26498a4b3f798ce4e9874e80613818d9, type: 3}
   barPrefab: {fileID: 5175699251726539878, guid: 7fa25766716920d4a8fa702d7030254e,
     type: 3}
-  numBars: 8
+  numBars: 10
   barDistance: 3
-  barHeight: 5
-  barWidth: 2
+  barHeight: 1
+  barWidth: 1
   barMinScale: 1
-  barMaxScale: 10
+  barMaxScale: 20
+  scaleCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1.5781097
+      value: 49.59424
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  outputMixerGroup: {fileID: 24300002, guid: a80bde27f314e423eacbf7473d1970d3, type: 2}
+  sensitivity: 50
+  noiseThreshold: 100
+  useBuffer: 1
+  useScaleCurve: 0
 --- !u!4 &1661074584
 Transform:
   m_ObjectHideFlags: 0
@@ -1199,7 +1228,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1661074582}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -37, y: 0.9, z: 0}
+  m_LocalPosition: {x: -32.02, y: 0.9, z: 8.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
