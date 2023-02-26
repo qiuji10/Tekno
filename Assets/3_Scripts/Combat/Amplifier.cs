@@ -51,8 +51,12 @@ public class Amplifier : MonoBehaviour, IDamagable
     {
         for (int i = 0; i < beats.Count; i++)
         {
-            beats[i].successCallback -= SuccessStreak;
-            beats[i].failCallback -= FailStreak;
+            if (beats[i] != null) 
+            { 
+                beats[i].successCallback -= SuccessStreak;
+                beats[i].failCallback -= FailStreak;
+            }
+
         }
     }
 
