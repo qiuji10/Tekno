@@ -16,7 +16,7 @@ public class CircleBeat : MonoBehaviour
     public int onBeatCount = 4;
     [SerializeField] private float bufferMargin = 0.3f;
 
-    private bool start, triggerNextFadeIn;
+    private bool start;
     public bool startTrace;
     public bool end { get; set; }
 

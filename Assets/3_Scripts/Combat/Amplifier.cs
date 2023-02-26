@@ -104,13 +104,12 @@ public class Amplifier : MonoBehaviour, IDamagable
             health = 100;
             //beatCanvas.gameObject.SetActive(false);
 
-            return;
-
             if (enemiesInControl.Count > 0)
             {
                 foreach (EnemyBase enemy in enemiesInControl)
                 {
-                    enemy.FreeEnemy();
+                    if (enemy.gameObject.activeInHierarchy)
+                        enemy.FreeEnemy();
                 }
             }
             else
