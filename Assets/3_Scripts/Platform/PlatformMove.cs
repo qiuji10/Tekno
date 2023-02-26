@@ -2,106 +2,63 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SonicBloom.Koreo;
-using UnityEngine.UI;
 
 public class PlatformMove : MonoBehaviour
 {
-    [Header("Select platform Type")]
-    public bool movingPlatform = false;
-    public bool flippingPlatform = false;
-
-    [Header("Platform Settings")]
+    [Header("Movement Settings")]
     [EventID]
     public string eventID;
     public Transform[] points;
-    private Transform objTransform;
-    private float movementSpeed;
-    private float flippingSpeed;
     private int currentPoint;
+    private bool isMoving;
 
-    [Header("Flip Settings")]
-    public float flipInterval = 5f; // The time between flips
-    public float flipDuration = 1f;
-    public float timeSinceLastFlip;
-    private bool flipping = false;
-
-    public Transform player { get; set; }
-    private GameObject parental;
-
+    [Header("Speed Settings")]
+    public int bpm; // Beats per minute
+    private float beatDuration; // Duration of one beat in seconds
+    private float moveTime;
 
     private void Awake()
     {
-        objTransform = GetComponent<Transform>();
-        Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicMove);
+        Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+        beatDuration = 60f / bpm;
     }
 
-    private void Start()
+    private void Update()
     {
-        //bpm = Track.BPM;
-    }
-
-    private void OnMusicMove(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
-    {
-        if(movingPlatform)
+        if (isMoving)
         {
-            //updating moving speed based on event curvedata
-            movementSpeed = evt.GetValueOfCurveAtTime(sampleTime);
-
-            //Move platform according to beat 
-            Vector3 dir = (points[currentPoint].position - transform.position).normalized;
-            transform.position = transform.position + dir * movementSpeed;
-
-            if (Vector3.Distance(transform.position, points[currentPoint].position) < 0.1f)
-            {
-                currentPoint++;
-
-                if (currentPoint >= points.Length)
-                {
-                    currentPoint = 0;
-                }
-            }
+            MoveToPoint(points[currentPoint].position);
         }
     }
 
-    public void OnMusicFlip(KoreographyEvent evt, int sampleTime, int sampleData, DeltaSlice deltaSlice)
+    private void OnMusicEvent(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
     {
-        if (flippingPlatform)
+        // Move object to next point on beat
+        if (!isMoving)
         {
-            //Flipping speed based on event curvedata
-            flippingSpeed = evt.GetValueOfCurveAtTime(sampleTime);
-
-            //Flip platform 
-            if (!flipping)
+            currentPoint++;
+            if (currentPoint >= points.Length)
             {
-                timeSinceLastFlip += Time.deltaTime;
-                if (timeSinceLastFlip >= flipInterval)
-                {
-                    StartCoroutine(Flip());
-
-                    timeSinceLastFlip = 0;
-                }
+                currentPoint = 0;
             }
-        }
 
-        IEnumerator Flip()
+            isMoving = true;
+        }
+    }
+
+    private void MoveToPoint(Vector3 targetPosition)
+    {
+        float distance = Vector3.Distance(transform.position, targetPosition);
+        float duration = distance /  beatDuration;
+
+        moveTime += Time.deltaTime;
+        transform.position = Vector3.Lerp(transform.position, targetPosition, moveTime / duration);
+
+        if (moveTime >= duration)
         {
-            parental.SetActive(false);
-            if (player != null && player.parent != null) player.SetParent(null);
-            flipping = true;
-            Quaternion startRotation = transform.rotation;
-            Quaternion endRotation = startRotation * Quaternion.Euler(180f, 0f, 0f);
-            float time = 0f;
-
-            while (time <= flipDuration)
-            {
-                time += Time.deltaTime;
-                transform.rotation = Quaternion.Lerp(startRotation, endRotation, time / flipDuration);
-
-                yield return null;
-            }
-            flipping = false;
-            parental.SetActive(true);
+            moveTime = 0f;
+            isMoving = false;
         }
-
     }
 }
+
