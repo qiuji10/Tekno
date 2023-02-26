@@ -8,7 +8,6 @@ public class BeatSequenceEditor : Editor
     private const float WindowRatio = 16f / 9f;
     private const float BeatSize = 30f;
     private Texture2D circleTexture, crossTexture, squareTexture, triangleTexture;
-    private Rect windowRect;
 
     private bool isDraggingBeat = false;
     private int beatBeingDragged = -1;
@@ -28,18 +27,17 @@ public class BeatSequenceEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-        //base.OnInspectorGUI();
+
         GUILayout.BeginHorizontal();
         // Get the BeatSequence object being inspected
         BeatSequence beatSequence = (BeatSequence)target;
-        // Draw the beatSettings list as usual
 
         // Create a rect for the window box
         float windowWidth = EditorGUIUtility.currentViewWidth - 5;
         float windowHeight = windowWidth / WindowRatio;
         Rect winRect = new Rect(0, 0, windowWidth, windowHeight);
         Handles.DrawWireCube(winRect.center, new Vector3(winRect.width, winRect.height, 0f));
-        //windowRect = GUILayoutUtility.GetRect(winRect);
+
         GUI.Box(winRect, GUIContent.none);
         
         // Calculate the size of the simulated quadrant
