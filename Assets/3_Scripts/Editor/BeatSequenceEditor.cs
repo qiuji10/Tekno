@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,6 +12,7 @@ public class BeatSequenceEditor : Editor
     private int beatBeingDragged = -1;
 
     private SerializedProperty objectProperty;
+    private Vector2 scrollPosition;
 
     private void OnEnable()
     {
@@ -28,14 +28,14 @@ public class BeatSequenceEditor : Editor
     {
         serializedObject.Update();
 
-        GUILayout.BeginHorizontal();
+        
         // Get the BeatSequence object being inspected
         BeatSequence beatSequence = (BeatSequence)target;
 
         // Create a rect for the window box
-        float windowWidth = EditorGUIUtility.currentViewWidth - 5;
+        float windowWidth = EditorGUIUtility.currentViewWidth - 10;
         float windowHeight = windowWidth / WindowRatio;
-        Rect winRect = new Rect(0, 0, windowWidth, windowHeight);
+        Rect winRect = new Rect(5, 0, windowWidth, windowHeight);
         Handles.DrawWireCube(winRect.center, new Vector3(winRect.width, winRect.height, 0f));
 
         GUI.Box(winRect, GUIContent.none);
@@ -66,8 +66,6 @@ public class BeatSequenceEditor : Editor
 
             // Draw a circle at the beat position
             Rect textureRect = new Rect(beatPos.x - BeatSize / 2f, beatPos.y - BeatSize / 2f, BeatSize, BeatSize);
-
-            
 
             SerializedProperty elementProperty = objectProperty.GetArrayElementAtIndex(i);
             SerializedProperty positionProperty = elementProperty.FindPropertyRelative("position");
@@ -116,12 +114,22 @@ public class BeatSequenceEditor : Editor
             Rect labelRect = new Rect(textureRect.x - BeatSize / 2f, textureRect.yMax, 60f, 20f);
             GUI.Label(labelRect, "Beat " + beat.onBeatCount, EditorStyles.centeredGreyMiniLabel);
         }
-        GUILayout.EndHorizontal();
+        
 
-        GUILayout.Space(windowHeight);
+        GUILayout.Space(windowHeight + 10);
 
-        EditorGUILayout.PropertyField(objectProperty, true);
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, GUILayout.Height(450));
+        EditorGUILayout.BeginVertical();
+
+        //GUI.backgroundColor = Color.cyan;
+        EditorGUILayout.PropertyField(objectProperty);
+
         serializedObject.ApplyModifiedProperties();
+
+
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.EndScrollView();
+
     }
     
     private Texture GetTextureForInputKey(KeyInput key)
@@ -138,6 +146,25 @@ public class BeatSequenceEditor : Editor
                 return triangleTexture;
             default:
                 return null;
+        }
+    }
+
+    private Color GetColor(int index)
+    {
+        KeyInput key = (KeyInput)index;
+
+        switch (key)
+        {
+            case KeyInput.Circle:
+                return Color.red;
+            case KeyInput.Cross:
+                return Color.cyan;
+            case KeyInput.Square:
+                return Color.magenta;
+            case KeyInput.Triangle:
+                return Color.green;
+            default:
+                return Color.white;
         }
     }
 }
