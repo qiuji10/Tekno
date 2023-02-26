@@ -134,6 +134,10 @@ public class Amplifier : MonoBehaviour, IDamagable
         for (int i = 0; i < beatSettings.Count; i++)
         {
             CircleBeat beat = Instantiate(circleBeatPrefab, beatCanvas.transform);
+
+            if (i != 0)
+                beat.gameObject.SetActive(false);
+
             beats.Add(beat);
         }
 
@@ -151,7 +155,6 @@ public class Amplifier : MonoBehaviour, IDamagable
             }
 
             beats[i].nextBeat = beats[i + 1];
-
         }
     }
 

@@ -17,10 +17,10 @@ public class CircleBeat : MonoBehaviour
     public int onBeatCount = 4;
     [SerializeField] private float bufferMargin = 0.3f;
 
+    private bool start;
     public bool startTrace;
     public bool end { get; set; }
 
-    private bool start; 
     private float timer, timeToBeatCount;
 
     public RectTransform rect { get; set; }
@@ -51,6 +51,8 @@ public class CircleBeat : MonoBehaviour
     private void TempoManager_OnBeat()
     {
         if (!start) start = true;
+
+        if (nextBeat) nextBeat.gameObject.SetActive(true);
     }
 
     void Start()
