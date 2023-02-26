@@ -54,7 +54,7 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
     {
         if (!allowedInput) return;
 
-        Rotation();
+        //Rotation();
         IsGround();
 
         if (!allowedAction) return;
