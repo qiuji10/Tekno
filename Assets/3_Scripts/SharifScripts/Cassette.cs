@@ -202,4 +202,9 @@ public class Cassette : MonoBehaviour
         //audioSource.pitch;
     }
 
+    void Teleport()
+    {
+
+    }
+
 }
