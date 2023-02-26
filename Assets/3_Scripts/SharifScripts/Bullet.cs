@@ -10,21 +10,19 @@ public class Bullet : MonoBehaviour
     [SerializeField]private Rigidbody rb;
     private Vector3 enemyTransform;
     private GameObject enemy;
+    private GameObject[] enemiesInArea;
 
     private void Start()
     {
         StartCoroutine(DisableAfterDelay(1f));
-        //GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
 
-        if(enemy != null)
-        {
-            enemyTransform = enemy.transform.position;
-        }
     }
 
     private void FixedUpdate()
     {
         enemy = GameObject.FindGameObjectWithTag("Enemy");
+        enemiesInArea = GameObject.FindGameObjectsWithTag("Enemy");
+
         if (enemy != null)
         {
             enemyTransform = enemy.transform.position;
@@ -49,6 +47,11 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             gameObject.SetActive(false);
+        }
+
+        foreach (var enemy in enemiesInArea)
+        {
+
         }
     }
 
