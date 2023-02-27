@@ -1,4 +1,3 @@
-using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,10 +16,10 @@ public class CircleBeat : MonoBehaviour
     public int onBeatCount = 4;
     [SerializeField] private float bufferMargin = 0.3f;
 
+    private bool start;
     public bool startTrace;
     public bool end { get; set; }
 
-    private bool start; 
     private float timer, timeToBeatCount;
 
     public RectTransform rect { get; set; }
@@ -37,10 +36,6 @@ public class CircleBeat : MonoBehaviour
         innerImg.color = new Color(innerImg.color.r, innerImg.color.g, innerImg.color.b, 0);
         outerImg.color = new Color(0, 1, 0, 0);
         inputImage.color = new Color(1, 1, 1, 0);
-
-        LeanTween.color(innerImg.rectTransform, new Color(innerImg.color.r, innerImg.color.g, innerImg.color.b, 1), 1f);
-        LeanTween.color(outerImg.rectTransform, new Color(0, 1, 0, 1), 1f);
-        LeanTween.color(inputImage.rectTransform, new Color(1, 1, 1, 1), 1f);
     }
 
     private void OnDisable()
@@ -95,7 +90,6 @@ public class CircleBeat : MonoBehaviour
 
             if (InputReceiver.ReceiveInput(key))
             {
-                Debug.Log("YO");
                 InputReceiver.ToggleOffInput(key);
 
                 if (timer > timeToBeatCount + bufferMargin)
@@ -136,7 +130,7 @@ public class CircleBeat : MonoBehaviour
 
         if (!end)
         {
-            const float lerpSpeed = 1.0f;
+            const float lerpSpeed = 1.5f;
             Vector2 outerOri = innerImg.rectTransform.sizeDelta * (1.0f + lerpSpeed * timeToBeatCount);
 
             float minFactor = 0.5f;
@@ -163,5 +157,13 @@ public class CircleBeat : MonoBehaviour
                 outerImg.rectTransform.sizeDelta = targetSize;
             }
         }
+    }
+
+    public IEnumerator FadeInBeat(float time)
+    {
+        yield return new WaitForSeconds(time);
+        LeanTween.color(innerImg.rectTransform, new Color(innerImg.color.r, innerImg.color.g, innerImg.color.b, 1), 1f);
+        LeanTween.color(outerImg.rectTransform, new Color(0, 1, 0, 1), 1f);
+        LeanTween.color(inputImage.rectTransform, new Color(1, 1, 1, 1), 1f);
     }
 }

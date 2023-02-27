@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public enum KeyInput { Circle, Cross, Square, Triangle }
 
@@ -24,7 +25,7 @@ public class Amplifier : MonoBehaviour, IDamagable
 
     [Header("Beat Settings")]
     [SerializeField] private List<CircleBeat> beats;
-    [SerializeField] private List<BeatSettings> beatSettings;
+    [SerializeField] private List<BeatSequence> beatSequences;
     [SerializeField] private Canvas beatCanvas;
     [SerializeField] private CircleBeat circleBeatPrefab;
 
@@ -44,15 +45,18 @@ public class Amplifier : MonoBehaviour, IDamagable
     void OnEnable()
     {
         LeanTween.reset();
-        ResetAmplifier();
     }
 
     void OnDisable()
     {
         for (int i = 0; i < beats.Count; i++)
         {
-            beats[i].successCallback -= SuccessStreak;
-            beats[i].failCallback -= FailStreak;
+            if (beats[i] != null) 
+            { 
+                beats[i].successCallback -= SuccessStreak;
+                beats[i].failCallback -= FailStreak;
+            }
+
         }
     }
 
@@ -60,10 +64,10 @@ public class Amplifier : MonoBehaviour, IDamagable
     {
         if (other.CompareTag("Player"))
         {
-            ResetAmplifier();
             vcam.Priority = 11;
             player.allowedAction = false;
             beatCanvas.gameObject.SetActive(true);
+            ResetAmplifier();
             beats[0].startTrace = true;
         }
     }
@@ -103,13 +107,13 @@ public class Amplifier : MonoBehaviour, IDamagable
             // TODO: Temporary make heaoth 100 and keep canvas true to loop, in future the amplifier should 1 time destroyed
             health = 100;
             //beatCanvas.gameObject.SetActive(false);
-            
 
             if (enemiesInControl.Count > 0)
             {
                 foreach (EnemyBase enemy in enemiesInControl)
                 {
-                    enemy.FreeEnemy();
+                    if (enemy.gameObject.activeInHierarchy)
+                        enemy.FreeEnemy();
                 }
             }
             else
@@ -131,9 +135,17 @@ public class Amplifier : MonoBehaviour, IDamagable
             }
         }
 
+        int rand = Random.Range(0, beatSequences.Count);
+
+        List<BeatSettings> beatSettings = beatSequences[rand].beatSettings;
+
         for (int i = 0; i < beatSettings.Count; i++)
         {
             CircleBeat beat = Instantiate(circleBeatPrefab, beatCanvas.transform);
+
+            float beatTime = TempoManager.GetTimeToBeatCount(i);
+            beat.StartCoroutine(beat.FadeInBeat(beatTime));
+
             beats.Add(beat);
         }
 
@@ -151,7 +163,6 @@ public class Amplifier : MonoBehaviour, IDamagable
             }
 
             beats[i].nextBeat = beats[i + 1];
-
         }
     }
 
@@ -175,7 +186,7 @@ public class Amplifier : MonoBehaviour, IDamagable
 
         foreach (CircleBeat b in beats)
         {
-            if (b.Equals(beat)) continue;
+            if (!b.gameObject.activeInHierarchy || b.Equals(beat)) continue;
 
             LeanTween.scale(b.rect, Vector2.zero, timeToBeat);
         }
