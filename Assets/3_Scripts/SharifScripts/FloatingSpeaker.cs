@@ -32,7 +32,7 @@ public class FloatingSpeaker : MonoBehaviour
 
     }
 
-    void Attack()
+    public void Attack()
     {
         GameObject bullet = ObjectPooling.instance.GetPooledObject();
 
