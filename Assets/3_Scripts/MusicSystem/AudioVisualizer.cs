@@ -17,7 +17,7 @@ public class AudioVisualizer : MonoBehaviour
     public float barMaxScale = 10f;
     private List<GameObject> bars;
     private AudioSource audioSource;
-    private float[] frequencyRanges = { 20, 50, 150, 250, 450, 650, 1500, 3000, 5000, 20000 };
+    private float[] frequencyRanges = { 20, 50, 150,750,850,925,1000, 1500, 3000, 5000, 20000 };
     private float[] spectrumData;
     private int sampleCount = 8192;
 
