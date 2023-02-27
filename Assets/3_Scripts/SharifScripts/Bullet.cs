@@ -10,18 +10,23 @@ public class Bullet : MonoBehaviour
     [SerializeField]private Rigidbody rb;
     private Vector3 enemyTransform;
     private GameObject enemy;
-    private GameObject[] enemiesInArea;
+    [SerializeField] private EnemyDetection enemyDetection;
+    [SerializeField] private FloatingSpeaker floatingSpeaker;
 
     private void Start()
     {
-        StartCoroutine(DisableAfterDelay(1f));
+        //StartCoroutine(DisableAfterDelay(1f));
+        enemyDetection = GameObject.FindGameObjectWithTag("Detect").GetComponent<EnemyDetection>();
+        floatingSpeaker = GameObject.FindGameObjectWithTag("Player").GetComponent<FloatingSpeaker>();
 
+        
     }
 
     private void FixedUpdate()
     {
-        enemy = GameObject.FindGameObjectWithTag("Enemy");
-        enemiesInArea = GameObject.FindGameObjectsWithTag("Enemy");
+
+        enemy = enemyDetection.closeEnemy;
+
 
         if (enemy != null)
         {
@@ -40,18 +45,16 @@ public class Bullet : MonoBehaviour
 
         StartCoroutine(DisableAfterDelay(2f));
 
+
     }
+
 
     private void OnCollisionEnter(Collision collision)
     {
+
         if (collision.gameObject.CompareTag("Enemy"))
         {
             gameObject.SetActive(false);
-        }
-
-        foreach (var enemy in enemiesInArea)
-        {
-
         }
     }
 
