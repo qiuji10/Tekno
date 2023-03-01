@@ -33,13 +33,13 @@ public class Amplifier : MonoBehaviour, IDamagable
     [SerializeField] private ParticleSystem particle;
     [SerializeField] private CinemachineVirtualCameraBase vcam;
 
-    private PlayerController_FixedCam player;
+    private PlayerController player;
 
     public bool IsAlive => health > 0;
 
     private void Awake()
     {
-        player = FindObjectOfType<PlayerController_FixedCam>();
+        player = FindObjectOfType<PlayerController>();
     }
 
     void OnEnable()
