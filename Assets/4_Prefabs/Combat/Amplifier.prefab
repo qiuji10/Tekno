@@ -10087,7 +10087,7 @@ GameObject:
   - component: {fileID: 1676857278679770201}
   - component: {fileID: 1676857278679770200}
   - component: {fileID: 1676857278679770203}
-  - component: {fileID: 1676857278679770206}
+  - component: {fileID: 3416866321354405144}
   - component: {fileID: 1676857278679770207}
   m_Layer: 0
   m_Name: Amplifier
@@ -10165,7 +10165,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1676857278679770206
+--- !u!114 &3416866321354405144
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10174,35 +10174,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1676857278679770197}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d78e985d050954c46bba1f390e534672, type: 3}
+  m_Script: {fileID: 11500000, guid: c3ac43444a287fe4fa5685648ca98090, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  enemiesInControl:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  knockBackRange: 15
-  knockBackPower: 75
-  beats: []
-  beatSettings:
+  beatSequence:
   - key: 0
-    onBeatCount: 4
-    position: {x: -551, y: -195}
-  - key: 1
-    onBeatCount: 6
-    position: {x: 390, y: -226}
-  - key: 2
-    onBeatCount: 8
-    position: {x: 633, y: 232}
+    beat: 1
+    position: {x: -500, y: 0}
   - key: 3
-    onBeatCount: 10
-    position: {x: 0, y: 150}
-  beatCanvas: {fileID: 0}
-  circleBeatPrefab: {fileID: 2610864836514038406, guid: 45df9282012fbf94a9795577eece6220,
+    beat: 1
+    position: {x: -200, y: 0}
+  - key: 1
+    beat: 1
+    position: {x: -200, y: 250}
+  - key: -1
+    beat: 1
+    position: {x: 200, y: 250}
+  - key: 2
+    beat: 1
+    position: {x: 200, y: 0}
+  - key: -1
+    beat: 1
+    position: {x: 500, y: 0}
+  beatPrefab: {fileID: 6097634576198623637, guid: acbc5fac192fb404f91e2e61695c8de8,
     type: 3}
-  particle: {fileID: 6231391339937820782}
-  vcam: {fileID: 1311112056}
+  canvas: {fileID: 0}
+  sliderVisualParent: {fileID: 0}
+  speaker: {fileID: 0}
 --- !u!135 &1676857278679770207
 SphereCollider:
   m_ObjectHideFlags: 0

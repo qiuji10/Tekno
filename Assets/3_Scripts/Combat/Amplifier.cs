@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public enum KeyInput { Circle, Cross, Square, Triangle }
+public enum KeyInput { None = -1, Circle, Cross, Square, Triangle }
 
 [Serializable]
 public class BeatSettings
