@@ -42,5 +42,13 @@ public class DisappearingPlatform : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if (Koreographer.Instance != null)
+        {
+            Koreographer.Instance.UnregisterForAllEvents(this);
+        }
+    }
+
 
 }

@@ -59,5 +59,13 @@ public class SpikedPlatform : MonoBehaviour
             moveTime = 0f;
         }
     }
+
+    private void OnDestroy()
+    {
+        if (Koreographer.Instance != null)
+        {
+            Koreographer.Instance.UnregisterForAllEvents(this);
+        }
+    }
 }
 

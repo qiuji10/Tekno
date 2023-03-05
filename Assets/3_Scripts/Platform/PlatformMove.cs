@@ -60,5 +60,13 @@ public class PlatformMove : MonoBehaviour
             isMoving = false;
         }
     }
+
+    private void OnDestroy()
+    {
+        if (Koreographer.Instance != null)
+        {
+            Koreographer.Instance.UnregisterForAllEvents(this);
+        }
+    }
 }
 
