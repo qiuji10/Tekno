@@ -1,7 +1,8 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class PlayerController_FixedCam : MonoBehaviour, IKnockable
+public class PlayerController : MonoBehaviour, IKnockable
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
@@ -13,7 +14,7 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
     [SerializeField] private float moveSpeed = 7;
     [SerializeField] private float airSpeed = 0.4f;
     [SerializeField] private float moveDrag = 4;
-    [SerializeField] private float rotationSpeed = 7f;
+    public float MoveSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
 
     [Header("Jump Settings")]
     [SerializeField] private float jumpForce = 13f;
@@ -32,7 +33,10 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
     [SerializeField] private float deceleration = 5f;
     private float velocity;
 
-    private InputReceiver _input;
+    [Header("Input Action Reference")]
+    [SerializeField] private InputActionReference movementAction;
+    [SerializeField] private InputActionReference jumpAction;
+
     private Rigidbody _rb;
     private Animator _anim;
 
@@ -40,7 +44,6 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
 
     private void Awake()
     {
-        _input = GetComponent<InputReceiver>();
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponentInChildren<Animator>();
         _playerObj = transform.GetChild(0);
@@ -50,27 +53,24 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
         movement = Animator.StringToHash("Movement");
     }
 
+    private void OnEnable()
+    {
+        jumpAction.action.performed += Jump;
+    }
+
+    private void OnDisable()
+    {
+        jumpAction.action.performed -= Jump;
+    }
+
     private void Update()
     {
-        if (!allowedInput) return;
-
-        Rotation();
         IsGround();
-
-        if (!allowedAction) return;
-        if (_input.attack)
-            _input.attack = false;
-        if (_input.heavyAttack)
-            _input.heavyAttack = false;
-        if (_input.square)
-            _input.square = false;
     }
 
     private void FixedUpdate()
     {
-        if (!allowedInput) return;
-
-        Jump();
+        JumpVelocitySmoother();
         SpeedLimiter();
         Movement();
     }
@@ -100,7 +100,8 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
 
     private void Movement()
     {
-        Vector3 _moveDir = orientation.forward * _input.move.y + orientation.right * _input.move.x;
+        Vector2 move = movementAction.action.ReadValue<Vector2>();
+        Vector3 _moveDir = orientation.forward * move.y + orientation.right * move.x;
 
         if (_moveDir == Vector3.zero)
         {
@@ -140,14 +141,6 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
         _anim.SetFloat(movement, velocity);
     }
 
-    private void Rotation()
-    {
-        Vector3 inputDir = new Vector3(_input.move.x, 0, _input.move.y);
-
-        if (inputDir != Vector3.zero)
-            _playerObj.forward = Vector3.Slerp(_playerObj.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
-    }
-
     private void SpeedLimiter()
     {
         Vector3 flatVelocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
@@ -159,7 +152,7 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
         }
     }
 
-    private void Jump()
+    private void JumpVelocitySmoother()
     {
         if (_rb.velocity.y < 0.5f)
         {
@@ -169,21 +162,19 @@ public class PlayerController_FixedCam : MonoBehaviour, IKnockable
         {
             _rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
+    }
 
+    private void Jump(InputAction.CallbackContext context)
+    {
         if (!allowedAction) return;
 
-        if (_input.jump)
+        if (isGround && !isJumping)
         {
-            _input.jump = false;
-
-            if (isGround && !isJumping)
-            {
-                StartCoroutine(SetJump());
-                _anim.ResetTrigger(jumpGrounded);
-                _anim.SetTrigger(jump);
-                _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
-                _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-            }
+            StartCoroutine(SetJump());
+            _anim.ResetTrigger(jumpGrounded);
+            _anim.SetTrigger(jump);
+            _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
+            _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         }
     }
 

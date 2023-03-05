@@ -5,33 +5,26 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum Genre
-{
-    House,
-    Elecktronic,
-    DeepDown,
-}
-
 public class Cassette : MonoBehaviour
 {
     private Genre type;
 
-    public List<SongObject> Songs = new List<SongObject>();
-    private SongObject songObject;
+    public List<Track> Songs = new List<Track>();
+    private Track songObject;
     private Button addSongButton;
-    public GameObject songListContainer;
+    //public GameObject songListContainer;
     public AudioSource audioSource;
     public GameObject SongMenu;
 
     public int songIndex = 0;
     public int rewindTime = 10;
     public bool menuOpen = false;
+
+    private Track stance;
     //public Material material;
     private void Awake()
     {
-        //Debug.Log(songObject.genre);
-        //Debug.Log(songObject.name);
-
+        
     }
 
     public void Update()
@@ -40,7 +33,7 @@ public class Cassette : MonoBehaviour
         //display song list 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            foreach (SongObject song in Songs)
+            foreach (Track song in Songs)
             {
                 Debug.Log(song);
             }
@@ -84,7 +77,7 @@ public class Cassette : MonoBehaviour
             Songs.RemoveAt(0);
         }
 
-
+        
 
 
         //UpdateCassetteVisual();
@@ -131,7 +124,7 @@ public class Cassette : MonoBehaviour
     }
 
     //add songs to the list 
-    public void AddSong(SongObject song)
+    public void AddSong(Track song)
     {
         Songs.Add(song);
     }
@@ -145,6 +138,7 @@ public class Cassette : MonoBehaviour
     }
 
     //skip current song and play next songs in the list
+    //skips to current time of the song so next songs plays at same time as previous song - ADD THIS, ADD transition sound before playing next song
     void SkipSong()
     {
         audioSource.time = 0;
@@ -200,4 +194,10 @@ public class Cassette : MonoBehaviour
         //audioSource.volume;
         //audioSource.pitch;
     }
+
+    void Teleport()
+    {
+
+    }
+
 }

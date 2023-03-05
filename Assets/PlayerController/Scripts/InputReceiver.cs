@@ -45,65 +45,65 @@ public class InputReceiver : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    public void OnMove(InputValue value)
-    {
-        MoveInput(value.Get<Vector2>());
-    }
+    //public void OnMove(InputValue value)
+    //{
+    //    MoveInput(value.Get<Vector2>());
+    //}
 
-    public void OnLook(InputValue value)
-    {
-        LookInput(value.Get<Vector2>());
-    }
+    //public void OnLook(InputValue value)
+    //{
+    //    LookInput(value.Get<Vector2>());
+    //}
 
-    public void OnCross(InputValue value)
-    {
-        JumpInput(value.isPressed);
-    }
+    //public void OnCross(InputValue value)
+    //{
+    //    JumpInput(value.isPressed);
+    //}
 
-    public void OnCircle(InputValue value)
-    {
-        AttackInput(value.isPressed);
-    }
+    //public void OnCircle(InputValue value)
+    //{
+    //    SquareInput(value.isPressed);
+    //}
 
-    public void OnSquare(InputValue value)
-    {
-        SquareInput(value.isPressed);
-    }
+    //public void OnSquare(InputValue value)
+    //{
+    //    AttackInput(value.isPressed);
+    //}
 
-    public void OnTriangle(InputValue value)
-    {
-        HeavyAttack(value.isPressed);
-    }
+    //public void OnTriangle(InputValue value)
+    //{
+    //    HeavyAttack(value.isPressed);
+    //}
 
-    public void MoveInput(Vector2 newMoveDirection)
-    {
-        move = newMoveDirection;
-    }
+    //public void MoveInput(Vector2 newMoveDirection)
+    //{
+    //    move = newMoveDirection;
+    //}
     
-    public void LookInput(Vector2 newLookDirection)
-    {
-        look = newLookDirection;
-    }
+    //public void LookInput(Vector2 newLookDirection)
+    //{
+    //    look = newLookDirection;
+    //}
 
-    public void JumpInput(bool newJump)
-    {
-        jump = newJump;
-    }
+    //public void JumpInput(bool newJump)
+    //{
+    //    jump = newJump;
+    //}
 
-    public void AttackInput(bool attack)
-    {
-        this.attack = attack;
-    }
+    //public void AttackInput(bool attack)
+    //{
+    //    this.attack = attack;
+    //}
 
-    public void HeavyAttack(bool heavyAttack)
-    {
-        this.heavyAttack = heavyAttack;
-    }
+    //public void HeavyAttack(bool heavyAttack)
+    //{
+    //    this.heavyAttack = heavyAttack;
+    //}
 
-    public void SquareInput(bool square)
-    {
-        this.square = square;
-    }
+    //public void SquareInput(bool square)
+    //{
+    //    this.square = square;
+    //}
 
     public bool AnyActionKey()
     {

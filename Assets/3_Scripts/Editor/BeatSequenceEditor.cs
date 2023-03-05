@@ -11,32 +11,38 @@ public class BeatSequenceEditor : Editor
     private bool isDraggingBeat = false;
     private int beatBeingDragged = -1;
 
+    private SerializedProperty objectProperty;
+    private Vector2 scrollPosition;
+
     private void OnEnable()
     {
         circleTexture = Resources.Load<Texture2D>("Textures/PS4_Circle");
         crossTexture = Resources.Load<Texture2D>("Textures/PS4_Cross");
         squareTexture = Resources.Load<Texture2D>("Textures/PS4_Square");
         triangleTexture = Resources.Load<Texture2D>("Textures/PS4_Triangle");
+
+        objectProperty = serializedObject.FindProperty("beatSettings");
     }
 
     public override void OnInspectorGUI()
     {
-        base.OnInspectorGUI();
+        serializedObject.Update();
 
+        
         // Get the BeatSequence object being inspected
         BeatSequence beatSequence = (BeatSequence)target;
 
         // Create a rect for the window box
-        float windowHeight = EditorGUIUtility.currentViewWidth / WindowRatio;
-        Rect windowRect = GUILayoutUtility.GetRect(EditorGUIUtility.currentViewWidth, windowHeight);
-        GUI.Box(windowRect, GUIContent.none);
+        float windowWidth = EditorGUIUtility.currentViewWidth - 10;
+        float windowHeight = windowWidth / WindowRatio;
+        Rect winRect = new Rect(5, 0, windowWidth, windowHeight);
+        Handles.DrawWireCube(winRect.center, new Vector3(winRect.width, winRect.height, 0f));
 
+        GUI.Box(winRect, GUIContent.none);
+        
         // Calculate the size of the simulated quadrant
-        float quadrantWidth = windowRect.width / 2f;
-        float quadrantHeight = windowRect.height / 2f;
-
-        // Calculate the center of the window box
-        Vector2 center = new Vector2(windowRect.xMin + quadrantWidth, windowRect.yMin + quadrantHeight);
+        float quadrantWidth = windowWidth / 2f;
+        float quadrantHeight = windowHeight / 2f;
 
         // Draw each BeatSettings object in the window box
         for (int i = 0; i < beatSequence.beatSettings.Count; i++)
@@ -46,59 +52,86 @@ public class BeatSequenceEditor : Editor
             // Calculate the position of the beat in the simulated quadrant
             float x = beat.position.x / 1920f * quadrantWidth * 2;
             float y = beat.position.y / 1080f * quadrantHeight * 2;
-            Vector2 beatPos = center + new Vector2(x, -y);
+
+            Vector2 beatPos = winRect.center + new Vector2(x, -y);
 
             // Clamp the beat position within the window box
-            float minX = windowRect.xMin + BeatSize / 2f;
-            float maxX = windowRect.xMax - BeatSize / 2f;
-            float minY = windowRect.yMin + BeatSize / 2f;
-            float maxY = windowRect.yMax - BeatSize / 2f;
+            float minX = winRect.xMin + BeatSize / 2f;
+            float maxX = winRect.xMax - BeatSize / 2f;
+            float minY = winRect.yMin + BeatSize / 2f;
+            float maxY = winRect.yMax - BeatSize / 2f;
 
-            beatPos.x = Mathf.Clamp(beatPos.x, minX, maxX);
-            beatPos.y = Mathf.Clamp(beatPos.y, minY, maxY);
+            beatPos.x = Mathf.Clamp(beatPos.x, minX - BeatSize, maxX);
+            beatPos.y = Mathf.Clamp(beatPos.y, minY - BeatSize, maxY);
 
             // Draw a circle at the beat position
             Rect textureRect = new Rect(beatPos.x - BeatSize / 2f, beatPos.y - BeatSize / 2f, BeatSize, BeatSize);
+
+            SerializedProperty elementProperty = objectProperty.GetArrayElementAtIndex(i);
+            SerializedProperty positionProperty = elementProperty.FindPropertyRelative("position");
 
             if (Event.current.type == EventType.MouseDown && textureRect.Contains(Event.current.mousePosition))
             {
                 isDraggingBeat = true;
                 beatBeingDragged = i;
-                Event.current.Use();
             }
             else if (Event.current.type == EventType.MouseUp && isDraggingBeat && beatBeingDragged == i)
             {
                 isDraggingBeat = false;
                 beatBeingDragged = -1;
-                Event.current.Use();
             }
             else if (isDraggingBeat && beatBeingDragged == i)
             {
-                // Calculate the new position of the beat texture based on the mouse position
-                Vector2 mousePos = Event.current.mousePosition;
+                // Calculate the new position of the dragged beat based on mouse position
+                Vector2 newPosition = Event.current.mousePosition - new Vector2(BeatSize / 2, BeatSize / 2);
+                newPosition.x = Mathf.Clamp(newPosition.x, minX - BeatSize, maxX);
+                newPosition.y = Mathf.Clamp(newPosition.y, minY - BeatSize, maxY);
 
-                float xRatio = (mousePos.x - windowRect.xMin) / windowRect.width;
-                float yRatio = (mousePos.y - windowRect.yMin) / windowRect.height;
-                //Debug.Log(quadrantWidth);
-                float xPos = Mathf.Lerp(minX, maxX, xRatio);
-                float yPos = Mathf.Lerp(minY, maxY, yRatio); // Y-axis is inverted in Unity Editor window
+                Vector2Int intNewPos = Vector2Int.RoundToInt(newPosition);
 
-                Vector2 mousePosInBox = new Vector2(xPos, yPos);
-                Debug.Log(mousePosInBox);
-                beat.position = new Vector2(xPos, yPos);
+                // Draw the texture at the new position
+                Rect newRect = new Rect(intNewPos.x, intNewPos.y, BeatSize, BeatSize);
+                textureRect = newRect;
+
+
+
+                // Calculate the position of the beat in the simulated quadrant
+                float new_x = (newRect.position.x - winRect.center.x) / quadrantWidth * 960f;
+                float new_y = (winRect.center.y - newRect.position.y) / quadrantHeight * 540f;
+
+                Vector2 updatedPos = new Vector2(new_x + BeatSize * 1.6f, new_y - BeatSize * 1.6f);
+                Vector2Int intUpdatePos = Vector2Int.RoundToInt(updatedPos);
+                positionProperty.vector2Value = intUpdatePos;
+
+                serializedObject.ApplyModifiedProperties();
+
+                Repaint();
             }
 
-
             GUI.DrawTexture(textureRect, GetTextureForInputKey(beat.key));
-
+            
             // Add a label for the beatSettings index
             Rect labelRect = new Rect(textureRect.x - BeatSize / 2f, textureRect.yMax, 60f, 20f);
             GUI.Label(labelRect, "Beat " + beat.onBeatCount, EditorStyles.centeredGreyMiniLabel);
         }
+        
 
-        //Debug.Log(Event.current.mousePosition);
+        GUILayout.Space(windowHeight + 10);
+
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, GUILayout.Height(450));
+        EditorGUILayout.BeginVertical();
+
+        //GUI.backgroundColor = Color.cyan;
+        EditorGUILayout.PropertyField(objectProperty);
+
+        serializedObject.ApplyModifiedProperties();
+
+
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.EndScrollView();
+
     }
-
+    
     private Texture GetTextureForInputKey(KeyInput key)
     {
         switch (key)
@@ -113,6 +146,25 @@ public class BeatSequenceEditor : Editor
                 return triangleTexture;
             default:
                 return null;
+        }
+    }
+
+    private Color GetColor(int index)
+    {
+        KeyInput key = (KeyInput)index;
+
+        switch (key)
+        {
+            case KeyInput.Circle:
+                return Color.red;
+            case KeyInput.Cross:
+                return Color.cyan;
+            case KeyInput.Square:
+                return Color.magenta;
+            case KeyInput.Triangle:
+                return Color.green;
+            default:
+                return Color.white;
         }
     }
 }

@@ -14,8 +14,9 @@ GameObject:
   - component: {fileID: 5985521480967737901}
   - component: {fileID: 5985521480967737900}
   - component: {fileID: 1195899425391659668}
+  - component: {fileID: 1340141407}
   m_Layer: 0
-  m_Name: Fixed Main Camera
+  m_Name: Brain Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35,7 +36,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 5, y: 0, z: 0.002}
 --- !u!20 &5985521480967737898
 Camera:
   m_ObjectHideFlags: 0
@@ -61,7 +62,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 50
+  field of view: 56
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -176,3 +177,21 @@ MonoBehaviour:
     m_FrequencyGain: 1
     m_Duration: 1
     m_NoiseOffsets: {x: 0, y: 0, z: 0}
+--- !u!114 &1340141407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5985521480967737896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14d0567cf2707c146a043cbf7c391865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orientation: {fileID: 0}
+  player: {fileID: 0}
+  playerObj: {fileID: 0}
+  moveAction: {fileID: -6562477656552402222, guid: 1870834d611a202418d6e474a9fb0619,
+    type: 3}
+  rotationSpeed: 7

@@ -17,7 +17,7 @@ public class AudioVisualizer : MonoBehaviour
     public float barMaxScale = 10f;
     private List<GameObject> bars;
     private AudioSource audioSource;
-    private float[] frequencyRanges = { 20, 60, 250, 500, 2000, 4000, 6000, 20000 };
+    private float[] frequencyRanges = { 20, 50, 150, 250, 450, 650, 1500, 3000, 5000, 20000 };
     private float[] spectrumData;
     private int sampleCount = 8192;
 
@@ -31,8 +31,10 @@ public class AudioVisualizer : MonoBehaviour
         for (int i = 0; i < numBars; i++)
         {
             float lowFreq = i == 0 ? 0 : frequencyRanges[i - 1];
+            float midFreq = frequencyRanges[i];
             float highFreq = frequencyRanges[i];
             int lowFreqIndex = Mathf.FloorToInt(lowFreq / audioClip.frequency * sampleCount / 2);
+            int midhFreqIndex = Mathf.FloorToInt(midFreq / audioClip.frequency * sampleCount / 2);
             int highFreqIndex = Mathf.FloorToInt(highFreq / audioClip.frequency * sampleCount / 2);
             GameObject newBar = Instantiate(barPrefab, transform);
             bars.Add(newBar);
@@ -49,10 +51,11 @@ public class AudioVisualizer : MonoBehaviour
         {
             float barHeightSum = 0f;
             int lowFreqIndex = Mathf.FloorToInt((i == 0 ? 0 : frequencyRanges[i - 1]) / audioClip.frequency * sampleCount / 2);
+            int midFreqIndex = Mathf.FloorToInt(frequencyRanges[i] / audioClip.frequency * sampleCount / 2);
             int highFreqIndex = Mathf.FloorToInt(frequencyRanges[i] / audioClip.frequency * sampleCount / 2);
             for (int j = lowFreqIndex; j <= highFreqIndex; j++)
             {
-                barHeightSum += spectrumData[j];
+                barHeightSum += spectrumData[j] * 100;
             }
             float barHeightAvg = barHeightSum / (highFreqIndex - lowFreqIndex + 1);
             float barScale = Mathf.Clamp(barHeightAvg * barMaxScale, barMinScale, barMaxScale);

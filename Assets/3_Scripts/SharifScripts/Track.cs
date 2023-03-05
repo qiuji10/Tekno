@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Song")]
-public class SongObject : ScriptableObject
+public class Track : ScriptableObject
 {
     //public string name;
     public Genre genre;
