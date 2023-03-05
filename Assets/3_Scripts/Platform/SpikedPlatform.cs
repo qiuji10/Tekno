@@ -18,6 +18,8 @@ public class SpikedPlatform : MonoBehaviour
     public int bpm; // Beats per minute
     private float beatDuration; // Duration of one beat in seconds
     private float moveTime;
+    private float distanceToTravel; // Distance the Spikes need to travel
+    private Vector3 startingPosition;
 
     private int intValueEvt;
 
@@ -27,17 +29,12 @@ public class SpikedPlatform : MonoBehaviour
         beatDuration = 60f / bpm;
     }
 
-    private void Update()
-    {
-        
-    }
-
     private void RaiseSpikes(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
     {
         intValueEvt = evt.GetIntValue();
 
         //Spikes Moving to Position Based on Koreography Evt Int
-        if(intValueEvt == 0)
+        if (intValueEvt == 0)
         {
             MoveToPoint(initialPoint.position);
         }
@@ -49,11 +46,13 @@ public class SpikedPlatform : MonoBehaviour
 
     private void MoveToPoint(Vector3 targetPosition)
     {
-        float distance = Vector3.Distance(transform.position, targetPosition);
-        float duration = distance / beatDuration;
+        startingPosition = Spikes.transform.position;
+        distanceToTravel = Vector3.Distance(startingPosition, targetPosition);
+        float duration = distanceToTravel / beatDuration;
 
         moveTime += Time.deltaTime;
-        Spikes.transform.position = Vector3.Lerp(Spikes.transform.position, targetPosition, moveTime / duration);
+        float t = moveTime / duration;
+        Spikes.transform.position = Vector3.Lerp(startingPosition, targetPosition, t);
 
         if (moveTime >= duration)
         {
@@ -61,3 +60,4 @@ public class SpikedPlatform : MonoBehaviour
         }
     }
 }
+

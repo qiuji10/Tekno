@@ -8,7 +8,7 @@ public class PlatformDrop: MonoBehaviour
     [Header("Shake and Drop Settings")]
     public bool PlayerOnPlatform = false;
     public float shakeDuration = 1.5f;
-    public float shakeTimer = 0f;
+    public float shakeTimer = 3f;
     public float dropDistance = 10;
     private float originalY;
     private bool isDropping;
