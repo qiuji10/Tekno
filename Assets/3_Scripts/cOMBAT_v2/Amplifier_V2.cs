@@ -106,12 +106,18 @@ public class Amplifier_V2 : MonoBehaviour
 
                 beatObjects.Add(beatPoint);
                 index++;
+
+                if (index > beatData.Count - 1)
+                {
+                    isSpawning = false;
+                    index = -1;
+                }
             }
-            else if (index == beatData.Count)
-            {
-                isSpawning = false;
-                index = -1;
-            }
+            //else if (index == beatData.Count)
+            //{
+            //    isSpawning = false;
+            //    index = -1;
+            //}
         }
         else
         {
