@@ -5,12 +5,19 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum Genre
+{
+    House,
+    Elecktronic,
+    DeepDown,
+}
+
 public class Cassette : MonoBehaviour
 {
     private Genre type;
 
-    public List<Track> Songs = new List<Track>();
-    private Track songObject;
+    public List<SongObject> Songs = new List<SongObject>();
+    private SongObject songObject;
     private Button addSongButton;
     //public GameObject songListContainer;
     public AudioSource audioSource;
@@ -20,8 +27,8 @@ public class Cassette : MonoBehaviour
     public int rewindTime = 10;
     public bool menuOpen = false;
 
-    private Track stance;
-    //public Material material;
+    private SongObject stance;
+    public Material material;
     private void Awake()
     {
         
@@ -33,7 +40,7 @@ public class Cassette : MonoBehaviour
         //display song list 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            foreach (Track song in Songs)
+            foreach (SongObject song in Songs)
             {
                 Debug.Log(song);
             }
@@ -80,30 +87,30 @@ public class Cassette : MonoBehaviour
         
 
 
-        //UpdateCassetteVisual();
+        UpdateCassetteVisual();
     }
 
 
 
-    /*
+    
     void UpdateCassetteVisual()
     {
-        if(type == Genre.House)
+        if(songIndex == 0)
         {
             material.color = Color.blue;
         }
 
-        if (type == Genre.Elecktronic)
-        {
-            material.color = Color.green;
-        }
-
-        if (type == Genre.DeepDown)
+        if (songIndex == 1)
         {
             material.color = Color.yellow;
         }
+
+        if (songIndex == 2)
+        {
+            material.color = Color.green;
+        }
     }
-    */
+    
 
     public void EnableMenu(bool open)
     {
@@ -124,7 +131,7 @@ public class Cassette : MonoBehaviour
     }
 
     //add songs to the list 
-    public void AddSong(Track song)
+    public void AddSong(SongObject song)
     {
         Songs.Add(song);
     }
@@ -193,11 +200,6 @@ public class Cassette : MonoBehaviour
         audioSource.Play();
         //audioSource.volume;
         //audioSource.pitch;
-    }
-
-    void Teleport()
-    {
-
     }
 
 }
