@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class Minigame_Speaker : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class Minigame_Speaker : MonoBehaviour
     public Vector2 touchPoint;
 
     private RectTransform rect;
+
+    [SerializeField] private Image debug;
 
     private void Awake()
     {
@@ -48,14 +51,17 @@ public class Minigame_Speaker : MonoBehaviour
             if (RectTransformUtility.RectangleContainsScreenPoint(rect, touchPoint))
             {
                 Debug.Log("<color=green>success</color>");
+                debug.color = Color.green;
             }
             else
             {
+                debug.color = Color.red;
                 Debug.Log("<color=red>fail</color>");
             }
         }
         else
         {
+            debug.color = Color.yellow;
             Debug.Log("<color=red>wrong key</color>");
         }
         

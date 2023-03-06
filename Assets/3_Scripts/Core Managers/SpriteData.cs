@@ -25,4 +25,5 @@ public class SpriteData : MonoBehaviour
     public Sprite cross;
     public Sprite square;
     public Sprite triangle;
+    public Sprite skip;
 }

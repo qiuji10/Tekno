@@ -125,45 +125,45 @@ public class Amplifier : MonoBehaviour, IDamagable
 
     private void ResetAmplifier()
     {
-        beats.Clear();
+        //beats.Clear();
 
-        if (beatCanvas.transform.childCount > 0)
-        {
-            for (int i = 0; i < beatCanvas.transform.childCount; i++)
-            {
-                Destroy(beatCanvas.transform.GetChild(i).gameObject);
-            }
-        }
+        //if (beatCanvas.transform.childCount > 0)
+        //{
+        //    for (int i = 0; i < beatCanvas.transform.childCount; i++)
+        //    {
+        //        Destroy(beatCanvas.transform.GetChild(i).gameObject);
+        //    }
+        //}
 
-        int rand = Random.Range(0, beatSequences.Count);
+        //int rand = Random.Range(0, beatSequences.Count);
 
-        List<BeatSettings> beatSettings = beatSequences[rand].beatSettings;
+        //List<BeatSettings> beatSettings = beatSequences[rand].beatSettings;
 
-        for (int i = 0; i < beatSettings.Count; i++)
-        {
-            CircleBeat beat = Instantiate(circleBeatPrefab, beatCanvas.transform);
+        //for (int i = 0; i < beatSettings.Count; i++)
+        //{
+        //    CircleBeat beat = Instantiate(circleBeatPrefab, beatCanvas.transform);
 
-            float beatTime = TempoManager.GetTimeToBeatCount(i);
-            beat.StartCoroutine(beat.FadeInBeat(beatTime));
+        //    float beatTime = TempoManager.GetTimeToBeatCount(i);
+        //    beat.StartCoroutine(beat.FadeInBeat(beatTime));
 
-            beats.Add(beat);
-        }
+        //    beats.Add(beat);
+        //}
 
-        for (int i = 0; i < beats.Count; i++)
-        {
-            beats[i].key = beatSettings[i].key;
-            beats[i].onBeatCount = beatSettings[i].onBeatCount;
-            beats[i].GetComponent<RectTransform>().anchoredPosition = beatSettings[i].position;
-            beats[i].failCallback += FailStreak;
-            beats[i].successCallback += SuccessStreak;
+        //for (int i = 0; i < beats.Count; i++)
+        //{
+        //    beats[i].key = beatSettings[i].key;
+        //    beats[i].onBeatCount = beatSettings[i].onBeatCount;
+        //    beats[i].GetComponent<RectTransform>().anchoredPosition = beatSettings[i].position;
+        //    beats[i].failCallback += FailStreak;
+        //    beats[i].successCallback += SuccessStreak;
 
-            if (i == beats.Count - 1)
-            {
-                break;
-            }
+        //    if (i == beats.Count - 1)
+        //    {
+        //        break;
+        //    }
 
-            beats[i].nextBeat = beats[i + 1];
-        }
+        //    beats[i].nextBeat = beats[i + 1];
+        //}
     }
 
     private IEnumerator Fail(CircleBeat beat)

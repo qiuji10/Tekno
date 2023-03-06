@@ -4,18 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum Easing { None, EaseIn, EaseOut, EaseInOut }
+
 public class Amplifier_V2 : MonoBehaviour
 {
-    [SerializeField] List<BeatData> beatSequence = new List<BeatData>();
+    [Header("Beat Settings")]
+    [SerializeField] List<BeatSequence> beatSequence = new List<BeatSequence>();
     [SerializeField] BeatPoint beatPrefab;
-    
+
+    [Header("Parent Reference")]
     [SerializeField] Canvas canvas;
     [SerializeField] Transform sliderVisualParent;
 
+    [Header("Speaker")]
+    [SerializeField] private Easing easingMethod;
     [SerializeField] private Minigame_Speaker speaker;
     private Image speakerImg;
 
     private PlayerController playerController;
+    private List<BeatData> beatData = new List<BeatData>();
     private List<BeatPoint> beatObjects = new List<BeatPoint>();
     private int index;
     private bool startGame, isSpawning;
@@ -36,6 +43,9 @@ public class Amplifier_V2 : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            LeanTween.reset();
+            int rand = Random.Range(0, beatSequence.Count);
+            beatData = beatSequence[rand].beatSettings;
             playerController.allowedAction = false;
             startGame = true;
             canvas.gameObject.SetActive(true);
@@ -62,20 +72,20 @@ public class Amplifier_V2 : MonoBehaviour
 
         if (isSpawning)
         {
-            if (index < beatSequence.Count)
+            if (index < beatData.Count)
             {
                 BeatPoint beatPoint = Instantiate(beatPrefab, canvas.transform);
-                beatPoint.rect.anchoredPosition = beatSequence[index].position;
+                beatPoint.rect.anchoredPosition = beatData[index].position;
                 speakerImg.transform.SetAsLastSibling();
 
-                if (index < beatSequence.Count - 1)
+                if (index < beatData.Count - 1)
                 {
-                    float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatSequence[index].beat);
-                    PositionUtility.CalculatePositionInfo(beatSequence[index].position, beatSequence[index + 1].position, out float xPos, out Direction dir, out float scale);
+                    float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
+                    PositionUtility.CalculatePositionInfo(beatData[index].position, beatData[index + 1].position, out float xPos, out Direction dir, out float scale);
                     beatPoint.Scale(sliderVisualParent, xPos, dir, scale, timeToBeatCount);
                 }
 
-                switch (beatSequence[index].key)
+                switch (beatData[index].key)
                 {
                     case KeyInput.Circle:
                         beatPoint.img.sprite = SpriteData.Instance.circle;
@@ -90,15 +100,14 @@ public class Amplifier_V2 : MonoBehaviour
                         beatPoint.img.sprite = SpriteData.Instance.triangle;
                         break;
                     case KeyInput.None:
-                        beatPoint.img.sprite = SpriteData.Instance.triangle;
-                        beatPoint.img.color = new Color(1, 1, 1, 0);
+                        beatPoint.img.sprite = SpriteData.Instance.skip;
                         break;
                 }
 
                 beatObjects.Add(beatPoint);
                 index++;
             }
-            else if (index == beatSequence.Count)
+            else if (index == beatData.Count)
             {
                 isSpawning = false;
                 index = -1;
@@ -106,20 +115,51 @@ public class Amplifier_V2 : MonoBehaviour
         }
         else
         {
-            if (index < beatSequence.Count - 1)
+            if (index < beatData.Count - 1)
             {
                 index++;
-                float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatSequence[index].beat);
+                float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
                 speaker.touchPoint = beatObjects[index].img.rectTransform.position;
-                speaker.key = beatSequence[index].key;
-                speakerImg.rectTransform.LeanMoveLocal(beatSequence[index].position, timeToBeatCount).setEaseInCirc();
+                speaker.key = beatData[index].key;
+
+                switch (easingMethod)
+                {
+                    case Easing.None:
+                        speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount);
+                        break;
+                    case Easing.EaseOut:
+                        speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutCirc();
+                        break;
+                    case Easing.EaseInOut:
+                        speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseInOutCirc();
+                        break;
+                    case Easing.EaseIn:
+                        speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseInCirc();
+                        break;
+                }
             }
-            else if (index == beatSequence.Count - 1)
+            else if (index == beatData.Count - 1)
             {
-                float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatSequence[index].beat);
+                float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
                 speaker.touchPoint = beatObjects[index].img.rectTransform.position;
-                speaker.key = beatSequence[index].key;
-                speakerImg.rectTransform.LeanMoveLocal(beatSequence[index].position, timeToBeatCount).setEaseInCirc();
+                speaker.key = beatData[index].key;
+
+                switch (easingMethod)
+                {
+                    case Easing.None:
+                        speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount);
+                        break;
+                    case Easing.EaseOut:
+                        speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutCirc();
+                        break;
+                    case Easing.EaseInOut:
+                        speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseInOutCirc();
+                        break;
+                    case Easing.EaseIn:
+                        speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseInCirc();
+                        break;
+                }
+
                 index++;
             }
         }
@@ -146,7 +186,7 @@ public class Amplifier_V2 : MonoBehaviour
         isSpawning = true;
         startGame = false;
 
-        canvas.gameObject.SetActive(true);
+        canvas.gameObject.SetActive(false);
     }
 }
 

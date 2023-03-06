@@ -6,7 +6,7 @@ public class BeatSequenceEditor : Editor
 {
     private const float WindowRatio = 16f / 9f;
     private const float BeatSize = 30f;
-    private Texture2D circleTexture, crossTexture, squareTexture, triangleTexture;
+    private Texture2D circleTexture, crossTexture, squareTexture, triangleTexture, skipTexture;
 
     private bool isDraggingBeat = false;
     private int beatBeingDragged = -1;
@@ -20,6 +20,7 @@ public class BeatSequenceEditor : Editor
         crossTexture = Resources.Load<Texture2D>("Textures/PS4_Cross");
         squareTexture = Resources.Load<Texture2D>("Textures/PS4_Square");
         triangleTexture = Resources.Load<Texture2D>("Textures/PS4_Triangle");
+        skipTexture = Resources.Load<Texture2D>("Textures/skip");
 
         objectProperty = serializedObject.FindProperty("beatSettings");
     }
@@ -47,7 +48,7 @@ public class BeatSequenceEditor : Editor
         // Draw each BeatSettings object in the window box
         for (int i = 0; i < beatSequence.beatSettings.Count; i++)
         {
-            BeatSettings beat = beatSequence.beatSettings[i];
+            BeatData beat = beatSequence.beatSettings[i];
 
             // Calculate the position of the beat in the simulated quadrant
             float x = beat.position.x / 1920f * quadrantWidth * 2;
@@ -93,8 +94,6 @@ public class BeatSequenceEditor : Editor
                 Rect newRect = new Rect(intNewPos.x, intNewPos.y, BeatSize, BeatSize);
                 textureRect = newRect;
 
-
-
                 // Calculate the position of the beat in the simulated quadrant
                 float new_x = (newRect.position.x - winRect.center.x) / quadrantWidth * 960f;
                 float new_y = (winRect.center.y - newRect.position.y) / quadrantHeight * 540f;
@@ -108,11 +107,31 @@ public class BeatSequenceEditor : Editor
                 Repaint();
             }
 
+            
+            if (i < beatSequence.beatSettings.Count - 1)
+            {
+                BeatData currentBeat = beatSequence.beatSettings[i];
+                BeatData nextBeat = beatSequence.beatSettings[i + 1];
+
+                // Calculate the positions of the current and next beats
+                float x1 = currentBeat.position.x / 1920f * quadrantWidth * 2;
+                float y1 = currentBeat.position.y / 1080f * quadrantHeight * 2;
+                Vector2 currentPos = winRect.center + new Vector2(x1, -y1);
+
+                float x2 = nextBeat.position.x / 1920f * quadrantWidth * 2;
+                float y2 = nextBeat.position.y / 1080f * quadrantHeight * 2;
+                Vector2 nextPos = winRect.center + new Vector2(x2, -y2);
+
+                // Draw a line between the two beats
+                Handles.color = Color.red;
+                Handles.DrawLine(currentPos, nextPos);
+            }
+
             GUI.DrawTexture(textureRect, GetTextureForInputKey(beat.key));
             
             // Add a label for the beatSettings index
             Rect labelRect = new Rect(textureRect.x - BeatSize / 2f, textureRect.yMax, 60f, 20f);
-            GUI.Label(labelRect, "Beat " + beat.onBeatCount, EditorStyles.centeredGreyMiniLabel);
+            GUI.Label(labelRect, "Beat " + beat.beat, EditorStyles.centeredGreyMiniLabel);
         }
         
 
@@ -144,27 +163,10 @@ public class BeatSequenceEditor : Editor
                 return squareTexture;
             case KeyInput.Triangle:
                 return triangleTexture;
+            case KeyInput.None:
+                return skipTexture;
             default:
                 return null;
-        }
-    }
-
-    private Color GetColor(int index)
-    {
-        KeyInput key = (KeyInput)index;
-
-        switch (key)
-        {
-            case KeyInput.Circle:
-                return Color.red;
-            case KeyInput.Cross:
-                return Color.cyan;
-            case KeyInput.Square:
-                return Color.magenta;
-            case KeyInput.Triangle:
-                return Color.green;
-            default:
-                return Color.white;
         }
     }
 }

@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewBeatSequemce", menuName = "Beat System/New Beat Sequemce")]
 public class BeatSequence : ScriptableObject
 {
-    public List<BeatSettings> beatSettings = new List<BeatSettings>();
+    public List<BeatData> beatSettings = new List<BeatData>();
 }
