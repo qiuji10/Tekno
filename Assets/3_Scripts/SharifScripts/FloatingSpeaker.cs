@@ -4,36 +4,42 @@ using UnityEngine;
 
 public class FloatingSpeaker : MonoBehaviour
 {
-    public float verticalSpeed = 0.5f;     // Speed of floating
-    public float floatHeight = 0.5f;    // Maximum height of floating
-    private Vector3 startPosition;      // Starting position of the object
-    public InputReceiver receiveInput;
-    public GameObject waypoint;
+    public GameObject player;
     public float moveSpeed = 5.0f;
-    [SerializeField]private Transform bulletPos;
+    public FloatingEffect floatingEffect;
+    private Vector3 initialPlayerPosition;
+    private Vector3 finalPosition;
+
+    //[SerializeField]private Transform bulletPos;
 
     void Start()
     {
-        startPosition = transform.position;   // Store starting position
+        initialPlayerPosition = player.transform.position;
+        finalPosition = transform.position;
     }
 
     void Update()
     {
-        float newPosition = startPosition.y + (floatHeight * Mathf.Sin(Time.time * verticalSpeed));  // Calculate new y position
 
-        transform.position = new Vector3(waypoint.transform.position.x, newPosition, waypoint.transform.position.z);   // Set new position
+        // Set target position for movement
+        float newY = floatingEffect.transform.position.y;
+        finalPosition = new Vector3(player.transform.position.x, newY, player.transform.position.z);
 
-        if(receiveInput.attack == true)
-        {
-            Debug.Log("shoot");
-            Attack();
-        }
-
+        // Move towards target using Lerp function
+        float journeyLength = Vector3.Distance(initialPlayerPosition, finalPosition);
+        float journeyTime = journeyLength / moveSpeed;
+        float fracJourney = Mathf.Clamp01(Time.deltaTime / journeyTime);
+        transform.position = Vector3.Lerp(transform.position, finalPosition, fracJourney);
 
     }
 
     public void Attack()
     {
+        /*
+        if (receiveInput.attack == true)
+        {
+            Attack();
+        }
         GameObject bullet = ObjectPooling.instance.GetPooledObject();
 
         if (bullet != null)
@@ -42,6 +48,6 @@ public class FloatingSpeaker : MonoBehaviour
             bullet.SetActive(true);
             receiveInput.attack = false;
         }
-
+        */
     }
 }

@@ -28,7 +28,7 @@ public class Cassette : MonoBehaviour
     public bool menuOpen = false;
 
     private SongObject stance;
-    //public Material material;
+    public Material material;
     private void Awake()
     {
         
@@ -87,30 +87,30 @@ public class Cassette : MonoBehaviour
         
 
 
-        //UpdateCassetteVisual();
+        UpdateCassetteVisual();
     }
 
 
 
-    /*
+    
     void UpdateCassetteVisual()
     {
-        if(type == Genre.House)
+        if(songIndex == 0)
         {
             material.color = Color.blue;
         }
 
-        if (type == Genre.Elecktronic)
-        {
-            material.color = Color.green;
-        }
-
-        if (type == Genre.DeepDown)
+        if (songIndex == 1)
         {
             material.color = Color.yellow;
         }
+
+        if (songIndex == 2)
+        {
+            material.color = Color.green;
+        }
     }
-    */
+    
 
     public void EnableMenu(bool open)
     {
@@ -200,11 +200,6 @@ public class Cassette : MonoBehaviour
         audioSource.Play();
         //audioSource.volume;
         //audioSource.pitch;
-    }
-
-    void Teleport()
-    {
-
     }
 
 }
