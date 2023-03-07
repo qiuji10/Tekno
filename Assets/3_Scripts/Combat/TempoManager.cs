@@ -7,6 +7,7 @@ public class TempoManager : MonoBehaviour
     public float delay;
     public float BPM = 120;
     [SerializeField] float bpmChnager;
+    public static float _lastBeatTime;
     public static float staticBPM;
 
     private float _lastSyncTime = 0;
@@ -63,7 +64,8 @@ public class TempoManager : MonoBehaviour
     {
         _beatsSinceSync++;
         OnBeat?.Invoke();
-        //Debug.Log($"{_beatsSinceSync} beat!");
+        _lastBeatTime = Time.time;
+        //Debug.Log($"{_lastBeatTime} beat!");
     }
 
    

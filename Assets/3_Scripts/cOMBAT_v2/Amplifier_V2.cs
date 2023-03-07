@@ -113,20 +113,33 @@ public class Amplifier_V2 : MonoBehaviour
                     index = -1;
                 }
             }
-            //else if (index == beatData.Count)
-            //{
-            //    isSpawning = false;
-            //    index = -1;
-            //}
         }
         else
         {
+            if (speaker.failed)
+            {
+                return;
+            }
+
+            if (index == -1)
+            {
+                
+                speaker.lastHitTime = Time.time;
+            }
+            speaker.startTrace = true;
             if (index < beatData.Count - 1)
             {
                 index++;
                 float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
                 speaker.touchPoint = beatObjects[index].img.rectTransform.position;
                 speaker.key = beatData[index].key;
+
+                if (beatData[index].key == KeyInput.None)
+                {
+                    float timeToInput = GetTimeToInput(index);
+                    Debug.Log(timeToInput);
+                    speaker.timeToInput = timeToInput;
+                }
 
                 switch (easingMethod)
                 {
@@ -166,8 +179,23 @@ public class Amplifier_V2 : MonoBehaviour
                         break;
                 }
 
+                speaker.startTrace = false;
                 index++;
             }
+        }
+    }
+
+    private float GetTimeToInput(int index)
+    {
+        float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
+
+        if (beatData[index].key == KeyInput.None)
+        {
+            return timeToBeatCount + GetTimeToInput(index + 1);
+        }
+        else
+        {
+            return timeToBeatCount;
         }
     }
 
@@ -191,6 +219,9 @@ public class Amplifier_V2 : MonoBehaviour
         index = 0;
         isSpawning = true;
         startGame = false;
+
+        speaker.startTrace = false;
+        speaker.failed = false;
 
         canvas.gameObject.SetActive(false);
     }

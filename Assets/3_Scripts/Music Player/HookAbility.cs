@@ -10,9 +10,12 @@ public class HookAbility : MonoBehaviour
     [SerializeField] private float horizontalThrustForce;
     [SerializeField] private float forwardThrustForce;
 
-    public Vector3 hookPoint;
-    public Vector3 handPoint;
-    [SerializeField] Vector3 grabOffset;
+    [SerializeField] private float anchor = -4;
+    [SerializeField] private float maxDistance = 5;
+
+    [SerializeField] private Vector3 hookPoint;
+    [SerializeField] private Vector3 handPoint;
+    [SerializeField] private Vector3 grabOffset;
 
     [Header("References")]
     [SerializeField] private Transform orientation;
@@ -73,14 +76,14 @@ public class HookAbility : MonoBehaviour
                 if (collide.CompareTag("Hook") && collide.TryGetComponent(out Rigidbody rb))
                 {
                     _joint = gameObject.AddComponent<SpringJoint>();
-                    _joint.anchor = new Vector3(0, -4, 0);
+                    _joint.anchor = new Vector3(0, anchor, 0);
                     _joint.autoConfigureConnectedAnchor = false;
                     _joint.connectedBody = rb;
 
                     float distanceFromPoint = Vector3.Distance(transform.position, rb.position);
 
                     //The distance grapple will try to keep from grapple point. 
-                    _joint.maxDistance = 9;
+                    _joint.maxDistance = maxDistance;
                     _joint.minDistance = distanceFromPoint * 0.25f;
 
                     //Adjust these values to fit your game.
