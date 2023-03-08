@@ -50,4 +50,12 @@ public class ColorChangeSync : MonoBehaviour
             cubeRenderer.material = materials[3];
         }
     }
+
+    private void OnDestroy()
+    {
+        if (Koreographer.Instance != null)
+        {
+            Koreographer.Instance.UnregisterForAllEvents(this);
+        }
+    }
 }

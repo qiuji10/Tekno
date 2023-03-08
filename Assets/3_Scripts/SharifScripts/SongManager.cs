@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SongManager : MonoBehaviour
 {
-    public SongObject songData;
+    public Track songData;
 
     private void Start()
     {

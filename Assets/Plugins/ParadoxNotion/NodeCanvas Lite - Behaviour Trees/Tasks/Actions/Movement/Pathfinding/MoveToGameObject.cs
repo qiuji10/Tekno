@@ -1,7 +1,6 @@
 ﻿using NodeCanvas.Framework;
 using ParadoxNotion.Design;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 using NavMeshAgent = UnityEngine.AI.NavMeshAgent;
 
 namespace NodeCanvas.Tasks.Actions

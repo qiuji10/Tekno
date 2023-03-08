@@ -26,7 +26,7 @@ public class OnBeatDetection : MonoBehaviour
         {
             float timeSinceLastBeat = Time.time - _lastBeatTime;
             float margin = TempoManager.BeatsPerMinuteToDelay(tempoManager.BPM) * bufferMargin;
-            //Debug.Log(margin);
+            Debug.Log(margin);
             if (timeSinceLastBeat > margin * 2f)
             {
                 Debug.Log($"timeSinceLastBeat:{timeSinceLastBeat}, {margin} <color=red>Input too late</color>");

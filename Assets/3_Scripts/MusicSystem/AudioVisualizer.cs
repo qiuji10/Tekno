@@ -1,57 +1,65 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using SonicBloom.Koreo;
 
 public class AudioVisualizer : MonoBehaviour
 {
-    [Header("Selected Beat Data")]
-    [EventID]
-    public string eventID;
+    [Header("Audio Clip")]
+    public AudioClip audioClip;
 
     [Header("Bar Properties")]
     public GameObject barPrefab;
+    public int numBars = 64;
     public float barDistance = 1f;
     public float barHeight = 10f;
     public float barWidth = 0.2f;
     public float barMinScale = 1f;
     public float barMaxScale = 10f;
-
     private List<GameObject> bars;
+    private AudioSource audioSource;
+    private float[] frequencyRanges = { 20, 50, 150,750,850,925,1000, 1500, 3000, 5000, 20000 };
+    private float[] spectrumData;
+    private int sampleCount = 8192;
 
-    //void Start()
-    //{
-    //    bars = new List<GameObject>();
-    //    Koreographer.Instance.RegisterForEvents(eventID, OnBeatEvent);
-    //}
+    private void Start()
+    {
+        bars = new List<GameObject>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = audioClip;
+        audioSource.Play();
+        spectrumData = new float[sampleCount];
+        for (int i = 0; i < numBars; i++)
+        {
+            float lowFreq = i == 0 ? 0 : frequencyRanges[i - 1];
+            float midFreq = frequencyRanges[i];
+            float highFreq = frequencyRanges[i];
+            int lowFreqIndex = Mathf.FloorToInt(lowFreq / audioClip.frequency * sampleCount / 2);
+            int midhFreqIndex = Mathf.FloorToInt(midFreq / audioClip.frequency * sampleCount / 2);
+            int highFreqIndex = Mathf.FloorToInt(highFreq / audioClip.frequency * sampleCount / 2);
+            GameObject newBar = Instantiate(barPrefab, transform);
+            bars.Add(newBar);
+            newBar.transform.localScale = new Vector3(barWidth, barMinScale, barWidth);
+            float xPos = (i - (numBars / 2f)) * barDistance;
+            newBar.transform.localPosition = new Vector3(xPos, barHeight / 2f, 0f);
+        }
+    }
 
-    //private void OnBeatEvent(KoreographyEvent evt)
-    //{
-    //    // Get data from Koreography
-    //    float[] frequencyData = evt.GetValueOfCurveAtTime<float[]>(0);
-
-       
-    //    for (int i = 0; i < frequencyData.Length; i++)  // Create bars for each frequency range
-    //    {
-    //        if (i >= bars.Count)
-    //        {
-    //            GameObject newBar = Instantiate(barPrefab, transform);
-    //            bars.Add(newBar);
-    //        }
-
-    //        // Scale bar based on amplitude.
-    //        float barScale = Mathf.Clamp(frequencyData[i] * barMaxScale, barMinScale, barMaxScale);
-    //        bars[i].transform.localScale = new Vector3(barWidth, barScale, barWidth);
-
-    //        //Position bar and the bar distance
-    //        float xPos = (i - (frequencyData.Length / 2f)) * barDistance;
-    //        bars[i].transform.localPosition = new Vector3(xPos, barHeight / 2f, 0f);
-    //    }
-
-    //    //Disable unused bars.
-    //    for (int i = frequencyData.Length; i < bars.Count; i++)
-    //    {
-    //        bars[i].SetActive(false);
-    //    }
-    //}
+    private void Update()
+    {
+        audioSource.GetSpectrumData(spectrumData, 0, FFTWindow.Rectangular);
+        for (int i = 0; i < numBars; i++)
+        {
+            float barHeightSum = 0f;
+            int lowFreqIndex = Mathf.FloorToInt((i == 0 ? 0 : frequencyRanges[i - 1]) / audioClip.frequency * sampleCount / 2);
+            int midFreqIndex = Mathf.FloorToInt(frequencyRanges[i] / audioClip.frequency * sampleCount / 2);
+            int highFreqIndex = Mathf.FloorToInt(frequencyRanges[i] / audioClip.frequency * sampleCount / 2);
+            for (int j = lowFreqIndex; j <= highFreqIndex; j++)
+            {
+                barHeightSum += spectrumData[j] * 100;
+            }
+            float barHeightAvg = barHeightSum / (highFreqIndex - lowFreqIndex + 1);
+            float barScale = Mathf.Clamp(barHeightAvg * barMaxScale, barMinScale, barMaxScale);
+            bars[i].transform.localScale = new Vector3(barWidth, barScale, barWidth);
+        }
+    }
 }

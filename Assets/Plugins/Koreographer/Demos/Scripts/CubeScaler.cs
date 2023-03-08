@@ -14,11 +14,14 @@ namespace SonicBloom.Koreo.Demos
 		public string eventID;
 		public float minScale = 0.5f;
 		public float maxScale = 1.5f;
-		
-		void Start()
+		public float scaleAdjustment = 1.0f;
+        private Vector3 baseScale;
+
+        void Start()
 		{
-			// Register for Koreography Events.  This sets up the callback.
-			Koreographer.Instance.RegisterForEventsWithTime(eventID, AdjustScale);
+            baseScale = transform.localScale;
+            // Register for Koreography Events.  This sets up the callback.
+            Koreographer.Instance.RegisterForEventsWithTime(eventID, AdjustScale);
 		}
 		
 		void OnDestroy()
@@ -33,15 +36,23 @@ namespace SonicBloom.Koreo.Demos
 		
 		void AdjustScale(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
 		{
-			if (evt.HasCurvePayload())
-			{
-				// Get the value of the curve at the current audio position.  This will be a
-				//  value between [0, 1] and will be used, below, to interpolate between
-				//  minScale and maxScale.
-				float curveValue = evt.GetValueOfCurveAtTime(sampleTime);
+            if (evt.HasCurvePayload())
+            {
+                // Get the value of the curve at the current audio position. This will be a
+                // value between [0, 1] and will be used, below, to adjust the scale.
+                float curveValue = evt.GetValueOfCurveAtTime(sampleTime);
 
-				transform.localScale = Vector3.one * Mathf.Lerp(minScale, maxScale, curveValue);
-			}
-		}
+                // Calculate the new scale of the cube based on the current scale and the
+                // adjustment value.
+                float currentScale = transform.localScale.x;
+                float newScale = currentScale + (scaleAdjustment * curveValue);
+
+                // Make sure the new scale is within the allowed range.
+                newScale = Mathf.Clamp(newScale, baseScale.x * 0.5f, baseScale.x * 1.5f);
+
+                // Set the new scale of the cube.
+                transform.localScale = new Vector3(newScale, newScale, newScale);
+            }
+        }
 	}
 }

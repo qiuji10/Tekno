@@ -5,19 +5,19 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum Genre
-{
-    House,
-    Elecktronic,
-    DeepDown,
-}
+//public enum Genre
+//{
+//    House,
+//    Elecktronic,
+//    DeepDown,
+//}
 
 public class Cassette : MonoBehaviour
 {
     private Genre type;
 
-    public List<SongObject> Songs = new List<SongObject>();
-    private SongObject songObject;
+    public List<Track> Songs = new List<Track>();
+    private Track songObject;
     private Button addSongButton;
     //public GameObject songListContainer;
     public AudioSource audioSource;
@@ -27,7 +27,7 @@ public class Cassette : MonoBehaviour
     public int rewindTime = 10;
     public bool menuOpen = false;
 
-    private SongObject stance;
+    private Track stance;
     public Material material;
     private void Awake()
     {
@@ -40,7 +40,7 @@ public class Cassette : MonoBehaviour
         //display song list 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            foreach (SongObject song in Songs)
+            foreach (Track song in Songs)
             {
                 Debug.Log(song);
             }
@@ -131,7 +131,7 @@ public class Cassette : MonoBehaviour
     }
 
     //add songs to the list 
-    public void AddSong(SongObject song)
+    public void AddSong(Track song)
     {
         Songs.Add(song);
     }
