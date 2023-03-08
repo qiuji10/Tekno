@@ -7,6 +7,7 @@ public class Attack : MonoBehaviour
 {
     [SerializeField] private Transform attackPos;
     [SerializeField] private float attackRadius;
+    public float applyForce;
 
     private void FixedUpdate()
     {
@@ -38,7 +39,7 @@ public class Attack : MonoBehaviour
                 if (rb != null)
                 {
                     Vector3 forceDirection = (enemy.transform.position - attackPos.position).normalized;
-                    rb.AddForce(forceDirection * 5f, ForceMode.Impulse);
+                    rb.AddForce(forceDirection * applyForce, ForceMode.Impulse);
                 }
             }
         }
