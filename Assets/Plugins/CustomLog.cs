@@ -25,20 +25,15 @@ public class CustomLog : MonoBehaviour
             myLogQueue.Dequeue();
     }
 
-    private void ClearLog()
-    {
-        foreach (Queue q in myLogQueue)
-        {
-            myLogQueue.Dequeue();
-        }
-    }
-
     void OnGUI()
     {
         GUIStyle style = new GUIStyle(GUI.skin.label);
         style.fontSize = 20;
         GUILayout.BeginArea(new Rect(Screen.width - 400, 0, 400, Screen.height));
-        GUILayout.Button("ClearLog");
+        if (GUILayout.Button("ClearLog"))
+        {
+            myLogQueue.Clear();
+        }
         GUILayout.Label("\n" + string.Join("\n", myLogQueue.ToArray()), style);
         GUILayout.EndArea();
     }

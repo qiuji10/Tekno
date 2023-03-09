@@ -59,6 +59,7 @@ public class Minigame_Speaker : MonoBehaviour
         if (failed)
         {
             Debug.Log("<color=red>out of time</color>");
+            failed = true;
             LeanTween.cancel(gameObject);
             return;
         }
@@ -80,18 +81,21 @@ public class Minigame_Speaker : MonoBehaviour
                 else
                 {
                     Debug.Log("<color=red>fail</color>");
+                    failed = true;
                     LeanTween.cancel(gameObject);
                 }
             }
             else
             {
                 Debug.Log("<color=yellow>wrong key</color>");
+                failed = true;
                 LeanTween.cancel(gameObject);
             }
         }
         else
         {
             Debug.Log("<color=cyan>out of time range</color>");
+            failed = true;
             LeanTween.cancel(gameObject);
         }
     }

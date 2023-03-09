@@ -12,9 +12,10 @@ public class Amplifier_V2 : MonoBehaviour
     [SerializeField] List<BeatSequence> beatSequence = new List<BeatSequence>();
     [SerializeField] BeatPoint beatPrefab;
 
-    [Header("Parent Reference")]
+    [Header("UI Reference")]
     [SerializeField] Canvas canvas;
     [SerializeField] Transform sliderVisualParent;
+    [SerializeField] Image amplifierCoreImg;
 
     [Header("Speaker")]
     [SerializeField] private Easing easingMethod;
@@ -46,6 +47,7 @@ public class Amplifier_V2 : MonoBehaviour
             LeanTween.reset();
             int rand = Random.Range(0, beatSequence.Count);
             beatData = beatSequence[rand].beatSettings;
+            amplifierCoreImg.rectTransform.anchoredPosition = beatData[beatData.Count - 1].position;
             playerController.allowedAction = false;
             startGame = true;
             canvas.gameObject.SetActive(true);
