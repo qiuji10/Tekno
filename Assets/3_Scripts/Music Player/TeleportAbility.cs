@@ -59,7 +59,7 @@ public class TeleportAbility : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.cyan;
+        Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, teleportRange);
     }
 }
