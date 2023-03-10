@@ -10,7 +10,7 @@ public enum Genre { House, Elecktronic, DeepDown }
 public class StanceManager : MonoBehaviour
 {
     public static Genre curStance;
-    public static event Action<Genre> OnStanceChange;
+    public static event Action<Track> OnStanceChange;
 
     [Header("Audio References")]
     [SerializeField] private AudioSource stanceAudio;
@@ -61,7 +61,7 @@ public class StanceManager : MonoBehaviour
     {
         stanceAudio.clip = tracks[index].clip;
         curStance = tracks[index].genre;
-        OnStanceChange?.Invoke(curStance);
+        OnStanceChange?.Invoke(tracks[index]);
         stanceAudio.Play();
 
         // here should ability switch

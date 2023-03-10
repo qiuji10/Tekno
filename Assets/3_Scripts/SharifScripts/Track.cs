@@ -1,3 +1,4 @@
+using SonicBloom.Koreo;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class Track : ScriptableObject
 {
     //public string name;
     public Genre genre;
+    public Koreography koreography;
     public AudioClip clip;
 
     public AudioClip Clip
