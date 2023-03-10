@@ -1882,7 +1882,7 @@ GameObject:
   - component: {fileID: 746145287}
   - component: {fileID: 746145286}
   - component: {fileID: 746145285}
-  - component: {fileID: 746145284}
+  - component: {fileID: 746145289}
   m_Layer: 0
   m_Name: TeleportNode (2)
   m_TagString: Untagged
@@ -1890,22 +1890,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &746145284
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 746145283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6404c3b93bd80fc4b9ff938cfbacb30b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  destination: {fileID: 1004173692}
-  moveSpeed: 20
-  isTeleporting: 0
-  insideTrigger: 0
 --- !u!136 &746145285
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1985,6 +1969,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &746145289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746145283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97fc039663fdaf94d96e4c230b175fac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prevTeleportPoint: {fileID: 1644683455}
+  nextTeleportPoint: {fileID: 0}
 --- !u!1 &753164631
 GameObject:
   m_ObjectHideFlags: 0
@@ -2477,7 +2475,7 @@ GameObject:
   - component: {fileID: 1004173691}
   - component: {fileID: 1004173690}
   - component: {fileID: 1004173689}
-  - component: {fileID: 1004173688}
+  - component: {fileID: 1004173693}
   m_Layer: 0
   m_Name: TeleportNode
   m_TagString: Untagged
@@ -2485,22 +2483,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1004173688
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1004173687}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6404c3b93bd80fc4b9ff938cfbacb30b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  destination: {fileID: 1644683455}
-  moveSpeed: 20
-  isTeleporting: 0
-  insideTrigger: 0
 --- !u!136 &1004173689
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2580,6 +2562,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1004173693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1004173687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97fc039663fdaf94d96e4c230b175fac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prevTeleportPoint: {fileID: 0}
+  nextTeleportPoint: {fileID: 1644683455}
 --- !u!1 &1218516633
 GameObject:
   m_ObjectHideFlags: 0
@@ -2804,11 +2800,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 4b7ed8e285e2f094aada116e244f407f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 9bfb3d29d68b31e42a56e86a07a5ebe7, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.104
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -2903,8 +2899,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 0
-  BPM: 140
-  bpmChnager: 140
+  BPM: 160
+  bpmChnager: 160
 --- !u!4 &1312062990
 Transform:
   m_ObjectHideFlags: 0
@@ -2954,6 +2950,22 @@ MonoBehaviour:
   attackRadius: 5
   sound: {fileID: 151846977}
   applyForce: 3
+--- !u!114 &1548327477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938818850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e9c043dbf4ad87478da1dfc14172cff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleportAction: {fileID: 7589435723925371507, guid: 1870834d611a202418d6e474a9fb0619,
+    type: 3}
+  teleportRange: 5
+  offsetBeatTime: 0.3
 --- !u!1 &1644683451
 GameObject:
   m_ObjectHideFlags: 0
@@ -3062,13 +3074,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1644683451}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6404c3b93bd80fc4b9ff938cfbacb30b, type: 3}
+  m_Script: {fileID: 11500000, guid: 97fc039663fdaf94d96e4c230b175fac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destination: {fileID: 746145288}
-  moveSpeed: 20
-  isTeleporting: 0
-  insideTrigger: 0
+  prevTeleportPoint: {fileID: 1004173692}
+  nextTeleportPoint: {fileID: 746145288}
 --- !u!1 &1673122077
 GameObject:
   m_ObjectHideFlags: 0
@@ -3389,7 +3399,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1933168889}
-  - component: {fileID: 1933168888}
   m_Layer: 0
   m_Name: ObjectPool
   m_TagString: Untagged
@@ -3397,18 +3406,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1933168888
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1933168887}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f398afca4cb56db4b90ba9a8568cfd79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1933168889
 Transform:
   m_ObjectHideFlags: 0
