@@ -7,7 +7,7 @@ public class PlatformMove : MonoBehaviour
 {
     [Header("Movement Settings")]
     [EventID]
-    public string eventID;
+    public List<string> eventIDs = new List<string>();
     public Transform[] points;
     private int currentPoint;
     private bool isMoving;
@@ -19,8 +19,27 @@ public class PlatformMove : MonoBehaviour
 
     private void Awake()
     {
-        Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+        foreach (string eventID in eventIDs)
+        {
+            Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+        }
+
         beatDuration = 60f / bpm;
+    }
+
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    }
+
+    private void StanceManager_OnStanceChange(Genre obj)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void OnDisable()
+    {
+        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
     }
 
     private void Update()
@@ -65,7 +84,10 @@ public class PlatformMove : MonoBehaviour
     {
         if (Koreographer.Instance != null)
         {
-            Koreographer.Instance.UnregisterForAllEvents(this);
+            foreach (string eventID in eventIDs)
+            {
+                Koreographer.Instance.UnregisterForAllEvents(this);
+            }
         }
     }
 }
