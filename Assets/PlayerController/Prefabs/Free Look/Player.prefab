@@ -1471,6 +1471,7 @@ GameObject:
   - component: {fileID: 5857127735011198083}
   - component: {fileID: 7978853882234367722}
   - component: {fileID: 1461268724}
+  - component: {fileID: 4016300956982344915}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -1602,12 +1603,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14498a66a9c9eb04fb785e3348ec28c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hookRange: 12.4
-  horizontalThrustForce: 2000
-  forwardThrustForce: 3000
-  anchor: -4
-  maxDistance: 5
-  hookPoint: {x: 0, y: 0, z: 0}
+  hookRange: 8
+  forwardThrustForce: 5000
+  throwForwardBurst: 100
+  throwDownBurst: 50
+  anchor: 7
+  angle: 100
+  damper: 5
+  spring: 5
+  offsetBeatTime: 0.3
   handPoint: {x: 0, y: 0, z: 0}
   grabOffset: {x: -0.15, y: 1.62, z: 0.77}
   orientation: {fileID: 5857127737045039209}
@@ -1619,6 +1623,22 @@ MonoBehaviour:
   shrinkAction: {fileID: -5402125171716273264, guid: 1870834d611a202418d6e474a9fb0619,
     type: 3}
   isHooking: 0
+--- !u!114 &4016300956982344915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5857127735011198082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e9c043dbf4ad87478da1dfc14172cff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleportAction: {fileID: 7589435723925371507, guid: 1870834d611a202418d6e474a9fb0619,
+    type: 3}
+  teleportRange: 5
+  offsetBeatTime: 0.3
 --- !u!1 &5857127735038007561
 GameObject:
   m_ObjectHideFlags: 0

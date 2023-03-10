@@ -1,3 +1,4 @@
+using SonicBloom.Koreo;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ public class StanceManager : MonoBehaviour
 
     [Header("Ability References")]
     [SerializeField] private HookAbility hookAbility;
+    [SerializeField] private TeleportAbility teleportAbility;
 
     [Header("Input Action References")]
     [SerializeField] private InputActionReference skipTrackAction;
@@ -66,13 +68,16 @@ public class StanceManager : MonoBehaviour
         switch (curStance)
         {
             case Genre.House:
-                hookAbility.enabled = false;
+                hookAbility.enabled = true;
+                teleportAbility.enabled = false;
                 break;
             case Genre.Elecktronic:
-                hookAbility.enabled = true;
+                hookAbility.enabled = false;
+                teleportAbility.enabled = false;
                 break;
             case Genre.DeepDown:
                 hookAbility.enabled = false;
+                teleportAbility.enabled = true;
                 break;
         }
     }
