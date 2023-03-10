@@ -1,3 +1,4 @@
+using SonicBloom.Koreo;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -173,7 +174,7 @@ public class Cassette : MonoBehaviour
             {
                 songIndex--;
                 PlaySong(songIndex);
-                audioSource.time = Songs[songIndex].clip.length - extraRewindTime;
+                audioSource.time = Songs[songIndex].koreography.SourceClip.length - extraRewindTime;
             }
             else
             {
@@ -196,7 +197,7 @@ public class Cassette : MonoBehaviour
 
     void PlaySong(int index)
     {
-        audioSource.clip = Songs[index].clip;
+        audioSource.clip = Songs[index].koreography.SourceClip;
         audioSource.Play();
         //audioSource.volume;
         //audioSource.pitch;

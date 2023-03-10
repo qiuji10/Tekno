@@ -9,6 +9,6 @@ public class SongManager : MonoBehaviour
     private void Start()
     {
         Genre genre = songData.genre;
-        AudioClip audioClip = songData.clip;
+        AudioClip audioClip = songData.koreography.SourceClip;
     }
 }

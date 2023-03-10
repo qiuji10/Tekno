@@ -1,11 +1,12 @@
 using SonicBloom.Koreo;
+using SonicBloom.Koreo.Players;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum Genre { House, Elecktronic, DeepDown }
+public enum Genre { House, Techno, Electronic }
 
 public class StanceManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class StanceManager : MonoBehaviour
     public static event Action<Track> OnStanceChange;
 
     [Header("Audio References")]
+    [SerializeField] private SimpleMusicPlayer musicPlayer;
     [SerializeField] private AudioSource stanceAudio;
     [SerializeField] List<Track> tracks = new List<Track>();
     private int trackIndex;
@@ -37,9 +39,14 @@ public class StanceManager : MonoBehaviour
         rewindTrackAction.action.performed -= RewindTrack;
     }
 
+    private void Awake()
+    {
+        musicPlayer = GetComponent<SimpleMusicPlayer>();
+    }
+
     private void Start()
     {
-        PlayTrack(0);
+        PlayTrack(1);
     }
 
     private void SkipTrack(InputAction.CallbackContext context)
@@ -59,10 +66,11 @@ public class StanceManager : MonoBehaviour
 
     private void PlayTrack(int index)
     {
-        stanceAudio.clip = tracks[index].clip;
+        stanceAudio.volume = tracks[index].volume;
+        musicPlayer.LoadSong(tracks[index].koreography);
         curStance = tracks[index].genre;
         OnStanceChange?.Invoke(tracks[index]);
-        stanceAudio.Play();
+        //stanceAudio.Play();
 
         // here should ability switch
         switch (curStance)
@@ -71,11 +79,11 @@ public class StanceManager : MonoBehaviour
                 hookAbility.enabled = true;
                 teleportAbility.enabled = false;
                 break;
-            case Genre.Elecktronic:
+            case Genre.Techno:
                 hookAbility.enabled = false;
                 teleportAbility.enabled = false;
                 break;
-            case Genre.DeepDown:
+            case Genre.Electronic:
                 hookAbility.enabled = false;
                 teleportAbility.enabled = true;
                 break;

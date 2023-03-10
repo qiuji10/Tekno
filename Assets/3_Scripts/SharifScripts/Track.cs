@@ -6,20 +6,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Song")]
 public class Track : ScriptableObject
 {
-    //public string name;
     public Genre genre;
+    public int bpm;
     public Koreography koreography;
-    public AudioClip clip;
-
-    public AudioClip Clip
-    {
-        get { return clip; }
-        set { clip = value; }
-    }
-
-    public Genre Genre
-    {
-        get { return genre; }
-        set { genre = value; }
-    }
+    [Range(0f, 1f)] public float volume;
 }

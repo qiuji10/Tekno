@@ -16,6 +16,22 @@ public class TempoManager : MonoBehaviour
 
     public static event Action OnBeat;
 
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    }
+
+    private void OnDisable()
+    {
+        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
+    }
+
+    private void StanceManager_OnStanceChange(Track track)
+    {
+        bpmChnager = track.bpm;
+        SyncBPM();
+    }
+
     void Update()
     {
         //Check beat timer and trigger beat if neccessary
@@ -34,8 +50,6 @@ public class TempoManager : MonoBehaviour
                 Beat();
             }
         }
-
-        
     }
 
     public static float BeatsPerMinuteToDelay(float beatsPerMinute)
@@ -43,7 +57,6 @@ public class TempoManager : MonoBehaviour
         //beats per second = beatsPerMinute / 60
         return 1.0f / (beatsPerMinute / 60.0f);
     }
-
 
     public float TimeSinceLastBeat()
     {
@@ -60,10 +73,7 @@ public class TempoManager : MonoBehaviour
         _beatsSinceSync++;
         OnBeat?.Invoke();
         _lastBeatTime = Time.time;
-        //Debug.Log($"{_lastBeatTime} beat!");
     }
-
-   
 
     [Button]
     /// <summary>
