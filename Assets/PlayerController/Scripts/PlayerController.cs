@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -70,6 +71,8 @@ public class PlayerController : MonoBehaviour, IKnockable
 
     private void FixedUpdate()
     {
+        if (!allowedInput) return;
+
         JumpVelocitySmoother();
         SpeedLimiter();
         Movement();
@@ -166,7 +169,7 @@ public class PlayerController : MonoBehaviour, IKnockable
 
     private void Jump(InputAction.CallbackContext context)
     {
-        if (!allowedAction) return;
+        if (!allowedAction || !allowedInput) return;
 
         if (isGround && !isJumping)
         {

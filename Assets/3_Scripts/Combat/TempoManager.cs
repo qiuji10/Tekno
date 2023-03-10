@@ -16,11 +16,6 @@ public class TempoManager : MonoBehaviour
 
     public static event Action OnBeat;
 
-    void Awake()
-    {
-        staticBPM = BPM;
-    }
-
     void Update()
     {
         //Check beat timer and trigger beat if neccessary
