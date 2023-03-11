@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum KeyInput { None, Circle, Cross, Square, Triangle }
+
 public class Amplifier_V2 : MonoBehaviour
 {
     [Header("Beat Settings")]
@@ -95,6 +97,9 @@ public class Amplifier_V2 : MonoBehaviour
         speaker.OnComboSuccess += Speaker_OnComboSuccess;
         speaker.totalInputNeeded = totalInputNeeded;
         speaker.successInput = 0;
+        speaker.totalBeat = beatData.Count;
+        speaker.currentBeat = 0;
+        speaker.touchPoint = beatData[index].position;
 
         float timeToBeatCount = TempoManager.GetTimeToBeatCount(1);
         speakerImg.rectTransform.LeanMoveLocal(new Vector2(-900, 0), timeToBeatCount);
@@ -223,6 +228,7 @@ public class Amplifier_V2 : MonoBehaviour
             if (index < beatData.Count - 1)
             {
                 speaker.startTrace = true;
+                speaker.currentBeat++;
                 index++;
                 float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
                 speaker.touchPoint = beatObjects[index].img.rectTransform.position;
@@ -242,6 +248,7 @@ public class Amplifier_V2 : MonoBehaviour
             {
                 //Debug.Log("<color=cyan>stop trace</color>");
                 //speaker.startTrace = false;
+                speaker.currentBeat++;
                 index++;
             }
         }

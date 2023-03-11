@@ -8,6 +8,8 @@ public class HookAbility : MonoBehaviour
     [Header("Hook Settings")]
     [SerializeField] private float hookRange = 10;
     [SerializeField] private float forwardThrustForce;
+    [SerializeField] private float throwForwardBurst = 50f;
+    [SerializeField] private float throwDownBurst = 25f;
 
     [SerializeField] private float anchor = -4;
     [SerializeField] private float angle = 45;
@@ -64,7 +66,14 @@ public class HookAbility : MonoBehaviour
             if (Time.time > TempoManager._lastBeatTime - offsetBeatTime && Time.time < TempoManager._lastBeatTime + offsetBeatTime)
             {
                 Debug.Log($"<color=magenta>Release On Beat");
-                _rb.AddForce(orientation.forward * 2);
+                Vector3 dir = orientation.TransformDirection(orientation.forward);
+                Vector3 realDir = new Vector3(dir.x, 0f, dir.z); 
+                _rb.AddForce(realDir * throwForwardBurst, ForceMode.Impulse);
+            }
+            else
+            {
+                Vector3 dir = -orientation.up;
+                _rb.AddForce(dir * throwDownBurst, ForceMode.Impulse);
             }
 
             isHooking = false;
@@ -141,6 +150,5 @@ public class HookAbility : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, hookRange);
         Gizmos.DrawSphere(transform.position + grabOffset, 0.1f);
-        
     }
 }
