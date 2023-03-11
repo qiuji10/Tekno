@@ -9,6 +9,13 @@ public class TeleportAbility : MonoBehaviour
     [SerializeField] private float teleportRange = 5f;
     [SerializeField] private float offsetBeatTime = 0.3f;
 
+    [SerializeField] private Rigidbody _rb;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+    }
+
     private void OnEnable()
     {
         teleportAction.action.performed += Teleport;
@@ -30,6 +37,7 @@ public class TeleportAbility : MonoBehaviour
             {
                 if (tpNode.nextTeleportPoint != null)
                 {
+                    Debug.LogWarning("teleport times");
                     nextTeleportPoint = tpNode.nextTeleportPoint;
                 }
 
@@ -41,18 +49,20 @@ public class TeleportAbility : MonoBehaviour
             }
         }
 
+        _rb.isKinematic = true;
+
         if (Time.time > TempoManager._lastBeatTime - offsetBeatTime && Time.time < TempoManager._lastBeatTime + offsetBeatTime)
         {
             if (nextTeleportPoint != null)
             {
-                transform.position = nextTeleportPoint.position;
+                LeanTween.moveLocal(gameObject, nextTeleportPoint.position, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => { _rb.isKinematic = false; });
             }
         }
         else
         {
             if (prevTeleportPoint != null)
             {
-                transform.position = prevTeleportPoint.position;
+                LeanTween.moveLocal(gameObject, prevTeleportPoint.position, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => { _rb.isKinematic = false; });
             }
         }
     }
