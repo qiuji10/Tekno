@@ -1,9 +1,10 @@
+using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 
 public class Minigame_Speaker : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class Minigame_Speaker : MonoBehaviour
     public float offsetTime = 0.1f, lastHitTime, timeToInput;
     public int totalInputNeeded, successInput;
     public int totalBeat, currentBeat;
+
+    [Header("Visuals")]
+    [SerializeField] private UIParticleSystem successParticle;
+    [SerializeField] private UIParticleSystem failParticle;
 
     private bool detectedEnterRegion;
 
@@ -47,6 +52,12 @@ public class Minigame_Speaker : MonoBehaviour
         triangleAction.action.performed -= OnPressed;
     }
 
+    [Button]
+    public void tep()
+    {
+        successParticle.StartParticleEmission();
+    }
+
     private void Update()
     {
         if (startTrace && !failed)
@@ -62,6 +73,7 @@ public class Minigame_Speaker : MonoBehaviour
                 {
                     Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
                     OnHitFailure?.Invoke();
+                    failParticle.StartParticleEmission();
                     detectedEnterRegion = false;
                     startTrace = false;
                     failed = true;
@@ -75,6 +87,7 @@ public class Minigame_Speaker : MonoBehaviour
                 {
                     Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
                     OnHitFailure?.Invoke();
+                    failParticle.StartParticleEmission();
                     detectedEnterRegion = false;
                     startTrace = false;
                     failed = true;
@@ -101,7 +114,7 @@ public class Minigame_Speaker : MonoBehaviour
                     lastHitTime = Time.time;
                     startTrace = false;
                     detectedEnterRegion = false;
-
+                    successParticle.StartParticleEmission();
                     successInput++;
 
                     if (successInput == totalInputNeeded)
@@ -113,6 +126,7 @@ public class Minigame_Speaker : MonoBehaviour
                 {
                     Debug.Log("<color=red>fail</color>");
                     OnHitFailure?.Invoke();
+                    failParticle.StartParticleEmission();
                     startTrace = false;
                     detectedEnterRegion = false;
                     failed = true;
@@ -123,6 +137,7 @@ public class Minigame_Speaker : MonoBehaviour
             {
                 Debug.Log("<color=yellow>wrong key</color>");
                 OnHitFailure?.Invoke();
+                failParticle.StartParticleEmission();
                 startTrace = false;
                 detectedEnterRegion = false;
                 failed = true;
@@ -133,6 +148,7 @@ public class Minigame_Speaker : MonoBehaviour
         {
             Debug.Log("<color=cyan>out of time range</color>");
             OnHitFailure?.Invoke();
+            failParticle.StartParticleEmission();
             startTrace = false;
             detectedEnterRegion = false;
             failed = true;

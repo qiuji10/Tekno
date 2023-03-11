@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour, IKnockable
 
     private Rigidbody _rb;
     private Animator _anim;
+    public Animator Anim { get { return _anim; } set { _anim = value; } }
 
     private int movement, jump, jumpGrounded;
 
