@@ -17,6 +17,7 @@ public class Minigame_Speaker : MonoBehaviour
     public bool startTrace, failed;
     public float offsetTime = 0.1f, lastHitTime, timeToInput;
     public int totalInputNeeded, successInput;
+    public int totalBeat, currentBeat;
 
     private bool detectedEnterRegion;
 
@@ -50,6 +51,7 @@ public class Minigame_Speaker : MonoBehaviour
     {
         if (startTrace && !failed)
         {
+            // TODO: Offset in future for calibration
             if (RectTransformUtility.RectangleContainsScreenPoint(rect, touchPoint) && key != KeyInput.None)
             {
                 detectedEnterRegion = true;
@@ -64,6 +66,18 @@ public class Minigame_Speaker : MonoBehaviour
                     startTrace = false;
                     failed = true;
                     LeanTween.cancel(gameObject);
+                }
+            }
+
+            if (currentBeat == totalBeat)
+            {
+                if (Time.time > TempoManager._lastBeatTime + timeToInput + offsetTime)
+                {
+                    Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
+                    OnHitFailure?.Invoke();
+                    detectedEnterRegion = false;
+                    startTrace = false;
+                    failed = true;
                 }
             }
         }
