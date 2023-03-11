@@ -5,9 +5,11 @@ using SonicBloom.Koreo;
 
 public class PlatformMove : MonoBehaviour
 {
+    public Track track;
+
     [Header("Movement Settings")]
     [EventID]
-    public string eventID;
+    public List<string> eventIDs = new List<string>();
     public Transform[] points;
     private int currentPoint;
     private bool isMoving;
@@ -17,9 +19,38 @@ public class PlatformMove : MonoBehaviour
     private float beatDuration; // Duration of one beat in seconds
     private float moveTime;
 
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    }
+
+    private void StanceManager_OnStanceChange(Track obj)
+    {
+        // Get the list of event IDs from the track
+        List<string> newEventIDs = new List<string>(obj.koreography.GetEventIDs());
+
+        // Add the new event IDs to the current list of event IDs
+        eventIDs.AddRange(newEventIDs);
+
+        // Register for the new event IDs
+        foreach (string eventID in newEventIDs)
+        {
+            Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+        }
+    }
+
+    private void OnDisable()
+    {
+        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
+    }
+
     private void Awake()
     {
-        Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+        foreach (string eventID in eventIDs)
+        {
+            Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+        }
+
         beatDuration = 60f / bpm;
     }
 
@@ -49,7 +80,7 @@ public class PlatformMove : MonoBehaviour
     private void MoveToPoint(Vector3 targetPosition)
     {
         float distance = Vector3.Distance(transform.position, targetPosition);
-        float duration = distance /  beatDuration;
+        float duration = distance / beatDuration;
 
         moveTime += Time.deltaTime;
         transform.position = Vector3.Lerp(transform.position, targetPosition, moveTime / duration);
@@ -65,8 +96,10 @@ public class PlatformMove : MonoBehaviour
     {
         if (Koreographer.Instance != null)
         {
-            Koreographer.Instance.UnregisterForAllEvents(this);
+            foreach (string eventID in eventIDs)
+            {
+                Koreographer.Instance.UnregisterForAllEvents(this);
+            }
         }
     }
 }
-
