@@ -32,7 +32,10 @@ public class MusicReactToWalls : MonoBehaviour
 
             case Genre.Electronic:
                 speed = 3.0f;
-                gridColor = new Color(0.564901888f, 5.23955345f, 0.173004225f, 0);
+                gridColor = new Color(47f / 255f, 219f / 255f, 7f / 255f, 0f);
+
+                
+
                 break;
 
             default:
