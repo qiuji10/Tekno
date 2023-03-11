@@ -44,11 +44,13 @@ public class HookAbility : MonoBehaviour
     private void OnEnable()
     {
         hookAction.action.performed += Hook;
+        hookAction.action.canceled += Hook;
     }
 
     private void OnDisable()
     {
         hookAction.action.performed -= Hook;
+        hookAction.action.canceled -= Hook;
     }
 
     private void Update()
@@ -80,6 +82,7 @@ public class HookAbility : MonoBehaviour
             _playerController.transform.eulerAngles = Vector3.zero;
             _rb.constraints = RigidbodyConstraints.FreezeRotation;
             _playerController.MoveSpeed = oriMoveSpeed;
+            _playerController.Anim.SetTrigger("EndSwing");
             lineRenderer.positionCount = 0;
             Destroy(_joint);
             _joint = null;
@@ -117,8 +120,8 @@ public class HookAbility : MonoBehaviour
 
                     oriMoveSpeed = _playerController.MoveSpeed;
                     _playerController.MoveSpeed *= 1.5f;
-
                     _playerController.transform.rotation = transform.rotation;
+                    _playerController.Anim.SetTrigger("StartSwing");
 
                     lineRenderer.positionCount = 2;
                     lineRenderer.SetPosition(0, rb.position);
