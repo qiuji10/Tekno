@@ -4,20 +4,23 @@ using UnityEngine;
 using SonicBloom.Koreo;
 
 public class PlatformMove : MonoBehaviour
-{
-    public Track track;
-
-    [Header("Movement Settings")]
+{ 
+    [Header("Moving Platform Settings")]
     [EventID]
-    public List<string> eventIDs = new List<string>();
+    public string eventID;
     public Transform[] points;
     private int currentPoint;
-    private bool isMoving;
 
-    [Header("Speed Settings")]
-    public int bpm; // Beats per minute
+    private bool isMoving;
+    private int bpm = 140; // Beats per minute
     private float beatDuration; // Duration of one beat in seconds
     private float moveTime;
+
+    private Track track;
+    public static Track currentTrack;
+
+    private GameObject parental;
+    public Transform player { get; set; }
 
     private void OnEnable()
     {
@@ -26,17 +29,27 @@ public class PlatformMove : MonoBehaviour
 
     private void StanceManager_OnStanceChange(Track obj)
     {
-        // Get the list of event IDs from the track
-        List<string> newEventIDs = new List<string>(obj.koreography.GetEventIDs());
-
-        // Add the new event IDs to the current list of event IDs
-        eventIDs.AddRange(newEventIDs);
-
-        // Register for the new event IDs
-        foreach (string eventID in newEventIDs)
+        // Determine which event ID to use based on the track's genre
+        if (obj.genre.ToString() == "House")
         {
-            Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+            eventID = "120_House_PlatformMove";
+            bpm = 120;
         }
+        else if (obj.genre.ToString() == "Techno")
+        {
+            eventID = "140_Techno_PlatformMove";
+            bpm = 140;
+        }
+        else if (obj.genre.ToString() == "Electronic")
+        {
+            eventID = "160_Electro_PlatformMove";
+            bpm = 160;
+        }
+
+        // Set the current track
+        currentTrack = obj;
+
+        Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
     }
 
     private void OnDisable()
@@ -46,11 +59,10 @@ public class PlatformMove : MonoBehaviour
 
     private void Awake()
     {
-        foreach (string eventID in eventIDs)
-        {
-            Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
-        }
+        // Set the track field to the current track
+        track = currentTrack;
 
+        //Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
         beatDuration = 60f / bpm;
     }
 
@@ -96,10 +108,7 @@ public class PlatformMove : MonoBehaviour
     {
         if (Koreographer.Instance != null)
         {
-            foreach (string eventID in eventIDs)
-            {
-                Koreographer.Instance.UnregisterForAllEvents(this);
-            }
+            Koreographer.Instance.UnregisterForAllEvents(this);
         }
     }
 }

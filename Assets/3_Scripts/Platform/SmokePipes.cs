@@ -6,7 +6,7 @@ using UnityEngine;
 public class SmokePipes : MonoBehaviour
 {
     [Header("Door Settings")]
-    public GameObject leftDoor;
+    public GameObject Door;
 
     [Header("Event Settings")]
     [EventID]
@@ -15,19 +15,64 @@ public class SmokePipes : MonoBehaviour
     private Quaternion leftDoorRotationOpen;
     private Quaternion leftDoorRotationClose;
 
-    [Header("Speed Settings")]
-    public float rotateDuration = 0.5f;
+    public float rotateDuration;
     private float rotateTime;
 
     private Coroutine rotationCoroutine = null;
     public ParticleSystem smokeParticles;
 
+    private int bpm = 140;
+    private Track track;
+    public static Track currentTrack;
+
+    private GameObject parental;
+    public Transform player { get; set; }
+
     private void Awake()
     {
-        Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
-        leftDoorRotationOpen = leftDoor.transform.rotation;
-        leftDoorRotationClose = Quaternion.Euler(0, -90f, 0);
+        // Set the track field to the current track
+        track = currentTrack;
 
+        Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+        rotateDuration = 60f / bpm;
+
+        leftDoorRotationOpen = Door.transform.rotation;
+        leftDoorRotationClose = Quaternion.Euler(0, -90f, 0);
+    }
+
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    }
+
+    private void StanceManager_OnStanceChange(Track obj)
+    {
+        // Determine which event ID to use based on the track's genre
+        if (obj.genre.ToString() == "House")
+        {
+            eventID = "120_House_IntPayload";
+            bpm = 120;
+        }
+        else if (obj.genre.ToString() == "Techno")
+        {
+            eventID = "140_Techno_IntPayload";
+            bpm = 140;
+        }
+        else if (obj.genre.ToString() == "Electronic")
+        {
+            eventID = "160_Electro_IntPayload";
+            bpm = 160;
+        }
+
+        // Set the current track
+        currentTrack = obj;
+
+        Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+    }
+
+    private void OnDisable()
+    {
+        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
     }
 
     private void OnMusicEvent(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
@@ -36,7 +81,7 @@ public class SmokePipes : MonoBehaviour
         {
             if (!isOpen)
             {
-                rotationCoroutine = StartCoroutine(RotateDoorsOpen(leftDoor, -90f));
+                rotationCoroutine = StartCoroutine(RotateDoorsOpen(Door, -90f));
                 smokeParticles.Play();
                 isOpen = true;
             }
@@ -45,7 +90,7 @@ public class SmokePipes : MonoBehaviour
         {
             if (isOpen)
             {
-                rotationCoroutine = StartCoroutine(RotateDoorsClose(leftDoor, 0f));
+                rotationCoroutine = StartCoroutine(RotateDoorsClose(Door, 0f));
                 isOpen = false;
                 smokeParticles.Stop();
             }
