@@ -21,20 +21,22 @@ public class MusicReactToWalls : MonoBehaviour
         switch (obj.genre)
         {
             case Genre.House:
-                speed = 1.0f;
-                gridColor = new Color(3.92452836f, 3.58071637f, 0, 0);
+                speed = 0.1f;
+                gridColor = new Color(1.72079539f, 1.57664502f, 0, 0);
+               
                 break;
 
             case Genre.Techno:
-                speed = 2.2f;
+                speed = 0.5f;
                 gridColor = new Color(0, 0.205526888f, 3.92452836f, 0);
                 break;
 
             case Genre.Electronic:
-                speed = 3.0f;
-                gridColor = new Color(47f / 255f, 219f / 255f, 7f / 255f, 0f);
+                speed = 1.5f;
+                gridColor = new Color(0.0313725509f, 1.74117649f, 0, 0);
+               
 
-                
+
 
                 break;
 
