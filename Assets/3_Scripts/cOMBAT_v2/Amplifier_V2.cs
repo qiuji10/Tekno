@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum KeyInput { None, Circle, Cross, Square, Triangle }
+
 public class Amplifier_V2 : MonoBehaviour
 {
     [Header("Beat Settings")]
