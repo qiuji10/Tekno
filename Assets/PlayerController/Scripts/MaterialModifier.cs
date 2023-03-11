@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.Rendering;
 
 public class MaterialModifier : MonoBehaviour
@@ -14,6 +15,43 @@ public class MaterialModifier : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float glitchFadeIn = 0.25f;
     [SerializeField] private float glitchFadeOut = 0.25f;
+
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    }
+
+    private void StanceManager_OnStanceChange(Track track)
+    {
+        string baseString = null, emissionString = null;
+
+        switch (track.genre)
+        {
+            case Genre.House:
+                baseString = "#988C00";
+                emissionString = "#605400";
+                break;
+            case Genre.Techno:
+                baseString = "#0042FF";
+                emissionString = "#000316";
+                break;
+            case Genre.Electronic:
+                
+                baseString = "#009A04";
+                emissionString = "#003A00";
+                break;
+        }
+
+        ColorUtility.TryParseHtmlString(baseString, out Color baseColor);
+        ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
+        m_Materials[1].SetColor("_BaseColor", baseColor);
+        m_Materials[1].SetColor("_Emission", emissionColor);
+    }
+
+    private void OnDisable()
+    {
+        
+    }
 
     public void StopCoroutines()
     {
