@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +37,8 @@ public class Amplifier_V2 : MonoBehaviour
     private EventInvoker eventInvoker;
     private List<BeatData> beatData = new List<BeatData>();
     private List<BeatPoint> beatObjects = new List<BeatPoint>();
+    private List<Slider> speakerSliders = new List<Slider>();
+    private List<Slider> amplifierSliders = new List<Slider>();
     private int index, totalRound, speakerHealth, amplifierHealth;
     private bool startGame, isSpawning;
 
@@ -49,6 +52,9 @@ public class Amplifier_V2 : MonoBehaviour
 
         speakerHealthShake = speakerHealthBar.GetComponent<UI_Shake>();
         amplifierHealthShake = amplifierHealthBar.GetComponent<UI_Shake>();
+
+        speakerSliders = speakerHealthBar.GetComponentsInChildren<Slider>().ToList();
+        amplifierSliders = amplifierHealthBar.GetComponentsInChildren<Slider>().ToList();
 
         isSpawning = true;
 
@@ -141,6 +147,16 @@ public class Amplifier_V2 : MonoBehaviour
     {
         if (amplifierHealth <= 0)
         {
+            foreach (Slider speakerSlider in speakerSliders)
+            {
+                speakerSlider.value = 1f;
+            }
+
+            foreach (Slider amplifierSlider in amplifierSliders)
+            {
+                amplifierSlider.value = 1f;
+            }
+
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
@@ -148,6 +164,16 @@ public class Amplifier_V2 : MonoBehaviour
         }
         else if (speakerHealth <= 0)
         {
+            foreach (Slider speakerSlider in speakerSliders)
+            {
+                speakerSlider.value = 1f;
+            }
+
+            foreach (Slider amplifierSlider in amplifierSliders)
+            {
+                amplifierSlider.value = 1f;
+            }
+
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
