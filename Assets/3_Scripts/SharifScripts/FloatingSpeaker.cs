@@ -5,49 +5,24 @@ using UnityEngine;
 public class FloatingSpeaker : MonoBehaviour
 {
     public GameObject player;
-    public float moveSpeed = 5.0f;
-    public FloatingEffect floatingEffect;
-    private Vector3 initialPlayerPosition;
-    private Vector3 finalPosition;
-
-    //[SerializeField]private Transform bulletPos;
-
-    void Start()
-    {
-        initialPlayerPosition = player.transform.position;
-        finalPosition = transform.position;
-    }
+    public float moveSpeed = 10f;
+    public float smoothTimeXZ = 0.3f;
+    public float smoothTimeY = 0.6f;
+    private Vector3 velocityXZ = Vector3.zero;
+    private Vector3 velocityY = Vector3.zero;
+    private Vector3 targetPosition;
 
     void Update()
     {
-
         // Set target position for movement
-        float newY = floatingEffect.transform.position.y;
-        finalPosition = new Vector3(player.transform.position.x, newY, player.transform.position.z);
+        targetPosition = player.transform.position;
 
-        // Move towards target using Lerp function
-        float journeyLength = Vector3.Distance(initialPlayerPosition, finalPosition);
-        float journeyTime = journeyLength / moveSpeed;
-        float fracJourney = Mathf.Clamp01(Time.deltaTime / journeyTime);
-        transform.position = Vector3.Lerp(transform.position, finalPosition, fracJourney);
+        // Move the object towards the target position on the x and z axes
+        Vector3 targetPositionXZ = new Vector3(targetPosition.x, transform.position.y, targetPosition.z);
+        transform.position = Vector3.SmoothDamp(transform.position, targetPositionXZ, ref velocityXZ, smoothTimeXZ);
 
-    }
-
-    public void Attack()
-    {
-        /*
-        if (receiveInput.attack == true)
-        {
-            Attack();
-        }
-        GameObject bullet = ObjectPooling.instance.GetPooledObject();
-
-        if (bullet != null)
-        {
-            bullet.transform.position = bulletPos.position;
-            bullet.SetActive(true);
-            receiveInput.attack = false;
-        }
-        */
+        // Move the object towards the target position on the y axis
+        Vector3 targetPositionY = new Vector3(transform.position.x, targetPosition.y, transform.position.z);
+        transform.position = Vector3.SmoothDamp(transform.position, targetPositionY, ref velocityY, smoothTimeY);
     }
 }
