@@ -2,24 +2,18 @@ using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 public class MaterialModifier : MonoBehaviour
 {
-    [SerializeField] private Renderer m_Renderer;
+    [SerializeField] List<Material> m_Materials = new List<Material>();
     [SerializeField] private Volume glitchVolume;
 
     [Header("Settings")]
     [SerializeField] private float glitchFadeIn = 0.25f;
     [SerializeField] private float glitchFadeOut = 0.25f;
-
-    private Material m_Material;
-
-    private void Awake()
-    {
-        m_Material = m_Renderer.material;
-    }
 
     public void StopCoroutines()
     {
@@ -46,26 +40,54 @@ public class MaterialModifier : MonoBehaviour
 
         if (increment)
         {
-            while (m_Material.GetFloat(property) < value)
+            while (m_Materials[0].GetFloat(property) < value)
             {
                 timer += Time.deltaTime;
-                m_Material.SetFloat(property, timer / fadeTime);
+                m_Materials[0].SetFloat(property, timer / fadeTime);
+                m_Materials[1].SetFloat(property, timer / fadeTime);
+                m_Materials[2].SetFloat(property, timer / fadeTime);
+                m_Materials[3].SetFloat(property, timer / fadeTime);
+                m_Materials[4].SetFloat(property, timer / fadeTime);
+                m_Materials[5].SetFloat(property, timer / fadeTime);
+                m_Materials[6].SetFloat(property, timer / fadeTime);
+                m_Materials[7].SetFloat(property, timer / fadeTime);
+                m_Materials[8].SetFloat(property, timer / fadeTime);
+                m_Materials[9].SetFloat(property, timer / fadeTime);
+                m_Materials[10].SetFloat(property, timer / fadeTime);
                 yield return null;
             }
         }
         else
         {
-            timer = m_Material.GetFloat(property);
-
-            while (m_Material.GetFloat(property) > value)
+            while (m_Materials[0].GetFloat(property) > value)
             {
                 timer -= Time.deltaTime;
-                m_Material.SetFloat(property, timer / fadeTime);
+                m_Materials[0].SetFloat(property, timer / fadeTime);
+                m_Materials[1].SetFloat(property, timer / fadeTime);
+                m_Materials[2].SetFloat(property, timer / fadeTime);
+                m_Materials[3].SetFloat(property, timer / fadeTime);
+                m_Materials[4].SetFloat(property, timer / fadeTime);
+                m_Materials[5].SetFloat(property, timer / fadeTime);
+                m_Materials[6].SetFloat(property, timer / fadeTime);
+                m_Materials[7].SetFloat(property, timer / fadeTime);
+                m_Materials[8].SetFloat(property, timer / fadeTime);
+                m_Materials[9].SetFloat(property, timer / fadeTime);
+                m_Materials[10].SetFloat(property, timer / fadeTime);
                 yield return null;
             }
         }
 
-        m_Material.SetFloat(property, value);
+        m_Materials[0].SetFloat(property, value);
+        m_Materials[1].SetFloat(property, value);
+        m_Materials[2].SetFloat(property, value);
+        m_Materials[3].SetFloat(property, value);
+        m_Materials[4].SetFloat(property, value);
+        m_Materials[5].SetFloat(property, value);
+        m_Materials[6].SetFloat(property, value);
+        m_Materials[7].SetFloat(property, value);
+        m_Materials[8].SetFloat(property, value);
+        m_Materials[9].SetFloat(property, value);
+        m_Materials[10].SetFloat(property, value);
     }
 
     IEnumerator VolumeFader(Volume volume, float fadeTime, float value, bool increment)
