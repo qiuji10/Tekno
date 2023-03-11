@@ -5,6 +5,8 @@ using SonicBloom.Koreo;
 
 public class PlatformMove : MonoBehaviour
 {
+    public Track track;
+
     [Header("Movement Settings")]
     [EventID]
     public List<string> eventIDs = new List<string>();
@@ -17,6 +19,31 @@ public class PlatformMove : MonoBehaviour
     private float beatDuration; // Duration of one beat in seconds
     private float moveTime;
 
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    }
+
+    private void StanceManager_OnStanceChange(Track obj)
+    {
+        // Get the list of event IDs from the track
+        List<string> newEventIDs = new List<string>(obj.koreography.GetEventIDs());
+
+        // Add the new event IDs to the current list of event IDs
+        eventIDs.AddRange(newEventIDs);
+
+        // Register for the new event IDs
+        foreach (string eventID in newEventIDs)
+        {
+            Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+        }
+    }
+
+    private void OnDisable()
+    {
+        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
+    }
+
     private void Awake()
     {
         foreach (string eventID in eventIDs)
@@ -25,21 +52,6 @@ public class PlatformMove : MonoBehaviour
         }
 
         beatDuration = 60f / bpm;
-    }
-
-    private void OnEnable()
-    {
-        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
-    }
-
-    private void StanceManager_OnStanceChange(Genre obj)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    private void OnDisable()
-    {
-        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
     }
 
     private void Update()
@@ -68,7 +80,7 @@ public class PlatformMove : MonoBehaviour
     private void MoveToPoint(Vector3 targetPosition)
     {
         float distance = Vector3.Distance(transform.position, targetPosition);
-        float duration = distance /  beatDuration;
+        float duration = distance / beatDuration;
 
         moveTime += Time.deltaTime;
         transform.position = Vector3.Lerp(transform.position, targetPosition, moveTime / duration);
@@ -91,4 +103,3 @@ public class PlatformMove : MonoBehaviour
         }
     }
 }
-
