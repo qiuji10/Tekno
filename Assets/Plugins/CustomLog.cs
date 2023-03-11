@@ -3,8 +3,11 @@ using System.Collections;
 
 public class CustomLog : MonoBehaviour
 {
-    uint qsize = 15;  // number of messages to keep
     Queue myLogQueue = new Queue();
+
+    Vector2 scrollPosition = Vector2.zero;
+
+    bool showLogWindow = false; // Flag to track whether to show log window or not
 
     void OnEnable()
     {
@@ -21,25 +24,37 @@ public class CustomLog : MonoBehaviour
         myLogQueue.Enqueue("[" + type + "] : " + logString);
         if (type == LogType.Exception)
             myLogQueue.Enqueue(stackTrace);
-        while (myLogQueue.Count > qsize)
-            myLogQueue.Dequeue();
     }
 
-    private void ClearLog()
+    void Update()
     {
-        foreach (Queue q in myLogQueue)
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
-            myLogQueue.Dequeue();
+            showLogWindow = !showLogWindow;
         }
     }
 
     void OnGUI()
     {
-        GUIStyle style = new GUIStyle(GUI.skin.label);
-        style.fontSize = 20;
-        GUILayout.BeginArea(new Rect(Screen.width - 400, 0, 400, Screen.height));
-        GUILayout.Button("ClearLog");
-        GUILayout.Label("\n" + string.Join("\n", myLogQueue.ToArray()), style);
-        GUILayout.EndArea();
+        if (showLogWindow)
+        {
+            GUIStyle style = new GUIStyle(GUI.skin.label);
+            style.fontSize = 20;
+            GUILayout.BeginArea(new Rect(Screen.width - 400, 0, 400, Screen.height));
+            if (GUILayout.Button("ClearLog"))
+            {
+                myLogQueue.Clear();
+            }
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(400), GUILayout.Height(400));
+            GUILayout.Label("\n" + string.Join("\n", myLogQueue.ToArray()), style);
+            GUILayout.EndScrollView();
+            GUILayout.EndArea();
+
+            // Set scroll position to bottom
+            if (Event.current.type == EventType.Repaint)
+            {
+                scrollPosition.y = Mathf.Infinity;
+            }
+        }
     }
 }

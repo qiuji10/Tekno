@@ -1,8 +1,6 @@
-using ParadoxNotion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -18,9 +16,14 @@ public class Minigame_Speaker : MonoBehaviour
     public Vector2 touchPoint;
     public bool startTrace, failed;
     public float offsetTime = 0.1f, lastHitTime, timeToInput;
+    public int totalInputNeeded, successInput;
+    public int totalBeat, currentBeat;
+
+    private bool detectedEnterRegion;
+
+    public event Action OnHitFailure, OnComboSuccess;
 
     public LTDescr speakerMovement { get; set; }
-
     private RectTransform rect;
 
     private void Awake()
@@ -46,22 +49,43 @@ public class Minigame_Speaker : MonoBehaviour
 
     private void Update()
     {
-        if (!failed && startTrace && lastHitTime < TempoManager._lastBeatTime - timeToInput - offsetTime)
+        if (startTrace && !failed)
         {
-            failed = true;
-            LeanTween.cancel(gameObject);
-            Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
+            // TODO: Offset in future for calibration
+            if (RectTransformUtility.RectangleContainsScreenPoint(rect, touchPoint) && key != KeyInput.None)
+            {
+                detectedEnterRegion = true;
+            }
+            else
+            {
+                if (detectedEnterRegion)
+                {
+                    Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
+                    OnHitFailure?.Invoke();
+                    detectedEnterRegion = false;
+                    startTrace = false;
+                    failed = true;
+                    LeanTween.cancel(gameObject);
+                }
+            }
+
+            if (currentBeat == totalBeat)
+            {
+                if (Time.time > TempoManager._lastBeatTime + timeToInput + offsetTime)
+                {
+                    Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
+                    OnHitFailure?.Invoke();
+                    detectedEnterRegion = false;
+                    startTrace = false;
+                    failed = true;
+                }
+            }
         }
     }
 
     private void OnPressed(InputAction.CallbackContext context)
     {
-        if (failed)
-        {
-            Debug.Log("<color=red>out of time</color>");
-            LeanTween.cancel(gameObject);
-            return;
-        }
+        if (!startTrace) return;
 
         string actionName = context.action.name;
         KeyInput inputKey = (KeyInput)Enum.Parse(typeof(KeyInput), actionName, ignoreCase: true);
@@ -76,22 +100,42 @@ public class Minigame_Speaker : MonoBehaviour
                     Debug.Log("<color=green>success</color>");
                     lastHitTime = Time.time;
                     startTrace = false;
+                    detectedEnterRegion = false;
+
+                    successInput++;
+
+                    if (successInput == totalInputNeeded)
+                    {
+                        OnComboSuccess?.Invoke();
+                    }
                 }
                 else
                 {
                     Debug.Log("<color=red>fail</color>");
+                    OnHitFailure?.Invoke();
+                    startTrace = false;
+                    detectedEnterRegion = false;
+                    failed = true;
                     LeanTween.cancel(gameObject);
                 }
             }
             else
             {
                 Debug.Log("<color=yellow>wrong key</color>");
+                OnHitFailure?.Invoke();
+                startTrace = false;
+                detectedEnterRegion = false;
+                failed = true;
                 LeanTween.cancel(gameObject);
             }
         }
         else
         {
             Debug.Log("<color=cyan>out of time range</color>");
+            OnHitFailure?.Invoke();
+            startTrace = false;
+            detectedEnterRegion = false;
+            failed = true;
             LeanTween.cancel(gameObject);
         }
     }

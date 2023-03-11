@@ -7,13 +7,17 @@ public class HookAbility : MonoBehaviour
 {
     [Header("Hook Settings")]
     [SerializeField] private float hookRange = 10;
-    [SerializeField] private float horizontalThrustForce;
     [SerializeField] private float forwardThrustForce;
+    [SerializeField] private float throwForwardBurst = 50f;
+    [SerializeField] private float throwDownBurst = 25f;
 
     [SerializeField] private float anchor = -4;
-    [SerializeField] private float maxDistance = 5;
+    [SerializeField] private float angle = 45;
+    [SerializeField] private float damper = 5;
+    [SerializeField] private float spring = 5;
 
-    [SerializeField] private Vector3 hookPoint;
+    [SerializeField] private float offsetBeatTime = 0.3f;
+
     [SerializeField] private Vector3 handPoint;
     [SerializeField] private Vector3 grabOffset;
 
@@ -26,7 +30,7 @@ public class HookAbility : MonoBehaviour
 
     private PlayerController _playerController;
     private Rigidbody _rb;
-    private SpringJoint _joint;
+    private HingeJoint _joint;
 
     public bool isHooking;
     private float oriMoveSpeed;
@@ -59,7 +63,22 @@ public class HookAbility : MonoBehaviour
     {
         if (isHooking) 
         {
+            if (Time.time > TempoManager._lastBeatTime - offsetBeatTime && Time.time < TempoManager._lastBeatTime + offsetBeatTime)
+            {
+                Debug.Log($"<color=magenta>Release On Beat");
+                Vector3 dir = orientation.TransformDirection(orientation.forward);
+                Vector3 realDir = new Vector3(dir.x, 0f, dir.z); 
+                _rb.AddForce(realDir * throwForwardBurst, ForceMode.Impulse);
+            }
+            else
+            {
+                Vector3 dir = -orientation.up;
+                _rb.AddForce(dir * throwDownBurst, ForceMode.Impulse);
+            }
+
             isHooking = false;
+            _playerController.transform.eulerAngles = Vector3.zero;
+            _rb.constraints = RigidbodyConstraints.FreezeRotation;
             _playerController.MoveSpeed = oriMoveSpeed;
             lineRenderer.positionCount = 0;
             Destroy(_joint);
@@ -75,27 +94,33 @@ public class HookAbility : MonoBehaviour
             { 
                 if (collide.CompareTag("Hook") && collide.TryGetComponent(out Rigidbody rb))
                 {
-                    _joint = gameObject.AddComponent<SpringJoint>();
+                    _joint = gameObject.AddComponent<HingeJoint>();
                     _joint.anchor = new Vector3(0, anchor, 0);
+                    JointLimits limits = new JointLimits();
+                    limits.min = -angle;
+                    limits.max = angle;
+
+                    _joint.limits = limits;
+
+                    _joint.useLimits = true;
                     _joint.autoConfigureConnectedAnchor = false;
                     _joint.connectedBody = rb;
 
-                    float distanceFromPoint = Vector3.Distance(transform.position, rb.position);
+                    JointSpring springJoint = new JointSpring();
+                    springJoint.damper = damper;
+                    springJoint.spring = spring;
 
-                    //The distance grapple will try to keep from grapple point. 
-                    _joint.maxDistance = maxDistance;
-                    _joint.minDistance = distanceFromPoint * 0.25f;
+                    _joint.spring = springJoint;
 
-                    //Adjust these values to fit your game.
-                    _joint.spring = 4.5f;
-                    _joint.damper = 7f;
+
+                    _joint.useSpring = true;
+
                     _joint.massScale = 4.5f;
-                    
+
+                    _rb.constraints = RigidbodyConstraints.None;
 
                     oriMoveSpeed = _playerController.MoveSpeed;
                     _playerController.MoveSpeed *= 1.5f;
-
-                    hookPoint = rb.position;
 
                     lineRenderer.positionCount = 2;
                     lineRenderer.SetPosition(0, rb.position);
@@ -114,21 +139,8 @@ public class HookAbility : MonoBehaviour
 
         handPoint = transform.position + grabOffset;
 
-        if (move.x > 0) _rb.AddForce(orientation.right * horizontalThrustForce * Time.deltaTime);
-        if (move.x < 0) _rb.AddForce(-orientation.right * horizontalThrustForce * Time.deltaTime);
         if (move.y > 0) _rb.AddForce(orientation.forward * forwardThrustForce * Time.deltaTime);
-        if (move.y < 0)
-        {
-            Vector3 direction = (hookPoint - transform.position).normalized;
-
-            _rb.AddForce(direction * forwardThrustForce * Time.deltaTime);
-
-            float distanceFromPoint = Vector3.Distance(transform.position, hookPoint);
-
-            //The distance grapple will try to keep from grapple point. 
-            _joint.maxDistance = distanceFromPoint * 0.8f;
-            _joint.minDistance = distanceFromPoint * 0.25f;
-        }
+        if (move.y < 0) _rb.AddForce(-orientation.forward * forwardThrustForce * Time.deltaTime);
 
         lineRenderer.SetPosition(1, handPoint);
     }
@@ -138,6 +150,5 @@ public class HookAbility : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, hookRange);
         Gizmos.DrawSphere(transform.position + grabOffset, 0.1f);
-        
     }
 }
