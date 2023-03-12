@@ -7,6 +7,8 @@ public class MusicReactToWalls : MonoBehaviour
 
     [SerializeField] private Material material;
     [SerializeField] private Material materialStatic;
+    [SerializeField] private Material materialStatic1;
+    [SerializeField] private Material materialStatic2;
 
     private void OnEnable()
     {
@@ -50,6 +52,8 @@ public class MusicReactToWalls : MonoBehaviour
         material.SetFloat("_speed", speed);
         material.SetColor("_GridColor", gridColor);
         materialStatic.SetColor("_GridColor", gridColor);
+        materialStatic1.SetColor("_GridColor", gridColor);
+        materialStatic2.SetColor("_GridColor", gridColor);
     } 
 
     private void OnDisable()

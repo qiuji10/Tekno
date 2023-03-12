@@ -10,6 +10,8 @@ public class TutorialWallsOnBeat : MonoBehaviour
     public string eventID;
     [SerializeField] private Material material;
     [SerializeField] private Material materialStatic;
+    [SerializeField] private Material materialStatic1;
+    [SerializeField] private Material materialStatic2;
     private Color originalColor;
     Color gridColor = Color.clear;
     private void OnEnable()
