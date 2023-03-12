@@ -7,11 +7,13 @@ public class PlayerStatus : MonoBehaviour, IDamagable
 
     public int Health { get { return health; } }
     public bool IsAlive => health > 0;
-    private CheckpointManager checkpointManager;
+    //private CheckpointManager checkpointManager;
+
+    private Animator _anim;
 
     private void Awake()
     {
-        checkpointManager = FindObjectOfType<CheckpointManager>();
+        //checkpointManager = FindObjectOfType<CheckpointManager>();
     }
 
     public void Damage(int damage)
@@ -27,12 +29,12 @@ public class PlayerStatus : MonoBehaviour, IDamagable
             if (life > 0)
             {
                 life -= 1;
-                checkpointManager.SetPlayerToSpawnPoint(transform);
+                //checkpointManager.SetPlayerToSpawnPoint(transform);
             }
             else
             {
                 // lose game
-                checkpointManager.SetPlayerToSpawnPoint(transform);
+                //checkpointManager.SetPlayerToSpawnPoint(transform);
             }
         }
     }

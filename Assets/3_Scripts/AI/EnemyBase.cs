@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyBase : MonoBehaviour
+public class EnemyBase : MonoBehaviour, IKnockable
 {
     public DamageTrigger damageTrigger;
 
@@ -67,6 +67,7 @@ public class EnemyBase : MonoBehaviour
                 isKnockng = false;
                 transform.eulerAngles = Vector3.zero;
                 _rb.velocity = Vector3.zero;
+                _rb.isKinematic = true;
                 _rb.constraints = RigidbodyConstraints.None;
                 _agent.enabled = true;
                 _owner.StartBehaviour();
@@ -112,6 +113,7 @@ public class EnemyBase : MonoBehaviour
         _agent.isStopped = true;
         _agent.enabled = false;
         _rb.velocity = Vector3.zero;
+        _rb.isKinematic = false;
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
         _rb.AddForce(new Vector3(direction.x * directionMuliplier.x, directionMuliplier.y, direction.z * directionMuliplier.z) * power, ForceMode.VelocityChange);
         
