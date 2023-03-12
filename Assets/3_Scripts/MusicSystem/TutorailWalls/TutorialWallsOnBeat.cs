@@ -1,7 +1,6 @@
 using SonicBloom.Koreo;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class TutorialWallsOnBeat : MonoBehaviour
@@ -11,7 +10,6 @@ public class TutorialWallsOnBeat : MonoBehaviour
     public string eventID;
     [SerializeField] private Material material;
     [SerializeField] private Material materialStatic;
-    private int bpm = 140;
     private Color originalColor;
     Color gridColor = Color.clear;
     private void OnEnable()
@@ -40,19 +38,16 @@ public class TutorialWallsOnBeat : MonoBehaviour
             case Genre.House:
                 eventID = "120_House_CurvePayload";
                 gridColor = new Color(1.72079539f, 1.57664502f, 0, 0);
-                bpm = 120;
                 break;
 
             case Genre.Techno:
                 eventID = "140_Techno_CurvePayload";
                 gridColor = new Color(0, 0.205526888f, 3.92452836f, 0);
-                bpm = 140;
                 break;
 
             case Genre.Electronic:
                 eventID = "160_Electro_CurvePayload";
                  gridColor = new Color(0.0313725509f, 1.74117649f, 0, 0);
-                bpm = 160;
                 break;
 
         }
