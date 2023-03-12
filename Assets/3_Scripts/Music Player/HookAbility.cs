@@ -99,9 +99,7 @@ public class HookAbility : MonoBehaviour
                     _joint = gameObject.AddComponent<HingeJoint>();
                     _joint.anchor = new Vector3(0, anchor, 0);
 
-                    Vector3 dir = collide.transform.TransformDirection(collide.transform.right);
-
-                    _joint.axis = new Vector3(dir.x, 0, dir.z);
+                    _joint.axis = new Vector3(collide.transform.right.x, collide.transform.right.y, collide.transform.right.z);
 
                     JointLimits limits = new JointLimits();
                     limits.min = -angle;
