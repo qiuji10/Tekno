@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Attack : MonoBehaviour
 {
@@ -8,44 +9,53 @@ public class Attack : MonoBehaviour
     [SerializeField] private float attackRadius;
     [SerializeField] private SoundWave sound;
     [SerializeField] private float cooldown = 1f;
-    private float nextAttackTime = 0f;
-    public float applyForce;
+    private bool isCooldownFinish;
 
+    [SerializeField] private InputActionReference attackAction;
 
-    private void FixedUpdate()
+    private void Awake()
     {
-        if (Input.GetKey(KeyCode.Return) && Time.time >= nextAttackTime)
-        {
-            AttackAction();
-            nextAttackTime= Time.time + cooldown;
-        }
+        isCooldownFinish = true;
     }
-    void AttackAction()
-    {
 
+    private void OnEnable()
+    {
+        attackAction.action.performed += AttackAction;
+    }
+
+    private void OnDisable()
+    {
+        attackAction.action.performed -= AttackAction;
+    }
+
+    private void AttackAction(InputAction.CallbackContext context)
+    {
+        if (!isCooldownFinish) return;
+
+        isCooldownFinish = false;
         CheckForEnemies();
+        StartCoroutine(Cooldown());
         sound.StartCoroutine(sound.Wave());
     }
 
-    void CheckForEnemies()
+    private void CheckForEnemies()
     {
         Collider[] colliders = Physics.OverlapSphere(attackPos.position, attackRadius);
 
         foreach(Collider enemy in colliders)
         {
-            if (enemy.CompareTag("Enemy"))
+            if (enemy.CompareTag("Enemy") && enemy.TryGetComponent(out IKnockable knockable))
             {
-                Debug.Log(enemy.name);
-
-                Rigidbody rb = enemy.GetComponent<Rigidbody>();
-
-                if (rb != null)
-                {
-                    Vector3 forceDirection = (enemy.transform.position - attackPos.position).normalized;
-                    rb.AddForce(forceDirection * applyForce, ForceMode.Impulse);
-                }
+                Vector3 forceDirection = (enemy.transform.position - attackPos.position).normalized;
+                knockable.Knock(forceDirection, 100);
             }
         }
+    }
+
+    private IEnumerator Cooldown()
+    {
+        yield return new WaitForSeconds(cooldown);
+        isCooldownFinish = true;
     }
 
     private void OnDrawGizmosSelected()

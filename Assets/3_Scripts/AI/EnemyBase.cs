@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using NodeCanvas.Framework;
+using NodeCanvas.Tasks.Actions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,8 @@ public class EnemyBase : MonoBehaviour, IKnockable
     [SerializeField] private float decelerationRate;
     [SerializeField] Vector3 directionMuliplier;
     private LayerMask ignoreLayer;
+
+    [SerializeField] Transform player;
 
     [Header("Ground Detection Settings")]
     [SerializeField] private float detectDistance;
@@ -37,6 +40,7 @@ public class EnemyBase : MonoBehaviour, IKnockable
 
         ignoreLayer = ~(1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Player"));
 
+        isKnockng = false;
     }
 
     private void Update()
@@ -67,7 +71,7 @@ public class EnemyBase : MonoBehaviour, IKnockable
                 isKnockng = false;
                 transform.eulerAngles = Vector3.zero;
                 _rb.velocity = Vector3.zero;
-                _rb.isKinematic = true;
+                //_rb.isKinematic = true;
                 _rb.constraints = RigidbodyConstraints.None;
                 _agent.enabled = true;
                 _owner.StartBehaviour();
@@ -96,6 +100,13 @@ public class EnemyBase : MonoBehaviour, IKnockable
         //TODO: DO IT DANCING
     }
 
+    [Button]
+    private void KnockTest()
+    {
+
+        Knock((transform.position - player.position).normalized, 100);
+    }
+
     public void Knock(Vector3 direction, float power)
     {
         // knockback power should be 100
@@ -112,16 +123,17 @@ public class EnemyBase : MonoBehaviour, IKnockable
 
         _agent.isStopped = true;
         _agent.enabled = false;
+        //_rb.isKinematic = false;
+        yield return null;
         _rb.velocity = Vector3.zero;
-        _rb.isKinematic = false;
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
         _rb.AddForce(new Vector3(direction.x * directionMuliplier.x, directionMuliplier.y, direction.z * directionMuliplier.z) * power, ForceMode.VelocityChange);
         
-        // Limit maximum speed
-        if (_rb.velocity.magnitude > maxKnockbackSpeed)
-        {
-            _rb.velocity = _rb.velocity.normalized * maxKnockbackSpeed;
-        }
+        //// Limit maximum speed
+        //if (_rb.velocity.magnitude > maxKnockbackSpeed)
+        //{
+        //    _rb.velocity = _rb.velocity.normalized * maxKnockbackSpeed;
+        //}
 
         yield return new WaitForSeconds(afterKnockedWaitTime);
         isKnockng = true;
@@ -133,5 +145,10 @@ public class EnemyBase : MonoBehaviour, IKnockable
         Vector3 detectEnd = new Vector3(offset.x, offset.y - detectDistance, offset.z);
         Gizmos.color = Color.magenta;
         Gizmos.DrawLine(offset, detectEnd);
+
+        Ray ray = new Ray();
+        ray.origin = transform.position;
+        ray.direction = (transform.position - player.position).normalized;
+        Gizmos.DrawRay(ray);
     }
 }

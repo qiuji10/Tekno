@@ -11,31 +11,31 @@ public class SoundWave : MonoBehaviour
     public float startWidth;
     [SerializeField] private Material material;
 
-    private void OnEnable()
-    {
-        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
-    }
+    //private void OnEnable()
+    //{
+    //    StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    //}
 
-    private void OnDisable()
-    {
-        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
-    }
+    //private void OnDisable()
+    //{
+    //    StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
+    //}
 
-    private void StanceManager_OnStanceChange(Track obj)
-    {
-        switch (obj.genre)
-        {
-            case Genre.Techno:
-                material.color = new Color(0.259434f, 0.366f, 1);
-                break;
-            case Genre.Electronic:
-                material.color = new Color(0.3271575f, 1, 0.2588235f);
-                break;
-            case Genre.House:
-                material.color = new Color(1, 0.9328827f, 0.2588235f);
-                break;
-        }
-    }
+    //private void StanceManager_OnStanceChange(Track obj)
+    //{
+    //    switch (obj.genre)
+    //    {
+    //        case Genre.Techno:
+    //            material.color = new Color(0.259434f, 0.366f, 1);
+    //            break;
+    //        case Genre.Electronic:
+    //            material.color = new Color(0.3271575f, 1, 0.2588235f);
+    //            break;
+    //        case Genre.House:
+    //            material.color = new Color(1, 0.9328827f, 0.2588235f);
+    //            break;
+    //    }
+    //}
     private void Awake()
     {
         lineRenderer= GetComponent<LineRenderer>();
