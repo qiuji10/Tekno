@@ -53,9 +53,9 @@ public class FloatingSpeaker : MonoBehaviour
         transform.position = Vector3.SmoothDamp(transform.position, targetPositionY, ref velocityY, smoothTimeY);
 
         //// Calculate desired rotation using LookRotation
-        //Quaternion targetRotation = Quaternion.LookRotation(player.position);
+        Quaternion targetRotation = Quaternion.LookRotation(player.position);
 
         //// Smoothly interpolate between current rotation and target rotation
-        //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime / lookAtSmoothTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime / lookAtSmoothTime);
     }
 }

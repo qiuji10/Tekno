@@ -74,9 +74,9 @@ GameObject:
   - component: {fileID: 3359316563919404197}
   - component: {fileID: 3359316563919404207}
   - component: {fileID: 7615868997241188246}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy_Grunt_Patrol
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,8 +129,8 @@ MonoBehaviour:
     _version: 3.25
     _category: 
     _comments: 
-    _translation: {x: 185, y: 243}
-    _zoomFactor: 0.78083813
+    _translation: {x: 708, y: 269}
+    _zoomFactor: 0.9559608
   _firstActivation: 0
   _enableAction: 0
   _disableAction: 0
@@ -175,7 +175,7 @@ Rigidbody:
   m_Mass: 80
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -229,6 +229,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageTrigger: {fileID: 1333014245}
+  afterKnockedWaitTime: 2.5
+  maxKnockbackSpeed: 5
+  decelerationRate: 0.01
+  directionMuliplier: {x: 0.1, y: 0.12, z: 0.1}
+  player: {fileID: 0}
+  detectDistance: 1.7
+  groundDetectOffset: {x: 0, y: 0, z: 0}
 --- !u!1001 &4817408494271586642
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -888,6 +895,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbc0148499db0c347bc86fafad6fb0bd, type: 3}
+--- !u!4 &4193828721699009567 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8712678026345895245, guid: dbc0148499db0c347bc86fafad6fb0bd,
+    type: 3}
+  m_PrefabInstance: {fileID: 4817408494271586642}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8508427530283399587 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3805223110973839601, guid: dbc0148499db0c347bc86fafad6fb0bd,
@@ -920,3 +933,72 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1001 &8903391145705260311
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 4193828721699009567}
+    m_Modifications:
+    - target: {fileID: 8526607573783579193, guid: d2362f3b16e7aad42aded96fa2972b9e,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526607573783579193, guid: d2362f3b16e7aad42aded96fa2972b9e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.10641022
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526607573783579193, guid: d2362f3b16e7aad42aded96fa2972b9e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.07784547
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526607573783579193, guid: d2362f3b16e7aad42aded96fa2972b9e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.237952
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526607573783579193, guid: d2362f3b16e7aad42aded96fa2972b9e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.43608606
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526607573783579193, guid: d2362f3b16e7aad42aded96fa2972b9e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.5716608
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526607573783579193, guid: d2362f3b16e7aad42aded96fa2972b9e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.34464452
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526607573783579193, guid: d2362f3b16e7aad42aded96fa2972b9e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.60353386
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526607573783579193, guid: d2362f3b16e7aad42aded96fa2972b9e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526607573783579193, guid: d2362f3b16e7aad42aded96fa2972b9e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526607573783579193, guid: d2362f3b16e7aad42aded96fa2972b9e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843904280703043711, guid: d2362f3b16e7aad42aded96fa2972b9e,
+        type: 3}
+      propertyPath: m_Name
+      value: VR Glass
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d2362f3b16e7aad42aded96fa2972b9e, type: 3}

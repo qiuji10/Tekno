@@ -9,12 +9,36 @@ public class SoundWave : MonoBehaviour
     public float maxRadius;
     public float speed;
     public float startWidth;
+    [SerializeField] private Material material;
 
+    //private void OnEnable()
+    //{
+    //    StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    //}
+
+    //private void OnDisable()
+    //{
+    //    StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
+    //}
+
+    //private void StanceManager_OnStanceChange(Track obj)
+    //{
+    //    switch (obj.genre)
+    //    {
+    //        case Genre.Techno:
+    //            material.color = new Color(0.259434f, 0.366f, 1);
+    //            break;
+    //        case Genre.Electronic:
+    //            material.color = new Color(0.3271575f, 1, 0.2588235f);
+    //            break;
+    //        case Genre.House:
+    //            material.color = new Color(1, 0.9328827f, 0.2588235f);
+    //            break;
+    //    }
+    //}
     private void Awake()
     {
         lineRenderer= GetComponent<LineRenderer>();
-
-        
     }
 
     public IEnumerator Wave()
@@ -45,14 +69,6 @@ public class SoundWave : MonoBehaviour
         }
 
         lineRenderer.widthMultiplier = Mathf.Lerp(0f, startWidth, 1f - currentRadius / maxRadius);
-    }
-
-    private void Update()
-    {
-        if(Input.GetKey(KeyCode.V))
-        {
-            StartCoroutine(Wave());
-        }
     }
 
     private void OnDrawGizmosSelected()

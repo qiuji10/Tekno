@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour, IKnockable
     [SerializeField] private bool isGround;
 
     [Header("Animation Blend")]
+    [SerializeField] private float animMoveSpeed = 0.8f;
     [SerializeField] private float acceleration = 5f;
     [SerializeField] private float deceleration = 5f;
     private float velocity;
@@ -56,11 +57,32 @@ public class PlayerController : MonoBehaviour, IKnockable
     private void OnEnable()
     {
         jumpAction.action.performed += Jump;
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
     }
 
     private void OnDisable()
     {
         jumpAction.action.performed -= Jump;
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    }
+
+    private void StanceManager_OnStanceChange(Track track)
+    {
+        switch (track.genre)
+        {
+            case Genre.House:
+                moveSpeed = 10.8f;
+                animMoveSpeed = 0.7f;
+                break;
+            case Genre.Techno:
+                moveSpeed = 10.9f;
+                animMoveSpeed = 0.7875f;
+                break;
+            case Genre.Electronic:
+                moveSpeed = 11;
+                animMoveSpeed = 0.9f;
+                break;
+        }
     }
 
     private void Update()
@@ -125,13 +147,13 @@ public class PlayerController : MonoBehaviour, IKnockable
                 _rb.AddForce(_moveDir.normalized * moveSpeed * 10f, ForceMode.Force);
 
                 // velocity for animation blend
-                if (velocity < 1f)
+                if (velocity < animMoveSpeed)
                 {
                     velocity += Time.fixedDeltaTime * acceleration;
                 }
                 else
                 {
-                    velocity = 1;
+                    velocity = 1 * animMoveSpeed;
                 }
             }
             else

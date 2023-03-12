@@ -26,7 +26,6 @@ public class HookAbility : MonoBehaviour
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private InputActionReference hookAction;
     [SerializeField] private InputActionReference movementAction;
-    [SerializeField] private InputActionReference shrinkAction;
 
     private PlayerController _playerController;
     private Rigidbody _rb;
