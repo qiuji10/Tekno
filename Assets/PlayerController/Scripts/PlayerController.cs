@@ -2,6 +2,7 @@ using NaughtyAttributes;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.DualShock;
 
 public class PlayerController : MonoBehaviour, IKnockable
 {
@@ -46,6 +47,7 @@ public class PlayerController : MonoBehaviour, IKnockable
 
     private void Awake()
     {
+        DualShockGamepad.current.SetLightBarColor(Color.cyan * 0.5f);
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponentInChildren<Animator>();
 
@@ -73,14 +75,17 @@ public class PlayerController : MonoBehaviour, IKnockable
             case Genre.House:
                 moveSpeed = 10.8f;
                 animMoveSpeed = 0.7f;
+                DualShockGamepad.current.SetLightBarColor(Color.yellow * 0.5f);
                 break;
             case Genre.Techno:
                 moveSpeed = 10.9f;
                 animMoveSpeed = 0.7875f;
+                DualShockGamepad.current.SetLightBarColor(Color.cyan * 0.5f);
                 break;
             case Genre.Electronic:
                 moveSpeed = 11;
                 animMoveSpeed = 0.9f;
+                DualShockGamepad.current.SetLightBarColor(Color.green * 0.5f);
                 break;
         }
     }
