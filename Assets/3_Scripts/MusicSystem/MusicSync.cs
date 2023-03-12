@@ -21,7 +21,7 @@ public class MusicSync : MonoBehaviour
     public bool RotateX;
     public bool RotateY;
     public bool RotateZ;
-
+    public Vector3 scaleMod = Vector3.one;
     private void Awake()
     {
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicScale);
@@ -32,9 +32,9 @@ public class MusicSync : MonoBehaviour
     {
        if (ScaleSelection)
         {
-            scale.x = ScaleX ? evt.GetValueOfCurveAtTime(sampleTime) * 2.0f : scale.x;
-            scale.y = ScaleY ? evt.GetValueOfCurveAtTime(sampleTime) * 2.0f : scale.y;
-            scale.z = ScaleZ ? evt.GetValueOfCurveAtTime(sampleTime) * 2.0f : scale.z;
+            scale.x = ScaleX ? evt.GetValueOfCurveAtTime(sampleTime) * 2.0f * scaleMod.x : scale.x;
+            scale.y = ScaleY ? evt.GetValueOfCurveAtTime(sampleTime) * 2.0f * scaleMod.y : scale.y;
+            scale.z = ScaleZ ? evt.GetValueOfCurveAtTime(sampleTime) * 2.0f * scaleMod.z : scale.z;
 
             transform.localScale = scale;
         }
