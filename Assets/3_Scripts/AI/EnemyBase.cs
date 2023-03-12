@@ -15,7 +15,6 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] private float decelerationRate;
     [SerializeField] Vector3 directionMuliplier;
     private LayerMask ignoreLayer;
-    [SerializeField] Transform player;
 
     [Header("Ground Detection Settings")]
     [SerializeField] private float detectDistance;
@@ -96,17 +95,9 @@ public class EnemyBase : MonoBehaviour
         //TODO: DO IT DANCING
     }
 
-    
-    [SerializeField] float pow;
-
-    [Button]
-    private void TestKnock()
-    {
-        Knock(directionMuliplier, pow);
-    }
-
     public void Knock(Vector3 direction, float power)
     {
+        // knockback power should be 100
         StartCoroutine(KnockedLogic(direction, power));
     }
 
@@ -118,22 +109,20 @@ public class EnemyBase : MonoBehaviour
         _anim.SetTrigger("IsKnocked");
         _owner.PauseBehaviour();
 
-        Vector3 dir = (transform.position - player.position).normalized;
         _agent.isStopped = true;
         _agent.enabled = false;
         _rb.velocity = Vector3.zero;
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
-        _rb.AddForce(new Vector3(dir.x * directionMuliplier.x, directionMuliplier.y, dir.z * directionMuliplier.z) * power, ForceMode.VelocityChange);
+        _rb.AddForce(new Vector3(direction.x * directionMuliplier.x, directionMuliplier.y, direction.z * directionMuliplier.z) * power, ForceMode.VelocityChange);
+        
         // Limit maximum speed
         if (_rb.velocity.magnitude > maxKnockbackSpeed)
         {
             _rb.velocity = _rb.velocity.normalized * maxKnockbackSpeed;
         }
-        yield return new WaitForSeconds(afterKnockedWaitTime);
-        //_rb.AddForce(new Vector3(0, -directionMuliplier.y, 0) * power, ForceMode.Impulse);
-        //yield return new WaitForSeconds(afterKnockedWaitTime / 2);
-        isKnockng = true;
 
+        yield return new WaitForSeconds(afterKnockedWaitTime);
+        isKnockng = true;
     }
 
     private void OnDrawGizmosSelected()
