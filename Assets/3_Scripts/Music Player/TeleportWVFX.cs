@@ -24,7 +24,9 @@ public class TeleportWVFX : MonoBehaviour
     {
         Collider[] collideData = Physics.OverlapSphere(transform.position, teleportRange);
         Transform nextTeleportPoint = null, prevTeleportPoint = null;
-        
+        Vector3 teleportDirection = Vector3.zero;
+        int teleportNodeCount = 0;
+
         foreach (Collider collide in collideData)
         {
             if (collide.TryGetComponent(out TeleportNode tpNode))
@@ -32,37 +34,43 @@ public class TeleportWVFX : MonoBehaviour
                 if (tpNode.nextTeleportPoint != null)
                 {
                     nextTeleportPoint = tpNode.nextTeleportPoint;
+                    teleportDirection += nextTeleportPoint.position - transform.position;
+                    teleportNodeCount++;
                 }
 
                 if (tpNode.prevTeleportPoint != null)
                 {
                     prevTeleportPoint = tpNode.prevTeleportPoint;
+                    teleportDirection += prevTeleportPoint.position - transform.position;
+                    teleportNodeCount++;
                 }
+
                 break;
             }
         }
 
         if (nextTeleportPoint == null && prevTeleportPoint == null) return;
 
+        Vector3 centerPoint = Vector3.Lerp(transform.position, nextTeleportPoint != null ? nextTeleportPoint.position : prevTeleportPoint.position, 0.5f);
+        GameObject vfx = Instantiate(electricVFX, centerPoint, Quaternion.identity);
+        Vector3 vfxDirection = teleportDirection / 2;
+        vfxDirection.Normalize();
+        Quaternion vfxRotation = Quaternion.Euler(vfxDirection);
+        vfx.transform.rotation = vfxRotation;
 
-
-        if (Time.time > TempoManager._lastBeatTime - offsetBeatTime && Time.time < TempoManager._lastBeatTime + offsetBeatTime)
+        if (nextTeleportPoint != null)
         {
-            if (nextTeleportPoint != null)
-            {
-                
-                LeanTween.moveLocal(gameObject, nextTeleportPoint.position, TempoManager.GetTimeToBeatCount(1f));
-            }
+            LeanTween.move(gameObject, nextTeleportPoint, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx,0.35f));
         }
         else
         {
-            if (prevTeleportPoint != null)
-            {
-                LeanTween.moveLocal(gameObject, prevTeleportPoint.position, TempoManager.GetTimeToBeatCount(1f));
-            }
+            LeanTween.move(gameObject, prevTeleportPoint, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx, 0.35f));
         }
-        //Invoke("DisabeleVFX", 0.85f);
+
+        
     }
+
+
 
     private void OnDrawGizmosSelected()
     {
