@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class Attack : MonoBehaviour
@@ -9,6 +8,7 @@ public class Attack : MonoBehaviour
     [SerializeField] private float attackRadius;
     [SerializeField] private SoundWave sound;
     public float applyForce;
+
 
     private void FixedUpdate()
     {
@@ -20,6 +20,7 @@ public class Attack : MonoBehaviour
     }
     void Attck()
     {
+
         if (Input.GetKey(KeyCode.Return))
         {
             CheckForEnemies();
