@@ -46,7 +46,8 @@ public class StanceManager : MonoBehaviour
 
     private void Start()
     {
-        PlayTrack(1);
+        trackIndex = 1;
+        PlayTrack(trackIndex);
     }
 
     private void SkipTrack(InputAction.CallbackContext context)

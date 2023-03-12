@@ -11,13 +11,45 @@ public class DisappearingPlatform : MonoBehaviour
     public GameObject Platform1;
     public GameObject Platform2;
 
-    [Header("BPM Settings")]
-    public int bpm = 0;
-
+    private int bpm = 140;
     private int intValueEvt;
 
     private GameObject parental;
     public Transform player { get; set; }
+
+    // Add OnEnable implementation
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    }
+
+    // Add OnDisable implementation
+    private void OnDisable()
+    {
+        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
+    }
+
+    // Add OnStanceChange implementation
+    private void StanceManager_OnStanceChange(Track obj)
+    {
+        if (obj.genre.ToString() == "House")
+        {
+            EventID = "120_House_IntPayload";
+            bpm = 120;
+        }
+        else if (obj.genre.ToString() == "Techno")
+        {
+            EventID = "140_Techno_IntPayload";
+            bpm = 140;
+        }
+        else if (obj.genre.ToString() == "Electronic")
+        {
+            EventID = "160_Electro_IntPayload";
+            bpm = 160;
+        }
+
+        Koreographer.Instance.RegisterForEventsWithTime(EventID, SwitchPlatform);
+    }
 
     private void Awake()
     {
@@ -30,7 +62,7 @@ public class DisappearingPlatform : MonoBehaviour
         //Getting Evt int from Koreography
         intValueEvt = evt.GetIntValue();
 
-        if(intValueEvt == 0)
+        if (intValueEvt == 0)
         {
             Platform1.gameObject.SetActive(true);
             Platform2.gameObject.SetActive(false);
@@ -49,6 +81,5 @@ public class DisappearingPlatform : MonoBehaviour
             Koreographer.Instance.UnregisterForAllEvents(this);
         }
     }
-
 
 }

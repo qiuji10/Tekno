@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour, IKnockable
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
-    private Transform _playerObj;
     public bool allowedInput = true;
     public bool allowedAction { get; set; } = true;
 
@@ -40,6 +39,7 @@ public class PlayerController : MonoBehaviour, IKnockable
 
     private Rigidbody _rb;
     private Animator _anim;
+    public Animator Anim { get { return _anim; } set { _anim = value; } }
 
     private int movement, jump, jumpGrounded;
 
@@ -47,7 +47,6 @@ public class PlayerController : MonoBehaviour, IKnockable
     {
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponentInChildren<Animator>();
-        _playerObj = transform.GetChild(0);
 
         jump = Animator.StringToHash("Jump");
         jumpGrounded = Animator.StringToHash("JumpGrounded");
