@@ -13,11 +13,10 @@ public class HookAbility : MonoBehaviour
 
     [SerializeField] private float anchor = -4;
     [SerializeField] private float angle = 45;
-    [SerializeField] private float damper = 5;
-    [SerializeField] private float spring = 5;
 
     [SerializeField] private float offsetBeatTime = 0.3f;
 
+    [SerializeField] private Vector3 detectOffset;
     [SerializeField] private Vector3 handPoint;
     [SerializeField] private Vector3 grabOffset;
 
@@ -90,16 +89,25 @@ public class HookAbility : MonoBehaviour
         {
             //_playerController.enabled = false;
             
-            Collider[] collideData = Physics.OverlapSphere(transform.position, hookRange);
+            Collider[] collideData = Physics.OverlapSphere(transform.position + detectOffset, hookRange);
 
             foreach (Collider collide in collideData) 
             { 
                 if (collide.CompareTag("Hook") && collide.TryGetComponent(out Rigidbody rb))
                 {
                     _joint = gameObject.AddComponent<HingeJoint>();
-                    _joint.anchor = new Vector3(0, anchor, 0);
-
                     _joint.axis = new Vector3(collide.transform.right.x, collide.transform.right.y, collide.transform.right.z);
+                    
+
+                    if (collide.transform.position.y >= transform.position.y)
+                    {
+                        _joint.anchor = new Vector3(0, 6f, 0f);
+                    }
+                    else
+                    {
+                        _joint.anchor = new Vector3(0, -10f, 0f);
+                    }
+                    
 
                     JointLimits limits = new JointLimits();
                     limits.min = -angle;
@@ -107,14 +115,14 @@ public class HookAbility : MonoBehaviour
                     _joint.limits = limits;
                     _joint.useLimits = true;
 
-                    _joint.autoConfigureConnectedAnchor = false;
+                    _joint.autoConfigureConnectedAnchor = true;
                     _joint.connectedBody = rb;
 
-                    JointSpring springJoint = new JointSpring();
-                    springJoint.damper = damper;
-                    springJoint.spring = spring;
-                    _joint.spring = springJoint;
-                    _joint.useSpring = true;
+                    //JointSpring springJoint = new JointSpring();
+                    //springJoint.damper = damper;
+                    //springJoint.spring = spring;
+                    //_joint.spring = springJoint;
+                    //_joint.useSpring = true;
                     _joint.massScale = 4.5f;
 
                     _rb.constraints = RigidbodyConstraints.None;
@@ -150,7 +158,7 @@ public class HookAbility : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, hookRange);
+        Gizmos.DrawWireSphere(transform.position + detectOffset, hookRange);
         Gizmos.DrawSphere(transform.position + grabOffset, 0.1f);
     }
 }
