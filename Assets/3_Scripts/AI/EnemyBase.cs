@@ -11,6 +11,7 @@ public class EnemyBase : MonoBehaviour
 
     [Header("Knockback Settings")]
     [SerializeField] private float afterKnockedWaitTime;
+    [SerializeField] private float maxKnockbackSpeed;
     [SerializeField] private float decelerationRate;
     [SerializeField] Vector3 directionMuliplier;
     private LayerMask ignoreLayer;
@@ -62,9 +63,6 @@ public class EnemyBase : MonoBehaviour
 
         if (isKnockng && !_agent.enabled)
         {
-
-            _rb.velocity -= new Vector3(_rb.velocity.x, 0, _rb.velocity.z) * Time.deltaTime * decelerationRate;
-
             if (Physics.Raycast(transform.position + groundDetectOffset, -Vector3.up, detectDistance, ignoreLayer))
             {
                 isKnockng = false;
@@ -126,6 +124,11 @@ public class EnemyBase : MonoBehaviour
         _rb.velocity = Vector3.zero;
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
         _rb.AddForce(new Vector3(dir.x * directionMuliplier.x, directionMuliplier.y, dir.z * directionMuliplier.z) * power, ForceMode.VelocityChange);
+        // Limit maximum speed
+        if (_rb.velocity.magnitude > maxKnockbackSpeed)
+        {
+            _rb.velocity = _rb.velocity.normalized * maxKnockbackSpeed;
+        }
         yield return new WaitForSeconds(afterKnockedWaitTime);
         //_rb.AddForce(new Vector3(0, -directionMuliplier.y, 0) * power, ForceMode.Impulse);
         //yield return new WaitForSeconds(afterKnockedWaitTime / 2);
