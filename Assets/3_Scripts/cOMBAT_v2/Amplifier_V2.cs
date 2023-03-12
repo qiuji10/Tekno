@@ -171,6 +171,14 @@ public class Amplifier_V2 : MonoBehaviour
                 amplifierSlider.value = 1f;
             }
 
+            foreach (EnemyBase e in enemiesInControl)
+            {
+                if (e != null)
+                {
+                    e.FreeEnemy();
+                }
+            }
+
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;

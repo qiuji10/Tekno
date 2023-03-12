@@ -10,6 +10,8 @@ public class TutorialWallsOnBeat : MonoBehaviour
     public string eventID;
     [SerializeField] private Material material;
     [SerializeField] private Material materialStatic;
+    [SerializeField] private Material materialStatic1;
+    [SerializeField] private Material materialStatic2;
     private Color originalColor;
     Color gridColor = Color.clear;
     private void OnEnable()
@@ -60,6 +62,8 @@ public class TutorialWallsOnBeat : MonoBehaviour
         float intensity = evt.GetValueOfCurveAtTime(sampleTime);
         material.SetColor("_GridColor", gridColor * intensity);
         materialStatic.SetColor("_GridColor", gridColor * intensity);
+        materialStatic1.SetColor("_GridColor", gridColor * intensity);
+        materialStatic2.SetColor("_GridColor", gridColor / intensity);
 
     }
 
