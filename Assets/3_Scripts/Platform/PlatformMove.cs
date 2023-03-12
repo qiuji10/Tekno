@@ -14,7 +14,7 @@ public class PlatformMove : MonoBehaviour, IPlatform
     private bool isMoving;
     private int bpm = 140; // Beats per minute
     private float beatDuration; // Duration of one beat in seconds
-    private float moveTime;
+    public float moveTime;
 
     private Track track;
     public static Track currentTrack;

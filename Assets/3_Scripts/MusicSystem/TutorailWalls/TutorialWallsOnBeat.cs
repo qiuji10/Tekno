@@ -62,6 +62,8 @@ public class TutorialWallsOnBeat : MonoBehaviour
         float intensity = evt.GetValueOfCurveAtTime(sampleTime);
         material.SetColor("_GridColor", gridColor * intensity);
         materialStatic.SetColor("_GridColor", gridColor * intensity);
+        materialStatic1.SetColor("_GridColor", gridColor * intensity);
+        materialStatic2.SetColor("_GridColor", gridColor / intensity);
 
     }
 
