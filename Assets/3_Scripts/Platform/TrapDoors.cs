@@ -52,25 +52,27 @@ public class TrapDoors : MonoBehaviour
     private void StanceManager_OnStanceChange(Track obj)
     {
         // Determine which event ID to use based on the track's genre
-        if (obj.genre.ToString() == "House")
+        if (obj.genre == Genre.House)
         {
             eventID = "120_House_IntPayload";
             bpm = 120;
+            rotateDuration = 60f / bpm;
         }
-        else if (obj.genre.ToString() == "Techno")
+        else if (obj.genre == Genre.Techno)
         {
             eventID = "140_Techno_IntPayload";
             bpm = 140;
+            rotateDuration = 60f / bpm;
         }
-        else if (obj.genre.ToString() == "Electronic")
+        else if (obj.genre == Genre.Electronic)
         {
             eventID = "160_Electro_IntPayload";
             bpm = 160;
+            rotateDuration = 60f / bpm;
         }
 
         // Set the current track
         currentTrack = obj;
-
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
     }
 
