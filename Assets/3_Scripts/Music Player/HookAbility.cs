@@ -95,13 +95,21 @@ public class HookAbility : MonoBehaviour
 
             foreach (Collider collide in collideData) 
             { 
-                if (collide.CompareTag("Hook") && collide.TryGetComponent(out Rigidbody rb) && (collide.transform.position.y - 3f > transform.position.y))
+                if (collide.CompareTag("Hook") && collide.TryGetComponent(out Rigidbody rb))
                 {
                     _joint = gameObject.AddComponent<HingeJoint>();
-
-                    _joint.anchor = new Vector3(0, 6f, 0f);
-
                     _joint.axis = new Vector3(collide.transform.right.x, collide.transform.right.y, collide.transform.right.z);
+                    
+
+                    if (collide.transform.position.y >= transform.position.y)
+                    {
+                        _joint.anchor = new Vector3(0, 6f, 0f);
+                    }
+                    else
+                    {
+                        _joint.anchor = new Vector3(0, -10f, 0f);
+                    }
+                    
 
                     JointLimits limits = new JointLimits();
                     limits.min = -angle;
