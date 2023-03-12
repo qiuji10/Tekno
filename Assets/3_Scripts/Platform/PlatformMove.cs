@@ -30,25 +30,27 @@ public class PlatformMove : MonoBehaviour
     private void StanceManager_OnStanceChange(Track obj)
     {
         // Determine which event ID to use based on the track's genre
-        if (obj.genre.ToString() == "House")
+        if (obj.genre == Genre.House)
         {
             eventID = "120_House_PlatformMove";
             bpm = 120;
+            beatDuration = 60f / bpm;
         }
-        else if (obj.genre.ToString() == "Techno")
+        else if (obj.genre == Genre.Techno)
         {
             eventID = "140_Techno_PlatformMove";
             bpm = 140;
+            beatDuration = 60f / bpm;
         }
-        else if (obj.genre.ToString() == "Electronic")
+        else if (obj.genre == Genre.Electronic)
         {
             eventID = "160_Electro_PlatformMove";
             bpm = 160;
+            beatDuration = 60f / bpm;
         }
 
         // Set the current track
         currentTrack = obj;
-
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
     }
 
@@ -61,8 +63,6 @@ public class PlatformMove : MonoBehaviour
     {
         // Set the track field to the current track
         track = currentTrack;
-
-        //Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
         beatDuration = 60f / bpm;
     }
 

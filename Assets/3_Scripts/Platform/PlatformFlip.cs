@@ -43,20 +43,23 @@ public class PlatformFlip : MonoBehaviour
     private void StanceManager_OnStanceChange(Track obj)
     {
         // Determine which event ID to use based on the track's genre
-        if (obj.genre.ToString() == "House")
+        if (obj.genre == Genre.House)
         {
             eventID = "120_House_IntPayload";
             bpm = 120;
+            flipDuration = 60f / bpm;
         }
-        else if (obj.genre.ToString() == "Techno")
+        else if (obj.genre == Genre.Techno)
         {
             eventID = "140_Techno_IntPayload";
             bpm = 140;
+            flipDuration = 60f / bpm;
         }
-        else if (obj.genre.ToString() == "Electronic")
+        else if (obj.genre == Genre.Electronic)
         {
             eventID = "160_Electro_IntPayload";
             bpm = 160;
+            flipDuration = 60f / bpm;
         }
 
         // Set the current track

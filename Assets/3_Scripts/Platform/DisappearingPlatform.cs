@@ -32,17 +32,17 @@ public class DisappearingPlatform : MonoBehaviour
     // Add OnStanceChange implementation
     private void StanceManager_OnStanceChange(Track obj)
     {
-        if (obj.genre.ToString() == "House")
+        if (obj.genre == Genre.House)
         {
             EventID = "120_House_IntPayload";
             bpm = 120;
         }
-        else if (obj.genre.ToString() == "Techno")
+        else if (obj.genre == Genre.Techno)
         {
             EventID = "140_Techno_IntPayload";
             bpm = 140;
         }
-        else if (obj.genre.ToString() == "Electronic")
+        else if (obj.genre == Genre.Electronic)
         {
             EventID = "160_Electro_IntPayload";
             bpm = 160;

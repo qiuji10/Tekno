@@ -1,5 +1,7 @@
+using SonicBloom.Koreo;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class LaserTrap : MonoBehaviour
@@ -25,7 +27,7 @@ public class LaserTrap : MonoBehaviour
             particleSystems[i] = LaserObjects[i].transform.GetChild(1).GetComponent<ParticleSystem>();
         }
 
-        beatInterval = (60f / 140f)*4f; // calculate the interval between beats based on the song's BPM
+        beatInterval = (60f / 140f)*8f; // calculate the interval between beats based on the song's BPM
         timer = beatInterval;
     }
 
@@ -73,6 +75,21 @@ public class LaserTrap : MonoBehaviour
                 timer = beatInterval;
             }
         }
+    }
+
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    }
+
+    private void StanceManager_OnStanceChange(Track obj)
+    {
+        timer = 0;
+    }
+
+    private void OnDisable()
+    {
+        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
     }
 }
 
