@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Parental : MonoBehaviour
+public class Parenter : MonoBehaviour
 {
-    private PlatformDrop platform;
+    private IPlatform platform;
 
     private void Awake()
     {
-        platform = GetComponentInParent<PlatformDrop>();
+        platform = GetComponentInParent<IPlatform>();
     }
 
     private void OnTriggerEnter(Collider other)
