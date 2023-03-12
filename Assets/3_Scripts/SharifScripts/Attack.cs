@@ -7,25 +7,24 @@ public class Attack : MonoBehaviour
     [SerializeField] private Transform attackPos;
     [SerializeField] private float attackRadius;
     [SerializeField] private SoundWave sound;
+    [SerializeField] private float cooldown = 1f;
+    private float nextAttackTime = 0f;
     public float applyForce;
 
 
     private void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.Return))
+        if (Input.GetKey(KeyCode.Return) && Time.time >= nextAttackTime)
         {
-            CheckForEnemies();
-            sound.StartCoroutine(sound.Wave());
+            AttackAction();
+            nextAttackTime= Time.time + cooldown;
         }
     }
-    void Attck()
+    void AttackAction()
     {
 
-        if (Input.GetKey(KeyCode.Return))
-        {
-            CheckForEnemies();
-            
-        }
+        CheckForEnemies();
+        sound.StartCoroutine(sound.Wave());
     }
 
     void CheckForEnemies()
