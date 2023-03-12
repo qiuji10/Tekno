@@ -22,7 +22,6 @@ public class StanceManager : MonoBehaviour
     [Header("Ability References")]
     [SerializeField] private HookAbility hookAbility;
     [SerializeField] private TeleportAbility teleportAbility;
-    [SerializeField] private TeleportWVFX teleportVFX;
 
     [Header("Input Action References")]
     [SerializeField] private InputActionReference skipTrackAction;

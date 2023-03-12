@@ -8,11 +8,11 @@ public class TeleportAbility : MonoBehaviour
     [SerializeField] private InputActionReference teleportAction;
     [SerializeField] private float teleportRange = 5f;
     [SerializeField] private float offsetBeatTime = 0.3f;
-
+    [SerializeField] private Transform electricVFX;
     private void OnEnable()
     {
-        LeanTween.reset();
         teleportAction.action.performed += Teleport;
+        LeanTween.reset();
     }
 
     private void OnDisable()
@@ -24,7 +24,9 @@ public class TeleportAbility : MonoBehaviour
     {
         Collider[] collideData = Physics.OverlapSphere(transform.position, teleportRange);
         Transform nextTeleportPoint = null, prevTeleportPoint = null;
-        
+        Vector3 teleportDirection = Vector3.zero;
+        int teleportNodeCount = 0;
+
         foreach (Collider collide in collideData)
         {
             if (collide.TryGetComponent(out TeleportNode tpNode))
@@ -32,33 +34,40 @@ public class TeleportAbility : MonoBehaviour
                 if (tpNode.nextTeleportPoint != null)
                 {
                     nextTeleportPoint = tpNode.nextTeleportPoint;
+                    teleportDirection += nextTeleportPoint.position - transform.position;
+                    teleportNodeCount++;
                 }
 
                 if (tpNode.prevTeleportPoint != null)
                 {
                     prevTeleportPoint = tpNode.prevTeleportPoint;
+                    teleportDirection += prevTeleportPoint.position - transform.position;
+                    teleportNodeCount++;
                 }
+
                 break;
             }
         }
 
         if (nextTeleportPoint == null && prevTeleportPoint == null) return;
+        Vector3 targetPosition = (nextTeleportPoint != null ? nextTeleportPoint.position : prevTeleportPoint.position);
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        Vector3 centerPoint = Vector3.Lerp(transform.position, targetPosition, 0.5f);
+        Transform vfx = Instantiate(electricVFX, targetPosition, Quaternion.LookRotation(direction));
 
-        if (Time.time > TempoManager._lastBeatTime - offsetBeatTime && Time.time < TempoManager._lastBeatTime + offsetBeatTime)
+        if (nextTeleportPoint != null)
         {
-            if (nextTeleportPoint != null)
-            {
-                LeanTween.moveLocal(gameObject, nextTeleportPoint.position, TempoManager.GetTimeToBeatCount(1f));
-            }
+            LeanTween.move(gameObject, nextTeleportPoint, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
         }
         else
         {
-            if (prevTeleportPoint != null)
-            {
-                LeanTween.moveLocal(gameObject, prevTeleportPoint.position, TempoManager.GetTimeToBeatCount(1f));
-            }
+            LeanTween.move(gameObject, prevTeleportPoint, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
         }
+
+
     }
+
+
 
     private void OnDrawGizmosSelected()
     {
