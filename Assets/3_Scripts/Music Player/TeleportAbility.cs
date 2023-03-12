@@ -11,6 +11,7 @@ public class TeleportAbility : MonoBehaviour
 
     private void OnEnable()
     {
+        LeanTween.reset();
         teleportAction.action.performed += Teleport;
     }
 
