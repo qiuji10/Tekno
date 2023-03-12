@@ -121,7 +121,7 @@ public class EnemyBase : MonoBehaviour, IKnockable
     {
         _anim.SetLayerWeight(1, 0);
         _anim.SetLayerWeight(2, 0);
-        Debug.Log("knoncncncn");
+
         _anim.SetTrigger("IsKnocked");
         _owner.PauseBehaviour();
 
