@@ -18,6 +18,7 @@ public class HookAbility : MonoBehaviour
 
     [SerializeField] private float offsetBeatTime = 0.3f;
 
+    [SerializeField] private Vector3 detectOffset;
     [SerializeField] private Vector3 handPoint;
     [SerializeField] private Vector3 grabOffset;
 
@@ -90,14 +91,15 @@ public class HookAbility : MonoBehaviour
         {
             //_playerController.enabled = false;
             
-            Collider[] collideData = Physics.OverlapSphere(transform.position, hookRange);
+            Collider[] collideData = Physics.OverlapSphere(transform.position + detectOffset, hookRange);
 
             foreach (Collider collide in collideData) 
             { 
-                if (collide.CompareTag("Hook") && collide.TryGetComponent(out Rigidbody rb))
+                if (collide.CompareTag("Hook") && collide.TryGetComponent(out Rigidbody rb) && (collide.transform.position.y - 3f > transform.position.y))
                 {
                     _joint = gameObject.AddComponent<HingeJoint>();
-                    _joint.anchor = new Vector3(0, anchor, 0);
+
+                    _joint.anchor = new Vector3(0, 6f, 0f);
 
                     _joint.axis = new Vector3(collide.transform.right.x, collide.transform.right.y, collide.transform.right.z);
 
@@ -107,14 +109,14 @@ public class HookAbility : MonoBehaviour
                     _joint.limits = limits;
                     _joint.useLimits = true;
 
-                    _joint.autoConfigureConnectedAnchor = false;
+                    _joint.autoConfigureConnectedAnchor = true;
                     _joint.connectedBody = rb;
 
-                    JointSpring springJoint = new JointSpring();
-                    springJoint.damper = damper;
-                    springJoint.spring = spring;
-                    _joint.spring = springJoint;
-                    _joint.useSpring = true;
+                    //JointSpring springJoint = new JointSpring();
+                    //springJoint.damper = damper;
+                    //springJoint.spring = spring;
+                    //_joint.spring = springJoint;
+                    //_joint.useSpring = true;
                     _joint.massScale = 4.5f;
 
                     _rb.constraints = RigidbodyConstraints.None;
@@ -150,7 +152,7 @@ public class HookAbility : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, hookRange);
+        Gizmos.DrawWireSphere(transform.position + detectOffset, hookRange);
         Gizmos.DrawSphere(transform.position + grabOffset, 0.1f);
     }
 }
