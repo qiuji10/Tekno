@@ -13,8 +13,6 @@ public class HookAbility : MonoBehaviour
 
     [SerializeField] private float anchor = -4;
     [SerializeField] private float angle = 45;
-    [SerializeField] private float damper = 5;
-    [SerializeField] private float spring = 5;
 
     [SerializeField] private float offsetBeatTime = 0.3f;
 
