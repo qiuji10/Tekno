@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SonicBloom.Koreo;
 
-public class PlatformMove : MonoBehaviour
+public class PlatformMove : MonoBehaviour, IPlatform
 { 
     [Header("Moving Platform Settings")]
     [EventID]
@@ -21,6 +21,7 @@ public class PlatformMove : MonoBehaviour
 
     private GameObject parental;
     public Transform player { get; set; }
+    public bool PlayerOnPlatform { get; set; }
 
     private void OnEnable()
     {

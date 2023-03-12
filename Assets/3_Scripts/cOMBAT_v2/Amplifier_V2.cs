@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.DualShock;
 using UnityEngine.UI;
 
 public enum KeyInput { None, Circle, Cross, Square, Triangle }
@@ -122,11 +124,17 @@ public class Amplifier_V2 : MonoBehaviour
 
         speakerHealthShake.Shake();
 
+        if (Gamepad.current != null) Gamepad.current.SetMotorSpeeds(2f, 3f);
+
         Slider slider = speakerHealthBar.transform.GetChild(speakerHealth).GetComponent<Slider>();
         float timeToBeatCount = TempoManager.GetTimeToBeatCount(1);
         LeanTween.value(slider.gameObject, 1, 0, timeToBeatCount).setOnUpdate((float blend) => {
             slider.value = blend;
-        }).setOnComplete(() => StartCoroutine(EvaluateStatus()));
+        }).setOnComplete(() =>
+        {
+            InputSystem.PauseHaptics();
+            StartCoroutine(EvaluateStatus());
+        });
     }
 
     // This function did not subscribe any event, it is internally called
@@ -136,11 +144,17 @@ public class Amplifier_V2 : MonoBehaviour
 
         amplifierHealthShake.Shake();
 
+        if (Gamepad.current != null) Gamepad.current.SetMotorSpeeds(2f, 3f);
+
         Slider slider = amplifierHealthBar.transform.GetChild(amplifierHealth).GetComponent<Slider>();
         float timeToBeatCount = TempoManager.GetTimeToBeatCount(1);
         LeanTween.value(slider.gameObject, 1, 0, timeToBeatCount).setOnUpdate((float blend) => {
             slider.value = blend;
-        }).setOnComplete(() => StartCoroutine(EvaluateStatus()));
+        }).setOnComplete(() =>
+        {
+            InputSystem.PauseHaptics();
+            StartCoroutine(EvaluateStatus());
+        });
     }
 
     private IEnumerator EvaluateStatus()

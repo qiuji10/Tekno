@@ -29,16 +29,16 @@ public class MaterialModifier : MonoBehaviour
         {
             case Genre.House:
                 baseString = "#988C00";
-                emissionString = "#605400";
+                emissionString = "#8E7C00";
                 break;
             case Genre.Techno:
                 baseString = "#0042FF";
-                emissionString = "#000316";
+                emissionString = "#0054FF";
                 break;
             case Genre.Electronic:
                 
                 baseString = "#009A04";
-                emissionString = "#003A00";
+                emissionString = "#00BC00";
                 break;
         }
 

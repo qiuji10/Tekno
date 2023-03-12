@@ -17,8 +17,6 @@ public class EnemyBase : MonoBehaviour, IKnockable
     [SerializeField] Vector3 directionMuliplier;
     private LayerMask ignoreLayer;
 
-    [SerializeField] Transform player;
-
     [Header("Ground Detection Settings")]
     [SerializeField] private float detectDistance;
     [SerializeField] private Vector3 groundDetectOffset;
@@ -100,13 +98,6 @@ public class EnemyBase : MonoBehaviour, IKnockable
         //TODO: DO IT DANCING
     }
 
-    [Button]
-    private void KnockTest()
-    {
-
-        Knock((transform.position - player.position).normalized, 100);
-    }
-
     public void Knock(Vector3 direction, float power)
     {
         // knockback power should be 100
@@ -145,10 +136,5 @@ public class EnemyBase : MonoBehaviour, IKnockable
         Vector3 detectEnd = new Vector3(offset.x, offset.y - detectDistance, offset.z);
         Gizmos.color = Color.magenta;
         Gizmos.DrawLine(offset, detectEnd);
-
-        Ray ray = new Ray();
-        ray.origin = transform.position;
-        ray.direction = (transform.position - player.position).normalized;
-        Gizmos.DrawRay(ray);
     }
 }
