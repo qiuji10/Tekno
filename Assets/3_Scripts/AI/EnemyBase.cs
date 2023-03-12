@@ -21,6 +21,9 @@ public class EnemyBase : MonoBehaviour, IKnockable
     [SerializeField] private float detectDistance;
     [SerializeField] private Vector3 groundDetectOffset;
 
+    [Header("Breaking Objects")]
+    [SerializeField] private BreakingObject vrHeadset;
+
     private NavMeshAgent _agent;
     private Rigidbody _rb;
     private Animator _anim;
@@ -92,10 +95,17 @@ public class EnemyBase : MonoBehaviour, IKnockable
     [Button]
     public void FreeEnemy()
     {
-        IBlackboard blackboard = _owner.graph.blackboard;
-        blackboard.SetVariableValue("FreeEnemy", true);
 
-        //TODO: DO IT DANCING
+        //IBlackboard blackboard = _owner.graph.blackboard;
+        //blackboard.SetVariableValue("FreeEnemy", true);
+
+        vrHeadset.BreakObjects();
+        _owner.StopBehaviour();
+        _rb.velocity = Vector3.zero;
+        _rb.isKinematic = true;
+        _agent.isStopped = true;
+        _anim.SetLayerWeight(1, 0);
+        _anim.SetLayerWeight(2, 0);
     }
 
     public void Knock(Vector3 direction, float power)
