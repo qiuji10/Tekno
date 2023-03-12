@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TeleportAbility : MonoBehaviour
+public class TeleportWVFX : MonoBehaviour
 {
     [SerializeField] private InputActionReference teleportAction;
     [SerializeField] private float teleportRange = 5f;
     [SerializeField] private float offsetBeatTime = 0.3f;
-
+    [SerializeField] private GameObject electricVFX;
     private void OnEnable()
     {
         teleportAction.action.performed += Teleport;
+        LeanTween.reset();
     }
 
     private void OnDisable()
@@ -43,10 +44,13 @@ public class TeleportAbility : MonoBehaviour
 
         if (nextTeleportPoint == null && prevTeleportPoint == null) return;
 
+
+
         if (Time.time > TempoManager._lastBeatTime - offsetBeatTime && Time.time < TempoManager._lastBeatTime + offsetBeatTime)
         {
             if (nextTeleportPoint != null)
             {
+                
                 LeanTween.moveLocal(gameObject, nextTeleportPoint.position, TempoManager.GetTimeToBeatCount(1f));
             }
         }
@@ -57,11 +61,17 @@ public class TeleportAbility : MonoBehaviour
                 LeanTween.moveLocal(gameObject, prevTeleportPoint.position, TempoManager.GetTimeToBeatCount(1f));
             }
         }
+        //Invoke("DisabeleVFX", 0.85f);
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, teleportRange);
+    }
+
+    void DisabeleVFX()
+    {
+        electricVFX.SetActive(false);
     }
 }
