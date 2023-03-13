@@ -86,6 +86,7 @@ public class Amplifier_V2 : MonoBehaviour
     public void StartPlay()
     {
         LeanTween.reset();
+        StanceManager.AllowPlayerSwitchStance = false;
 
         eventInvoker.enabled = false;
 
@@ -179,6 +180,7 @@ public class Amplifier_V2 : MonoBehaviour
                 }
             }
 
+            StanceManager.AllowPlayerSwitchStance = true;
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
@@ -196,6 +198,7 @@ public class Amplifier_V2 : MonoBehaviour
                 amplifierSlider.value = 1f;
             }
 
+            StanceManager.AllowPlayerSwitchStance = true;
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
