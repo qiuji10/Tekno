@@ -127,17 +127,18 @@ public class EnemyBase : MonoBehaviour, IKnockable
 
         if (_agent.enabled) _agent.isStopped = true;
         _agent.enabled = false;
-        //_rb.isKinematic = false;
+        _rb.isKinematic = false;
         yield return null;
         _rb.velocity = Vector3.zero;
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
+
         _rb.AddForce(new Vector3(direction.x * directionMuliplier.x, directionMuliplier.y, direction.z * directionMuliplier.z) * power, ForceMode.VelocityChange);
-        
-        //// Limit maximum speed
-        //if (_rb.velocity.magnitude > maxKnockbackSpeed)
-        //{
-        //    _rb.velocity = _rb.velocity.normalized * maxKnockbackSpeed;
-        //}
+
+        // Limit maximum speed
+        if (_rb.velocity.magnitude > maxKnockbackSpeed)
+        {
+            _rb.velocity = _rb.velocity.normalized * maxKnockbackSpeed;
+        }
 
         yield return new WaitForSeconds(afterKnockedWaitTime);
         isKnockng = true;
