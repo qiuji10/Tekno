@@ -2,19 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class HookAbility : MonoBehaviour
 {
     [Header("Hook Settings")]
-    [SerializeField] private float hookRange = 10;
-    [SerializeField] private float forwardThrustForce;
     [SerializeField] private float throwForwardBurst = 50f;
-    [SerializeField] private float throwDownBurst = 25f;
-
-    [SerializeField] private float anchor = -4;
-    [SerializeField] private float angle = 45;
-
-    [SerializeField] private float offsetBeatTime = 0.3f;
+    [SerializeField] private float hookTime = 7.4f;
+    [SerializeField] private float successRatio = 0.8f;
 
     [SerializeField] private Vector3 detectOffset;
     [SerializeField] private Vector3 handPoint;
@@ -22,32 +17,37 @@ public class HookAbility : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Transform orientation;
+    [SerializeField] private SensorDetection hookSensor;
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private InputActionReference hookAction;
-    [SerializeField] private InputActionReference movementAction;
+    [SerializeField] private Slider hookSlider;
+    [SerializeField] private Image hookViableVisual;
 
     private PlayerController _playerController;
+    private ThirdPerCam _cam;
     private Rigidbody _rb;
-    private HingeJoint _joint;
+    private Pendulum pendulum;
 
     public bool isHooking;
-    private float oriMoveSpeed;
+    private float timer;
 
     private void Awake()
     {
         _playerController = GetComponent<PlayerController>();
         _rb = GetComponent<Rigidbody>();
+        _cam = Camera.main.GetComponent<ThirdPerCam>();
+        hookViableVisual.fillAmount = 1 - successRatio;
     }
 
     private void OnEnable()
     {
-        hookAction.action.performed += Hook;
+        hookAction.action.started += Hook;
         hookAction.action.canceled += Hook;
     }
 
     private void OnDisable()
     {
-        hookAction.action.performed -= Hook;
+        hookAction.action.started -= Hook;
         hookAction.action.canceled -= Hook;
     }
 
@@ -63,102 +63,85 @@ public class HookAbility : MonoBehaviour
     {
         if (isHooking) 
         {
-            if (Time.time > TempoManager._lastBeatTime - offsetBeatTime && Time.time < TempoManager._lastBeatTime + offsetBeatTime)
-            {
-                Debug.Log($"<color=magenta>Release On Beat");
-                Vector3 dir = orientation.TransformDirection(orientation.forward);
-                Vector3 realDir = new Vector3(dir.x, 0f, dir.z); 
-                _rb.AddForce(realDir * throwForwardBurst, ForceMode.Impulse);
-            }
+            if (timer / hookTime < successRatio)
+                DisableHook(false);
             else
-            {
-                Vector3 dir = -orientation.up;
-                _rb.AddForce(dir * throwDownBurst, ForceMode.Impulse);
-            }
-
-            isHooking = false;
-            _playerController.transform.eulerAngles = Vector3.zero;
-            _rb.constraints = RigidbodyConstraints.FreezeRotation;
-            _playerController.MoveSpeed = oriMoveSpeed;
-            _playerController.Anim.SetTrigger("EndSwing");
-            lineRenderer.positionCount = 0;
-            Destroy(_joint);
-            _joint = null;
+                DisableHook(true);
         }
         else
         {
-            //_playerController.enabled = false;
-            
-            Collider[] collideData = Physics.OverlapSphere(transform.position + detectOffset, hookRange);
+            if (context.canceled) return;
 
-            foreach (Collider collide in collideData) 
-            { 
-                if (collide.CompareTag("Hook") && collide.TryGetComponent(out Rigidbody rb))
-                {
-                    _joint = gameObject.AddComponent<HingeJoint>();
-                    _joint.axis = new Vector3(collide.transform.right.x, collide.transform.right.y, collide.transform.right.z);
-                    
+            pendulum = hookSensor.GetNearestObject<Pendulum>();
 
-                    if (collide.transform.position.y >= transform.position.y)
-                    {
-                        _joint.anchor = new Vector3(0, 6f, 0f);
-                    }
-                    else
-                    {
-                        _joint.anchor = new Vector3(0, -10f, 0f);
-                    }
-                    
+            if (pendulum != null) 
+            {
+                hookSlider.gameObject.SetActive(true);
+                Transform playerTR = _playerController.transform;
 
-                    JointLimits limits = new JointLimits();
-                    limits.min = -angle;
-                    limits.max = angle;
-                    _joint.limits = limits;
-                    _joint.useLimits = true;
+                playerTR.SetParent(pendulum.transform);
+                playerTR.localPosition = grabOffset;
+                playerTR.eulerAngles = Vector3.zero;
+                playerTR.GetChild(0).eulerAngles = Vector3.zero;
 
-                    _joint.autoConfigureConnectedAnchor = true;
-                    _joint.connectedBody = rb;
+                _rb.isKinematic = true;
+                _rb.constraints = RigidbodyConstraints.None;
 
-                    //JointSpring springJoint = new JointSpring();
-                    //springJoint.damper = damper;
-                    //springJoint.spring = spring;
-                    //_joint.spring = springJoint;
-                    //_joint.useSpring = true;
-                    _joint.massScale = 4.5f;
+                _cam.enabled = false;
+                _playerController.Anim.SetTrigger("StartSwing");
+                _playerController.enabled = false;
 
-                    _rb.constraints = RigidbodyConstraints.None;
+                hookSlider.value = timer = 0;
+                hookSlider.maxValue = hookTime;
 
-                    oriMoveSpeed = _playerController.MoveSpeed;
-                    _playerController.MoveSpeed *= 1.5f;
-                    _playerController.transform.rotation = transform.rotation;
-                    _playerController.Anim.SetTrigger("StartSwing");
+                lineRenderer.positionCount = 2;
+                lineRenderer.SetPosition(0, pendulum.transform.position);
 
-                    lineRenderer.positionCount = 2;
-                    lineRenderer.SetPosition(0, rb.position);
-
-                    isHooking = true;
-
-                    break;
-                }
+                pendulum.isUsingHook = true;
+                isHooking = true;
             }
         }
     }
 
     private void HookMovement()
     {
-        Vector2 move = movementAction.action.ReadValue<Vector2>();
+        handPoint = lineRenderer.transform.position;
 
-        handPoint = transform.position + grabOffset;
-
-        if (move.y > 0) _rb.AddForce(orientation.forward * forwardThrustForce * Time.deltaTime);
-        if (move.y < 0) _rb.AddForce(-orientation.forward * forwardThrustForce * Time.deltaTime);
+        timer += Time.deltaTime;
+        hookSlider.value = timer;
 
         lineRenderer.SetPosition(1, handPoint);
+
+        if (timer > hookTime)
+            DisableHook(false);
     }
 
-    private void OnDrawGizmosSelected()
+    private void DisableHook(bool enableForce)
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position + detectOffset, hookRange);
-        Gizmos.DrawSphere(transform.position + grabOffset, 0.1f);
+        hookSlider.gameObject.SetActive(false);
+        isHooking = false;
+        timer = 0;
+
+        _rb.isKinematic = false;
+
+        if (enableForce)
+        {
+            _rb.AddForce(pendulum.transform.forward * throwForwardBurst, ForceMode.Impulse);
+        }
+
+        _rb.constraints = RigidbodyConstraints.FreezeRotation;
+
+        _playerController.transform.SetParent(null);
+        
+        _cam.enabled = true;
+        _playerController.enabled = true;
+        _playerController.transform.eulerAngles = Vector3.zero;
+        _playerController.Anim.SetTrigger("EndSwing");
+
+        lineRenderer.positionCount = 0;
+
+        pendulum.isUsingHook = false;
+        pendulum.ResetPendulum();
+        pendulum = null;
     }
 }
