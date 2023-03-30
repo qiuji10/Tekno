@@ -7,18 +7,18 @@ public class PlatformFlip : MonoBehaviour
 {
     [Header("Payload Settings")]
     [EventID]
-    public string payloadEventID;
+    public string eventID;
     public GameObject platform;
 
-    [Header("BPM Settings")]
-    public int bpm = 120;
-    public float flipSpeed = 1f;
-
     [Header("Flip Settings")]
+    public float flipSpeed = 1f;
     public float flipInterval;
     public float flipDuration;
     private bool flipping = false;
 
+    private int bpm = 140;
+    private Track track;
+    public static Track currentTrack;
 
     private GameObject parental;
     public Transform player { get; set; }
@@ -26,8 +26,51 @@ public class PlatformFlip : MonoBehaviour
 
     private void Awake()
     {
+        // Set the track field to the current track
+        track = currentTrack;
+
+        Koreographer.Instance.RegisterForEventsWithTime(eventID, PayloadTriggered);
+        flipDuration = 60f / bpm;
+
         parental = transform.GetChild(0).gameObject;
-        Koreographer.Instance.RegisterForEventsWithTime(payloadEventID, PayloadTriggered);
+    }
+
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    }
+
+    private void StanceManager_OnStanceChange(Track obj)
+    {
+        // Determine which event ID to use based on the track's genre
+        if (obj.genre == Genre.House)
+        {
+            eventID = "120_House_IntPayload";
+            bpm = 120;
+            flipDuration = 60f / bpm;
+        }
+        else if (obj.genre == Genre.Techno)
+        {
+            eventID = "140_Techno_IntPayload";
+            bpm = 140;
+            flipDuration = 60f / bpm;
+        }
+        else if (obj.genre == Genre.Electronic)
+        {
+            eventID = "160_Electro_IntPayload";
+            bpm = 160;
+            flipDuration = 60f / bpm;
+        }
+
+        // Set the current track
+        currentTrack = obj;
+
+        Koreographer.Instance.RegisterForEventsWithTime(eventID, PayloadTriggered);
+    }
+
+    private void OnDisable()
+    {
+        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
     }
 
     IEnumerator Flip()

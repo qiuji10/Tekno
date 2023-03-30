@@ -15,7 +15,6 @@ public class TrapDoors : MonoBehaviour
     private bool isOpen = false;
     private Quaternion leftDoorRotationOpen;
     private Quaternion rightDoorRotationOpen;
-
     private Quaternion leftDoorRotationClose;
     private Quaternion rightDoorRotationClose;
 
@@ -26,13 +25,60 @@ public class TrapDoors : MonoBehaviour
     private Coroutine rotationCoroutine = null;
     public ParticleSystem smokeParticles;
 
+    private int bpm = 140; // Beats per minute
+    private Track track;
+    public static Track currentTrack;
+
+
     private void Awake()
     {
+        // Set the track field to the current track
+        track = currentTrack;
+
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+        rotateDuration = 60f / bpm;
+
         leftDoorRotationOpen = leftDoor.transform.rotation;
         rightDoorRotationOpen = rightDoor.transform.rotation;
         leftDoorRotationClose = Quaternion.Euler(-90f,0,0);
         rightDoorRotationClose = Quaternion.Euler(90f, 0, 0);
+    }
+
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    }
+
+    private void StanceManager_OnStanceChange(Track obj)
+    {
+        // Determine which event ID to use based on the track's genre
+        if (obj.genre == Genre.House)
+        {
+            eventID = "120_House_IntPayload";
+            bpm = 120;
+            rotateDuration = 60f / bpm;
+        }
+        else if (obj.genre == Genre.Techno)
+        {
+            eventID = "140_Techno_IntPayload";
+            bpm = 140;
+            rotateDuration = 60f / bpm;
+        }
+        else if (obj.genre == Genre.Electronic)
+        {
+            eventID = "160_Electro_IntPayload";
+            bpm = 160;
+            rotateDuration = 60f / bpm;
+        }
+
+        // Set the current track
+        currentTrack = obj;
+        Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+    }
+
+    private void OnDisable()
+    {
+        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
     }
 
     private void OnMusicEvent(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)

@@ -1,7 +1,10 @@
 using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.DualShock;
 using UnityEngine.UI;
 
 public enum KeyInput { None, Circle, Cross, Square, Triangle }
@@ -36,6 +39,8 @@ public class Amplifier_V2 : MonoBehaviour
     private EventInvoker eventInvoker;
     private List<BeatData> beatData = new List<BeatData>();
     private List<BeatPoint> beatObjects = new List<BeatPoint>();
+    private List<Slider> speakerSliders = new List<Slider>();
+    private List<Slider> amplifierSliders = new List<Slider>();
     private int index, totalRound, speakerHealth, amplifierHealth;
     private bool startGame, isSpawning;
 
@@ -49,6 +54,9 @@ public class Amplifier_V2 : MonoBehaviour
 
         speakerHealthShake = speakerHealthBar.GetComponent<UI_Shake>();
         amplifierHealthShake = amplifierHealthBar.GetComponent<UI_Shake>();
+
+        speakerSliders = speakerHealthBar.GetComponentsInChildren<Slider>().ToList();
+        amplifierSliders = amplifierHealthBar.GetComponentsInChildren<Slider>().ToList();
 
         isSpawning = true;
 
@@ -116,11 +124,17 @@ public class Amplifier_V2 : MonoBehaviour
 
         speakerHealthShake.Shake();
 
+        if (Gamepad.current != null) Gamepad.current.SetMotorSpeeds(2f, 3f);
+
         Slider slider = speakerHealthBar.transform.GetChild(speakerHealth).GetComponent<Slider>();
         float timeToBeatCount = TempoManager.GetTimeToBeatCount(1);
         LeanTween.value(slider.gameObject, 1, 0, timeToBeatCount).setOnUpdate((float blend) => {
             slider.value = blend;
-        }).setOnComplete(() => StartCoroutine(EvaluateStatus()));
+        }).setOnComplete(() =>
+        {
+            InputSystem.PauseHaptics();
+            StartCoroutine(EvaluateStatus());
+        });
     }
 
     // This function did not subscribe any event, it is internally called
@@ -130,17 +144,41 @@ public class Amplifier_V2 : MonoBehaviour
 
         amplifierHealthShake.Shake();
 
+        if (Gamepad.current != null) Gamepad.current.SetMotorSpeeds(2f, 3f);
+
         Slider slider = amplifierHealthBar.transform.GetChild(amplifierHealth).GetComponent<Slider>();
         float timeToBeatCount = TempoManager.GetTimeToBeatCount(1);
         LeanTween.value(slider.gameObject, 1, 0, timeToBeatCount).setOnUpdate((float blend) => {
             slider.value = blend;
-        }).setOnComplete(() => StartCoroutine(EvaluateStatus()));
+        }).setOnComplete(() =>
+        {
+            InputSystem.PauseHaptics();
+            StartCoroutine(EvaluateStatus());
+        });
     }
 
     private IEnumerator EvaluateStatus()
     {
         if (amplifierHealth <= 0)
         {
+            foreach (Slider speakerSlider in speakerSliders)
+            {
+                speakerSlider.value = 1f;
+            }
+
+            foreach (Slider amplifierSlider in amplifierSliders)
+            {
+                amplifierSlider.value = 1f;
+            }
+
+            foreach (EnemyBase e in enemiesInControl)
+            {
+                if (e != null)
+                {
+                    e.FreeEnemy();
+                }
+            }
+
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
@@ -148,6 +186,16 @@ public class Amplifier_V2 : MonoBehaviour
         }
         else if (speakerHealth <= 0)
         {
+            foreach (Slider speakerSlider in speakerSliders)
+            {
+                speakerSlider.value = 1f;
+            }
+
+            foreach (Slider amplifierSlider in amplifierSliders)
+            {
+                amplifierSlider.value = 1f;
+            }
+
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;

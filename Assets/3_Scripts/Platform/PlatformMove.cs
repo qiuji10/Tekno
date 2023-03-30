@@ -3,23 +3,67 @@ using System.Collections.Generic;
 using UnityEngine;
 using SonicBloom.Koreo;
 
-public class PlatformMove : MonoBehaviour
-{
-    [Header("Movement Settings")]
+public class PlatformMove : MonoBehaviour, IPlatform
+{ 
+    [Header("Moving Platform Settings")]
     [EventID]
     public string eventID;
     public Transform[] points;
     private int currentPoint;
-    private bool isMoving;
 
-    [Header("Speed Settings")]
-    public int bpm; // Beats per minute
+    private bool isMoving;
+    private int bpm = 140; // Beats per minute
     private float beatDuration; // Duration of one beat in seconds
-    private float moveTime;
+    public float moveTime;
+
+    private Track track;
+    public static Track currentTrack;
+
+    private GameObject parental;
+    public Transform player { get; set; }
+    public bool PlayerOnPlatform { get; set; }
+
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+    }
+
+    private void StanceManager_OnStanceChange(Track obj)
+    {
+        // Determine which event ID to use based on the track's genre
+        if (obj.genre == Genre.House)
+        {
+            eventID = "120_House_PlatformMove";
+            bpm = 120;
+            beatDuration = 60f / bpm;
+        }
+        else if (obj.genre == Genre.Techno)
+        {
+            eventID = "140_Techno_PlatformMove";
+            bpm = 140;
+            beatDuration = 60f / bpm;
+        }
+        else if (obj.genre == Genre.Electronic)
+        {
+            eventID = "160_Electro_PlatformMove";
+            bpm = 160;
+            beatDuration = 60f / bpm;
+        }
+
+        // Set the current track
+        currentTrack = obj;
+        Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+    }
+
+    private void OnDisable()
+    {
+        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
+    }
 
     private void Awake()
     {
-        Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
+        // Set the track field to the current track
+        track = currentTrack;
         beatDuration = 60f / bpm;
     }
 
@@ -49,7 +93,7 @@ public class PlatformMove : MonoBehaviour
     private void MoveToPoint(Vector3 targetPosition)
     {
         float distance = Vector3.Distance(transform.position, targetPosition);
-        float duration = distance /  beatDuration;
+        float duration = distance / beatDuration;
 
         moveTime += Time.deltaTime;
         transform.position = Vector3.Lerp(transform.position, targetPosition, moveTime / duration);
@@ -69,4 +113,3 @@ public class PlatformMove : MonoBehaviour
         }
     }
 }
-

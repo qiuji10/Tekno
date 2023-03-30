@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerStatus : MonoBehaviour, IDamagable 
@@ -7,11 +8,16 @@ public class PlayerStatus : MonoBehaviour, IDamagable
 
     public int Health { get { return health; } }
     public bool IsAlive => health > 0;
-    private CheckpointManager checkpointManager;
+    private bool isGlitchy;
+    //private CheckpointManager checkpointManager;
+    private MaterialModifier matModifier;
+
+    private Animator _anim;
 
     private void Awake()
     {
-        checkpointManager = FindObjectOfType<CheckpointManager>();
+        //checkpointManager = FindObjectOfType<CheckpointManager>();
+        matModifier = GetComponent<MaterialModifier>();
     }
 
     public void Damage(int damage)
@@ -19,6 +25,11 @@ public class PlayerStatus : MonoBehaviour, IDamagable
         if (health > damage)
         {
             health -= damage;
+            
+            if (!isGlitchy)
+            {
+                StartCoroutine(GlitchyDamageEffect());
+            }
         }
         else
         {
@@ -27,14 +38,23 @@ public class PlayerStatus : MonoBehaviour, IDamagable
             if (life > 0)
             {
                 life -= 1;
-                checkpointManager.SetPlayerToSpawnPoint(transform);
+                //checkpointManager.SetPlayerToSpawnPoint(transform);
             }
             else
             {
                 // lose game
-                checkpointManager.SetPlayerToSpawnPoint(transform);
+                //checkpointManager.SetPlayerToSpawnPoint(transform);
             }
         }
+    }
+
+    IEnumerator GlitchyDamageEffect()
+    {
+        isGlitchy = true;
+        matModifier.GlitchyEffectOn();
+        yield return new WaitForSeconds(1f);
+        matModifier.GlitchyEffectOff();
+        isGlitchy = false;
     }
 
     private void OnApplicationQuit()

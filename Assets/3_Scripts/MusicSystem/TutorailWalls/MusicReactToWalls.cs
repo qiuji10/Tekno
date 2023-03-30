@@ -7,6 +7,8 @@ public class MusicReactToWalls : MonoBehaviour
 
     [SerializeField] private Material material;
     [SerializeField] private Material materialStatic;
+    [SerializeField] private Material materialStatic1;
+    [SerializeField] private Material materialStatic2;
 
     private void OnEnable()
     {
@@ -21,18 +23,23 @@ public class MusicReactToWalls : MonoBehaviour
         switch (obj.genre)
         {
             case Genre.House:
-                speed = 1.0f;
-                gridColor = new Color(3.92452836f, 3.58071637f, 0, 0);
+                speed = 0.1f;
+                gridColor = new Color(1.72079539f, 1.57664502f, 0, 0);
+               
                 break;
 
             case Genre.Techno:
-                speed = 2.2f;
+                speed = 0.5f;
                 gridColor = new Color(0, 0.205526888f, 3.92452836f, 0);
                 break;
 
             case Genre.Electronic:
-                speed = 3.0f;
-                gridColor = new Color(0.564901888f, 5.23955345f, 0.173004225f, 0);
+                speed = 1.5f;
+                gridColor = new Color(0.0313725509f, 1.74117649f, 0, 0);
+               
+
+
+
                 break;
 
             default:
@@ -45,6 +52,8 @@ public class MusicReactToWalls : MonoBehaviour
         material.SetFloat("_speed", speed);
         material.SetColor("_GridColor", gridColor);
         materialStatic.SetColor("_GridColor", gridColor);
+        materialStatic1.SetColor("_GridColor", gridColor);
+        materialStatic2.SetColor("_GridColor", gridColor);
     } 
 
     private void OnDisable()
