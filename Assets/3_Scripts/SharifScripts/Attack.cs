@@ -14,6 +14,8 @@ public class Attack : MonoBehaviour
 
     [SerializeField] private InputActionReference attackAction;
 
+    public bool showDebug;
+
     private void Awake()
     {
         isCooldownFinish = true;
@@ -61,6 +63,7 @@ public class Attack : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.DrawWireSphere(attackPos.position, attackRadius);
+        if (showDebug)
+            Gizmos.DrawWireSphere(attackPos.position, attackRadius);
     }
 }

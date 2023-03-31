@@ -65,7 +65,10 @@ public class EnemyBase : MonoBehaviour, IKnockable
             float currentWeight = _anim.GetLayerWeight(1);
             _anim.SetLayerWeight(1, Mathf.SmoothDamp(currentWeight, 0, ref velocity, 0.1f));
         }
+    }
 
+    private void FixedUpdate()
+    {
         if (isKnockng && !_agent.enabled)
         {
             if (Physics.Raycast(transform.position + groundDetectOffset, -Vector3.up, detectDistance, ignoreLayer))
@@ -76,7 +79,7 @@ public class EnemyBase : MonoBehaviour, IKnockable
                 //_rb.isKinematic = true;
                 _rb.constraints = RigidbodyConstraints.None;
                 _agent.enabled = true;
-                _owner.StartBehaviour();
+                _owner.RestartBehaviour();
             }
         }
     }
