@@ -22,49 +22,50 @@ public class TeleportAbility : MonoBehaviour
 
     private void Teleport(InputAction.CallbackContext context)
     {
-        Collider[] collideData = Physics.OverlapSphere(transform.position, teleportRange);
-        Transform nextTeleportPoint = null, prevTeleportPoint = null;
-        Vector3 teleportDirection = Vector3.zero;
-        int teleportNodeCount = 0;
-
-        foreach (Collider collide in collideData)
+        if (Time.time > TempoManager._lastBeatTime - offsetBeatTime && Time.time < TempoManager._lastBeatTime + offsetBeatTime)
         {
-            if (collide.TryGetComponent(out TeleportNode tpNode))
+            Collider[] collideData = Physics.OverlapSphere(transform.position, teleportRange);
+            Transform nextTeleportPoint = null, prevTeleportPoint = null;
+            Vector3 teleportDirection = Vector3.zero;
+            int teleportNodeCount = 0;
+
+            foreach (Collider collide in collideData)
             {
-                if (tpNode.nextTeleportPoint != null)
+                if (collide.TryGetComponent(out TeleportNode tpNode))
                 {
-                    nextTeleportPoint = tpNode.nextTeleportPoint;
-                    teleportDirection += nextTeleportPoint.position - transform.position;
-                    teleportNodeCount++;
-                }
+                    if (tpNode.nextTeleportPoint != null)
+                    {
+                        nextTeleportPoint = tpNode.nextTeleportPoint;
+                        teleportDirection += nextTeleportPoint.position - transform.position;
+                        teleportNodeCount++;
+                    }
 
-                if (tpNode.prevTeleportPoint != null)
-                {
-                    prevTeleportPoint = tpNode.prevTeleportPoint;
-                    teleportDirection += prevTeleportPoint.position - transform.position;
-                    teleportNodeCount++;
-                }
+                    if (tpNode.prevTeleportPoint != null)
+                    {
+                        prevTeleportPoint = tpNode.prevTeleportPoint;
+                        teleportDirection += prevTeleportPoint.position - transform.position;
+                        teleportNodeCount++;
+                    }
 
-                break;
+                    break;
+                }
+            }
+
+            if (nextTeleportPoint == null && prevTeleportPoint == null) return;
+            Vector3 targetPosition = (nextTeleportPoint != null ? nextTeleportPoint.position : prevTeleportPoint.position);
+            Vector3 direction = (targetPosition - transform.position).normalized;
+            Vector3 centerPoint = Vector3.Lerp(transform.position, targetPosition, 0.5f);
+            Transform vfx = Instantiate(electricVFX, targetPosition, Quaternion.LookRotation(direction));
+
+            if (nextTeleportPoint != null)
+            {
+                LeanTween.move(gameObject, nextTeleportPoint, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
+            }
+            else
+            {
+                LeanTween.move(gameObject, prevTeleportPoint, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
             }
         }
-
-        if (nextTeleportPoint == null && prevTeleportPoint == null) return;
-        Vector3 targetPosition = (nextTeleportPoint != null ? nextTeleportPoint.position : prevTeleportPoint.position);
-        Vector3 direction = (targetPosition - transform.position).normalized;
-        Vector3 centerPoint = Vector3.Lerp(transform.position, targetPosition, 0.5f);
-        Transform vfx = Instantiate(electricVFX, targetPosition, Quaternion.LookRotation(direction));
-
-        if (nextTeleportPoint != null)
-        {
-            LeanTween.move(gameObject, nextTeleportPoint, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
-        }
-        else
-        {
-            LeanTween.move(gameObject, prevTeleportPoint, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
-        }
-
-
     }
 
 

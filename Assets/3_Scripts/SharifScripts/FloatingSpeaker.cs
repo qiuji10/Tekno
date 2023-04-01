@@ -34,14 +34,10 @@ public class FloatingSpeaker : MonoBehaviour
 
     void Update()
     {
-        // Set target position for movement
         targetPosition = waypoint.position;
-
-        // Move the object towards the target position on the x and z axes
         Vector3 targetPositionXZ = new Vector3(targetPosition.x, transform.position.y, targetPosition.z);
         transform.position = Vector3.SmoothDamp(transform.position, targetPositionXZ, ref velocityXZ, smoothTimeXZ);
 
-        // Move the object towards the target position on the y axis
         Vector3 targetPositionY = new Vector3(transform.position.x, targetPosition.y, transform.position.z);
 
         if (isOnBeat)
@@ -51,11 +47,7 @@ public class FloatingSpeaker : MonoBehaviour
         }
 
         transform.position = Vector3.SmoothDamp(transform.position, targetPositionY, ref velocityY, smoothTimeY);
-
-        //// Calculate desired rotation using LookRotation
         Quaternion targetRotation = Quaternion.LookRotation(player.position);
-
-        //// Smoothly interpolate between current rotation and target rotation
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime / lookAtSmoothTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime / lookAtSmoothTime);
     }
 }
