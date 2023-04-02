@@ -44,7 +44,7 @@ public class SlidingRailAbility : MonoBehaviour
             if (m_Position >= m_Path.PathLength)
             {
                 rb.isKinematic = false;
-                rb.AddForce(transform.forward * 8);
+                rb.AddForce(transform.GetChild(0).forward * 15);
                 StartCoroutine(DelayAction(EndSlidingPipe, 0.2f));
             }
             else
@@ -58,11 +58,26 @@ public class SlidingRailAbility : MonoBehaviour
     {
         if (!isGrindingRail && collision.transform.CompareTag("Rail"))
         {
+            m_Path = collision.transform.GetComponentInParent<CinemachineSmoothPath>();
             float d = (float)collision.transform.GetSiblingIndex() / (float)collision.transform.parent.childCount;
 
+            //Vector3 tempPos = m_Path.EvaluatePositionAtUnit(0, m_PositionUnits);
+            //d = Vector3.Distance(transform.position, tempPos);
+
+            //for (float i = 0.01f; i < 1; i += 0.01f)
+            //{
+            //    Vector3 pointPos = m_Path.EvaluatePositionAtUnit(m_Path.StandardizeUnit(i, m_PositionUnits), m_PositionUnits);
+            //    float cacheDist = Vector3.Distance(transform.position, pointPos);
+
+            //    if (cacheDist <= d)
+            //        d = cacheDist;
+            //    else
+            //        break;
+            //}
+            //d = d / m_Path.PathLength;
             if (d > 0.95) return;
 
-            m_Path = collision.transform.GetComponentInParent<CinemachineSmoothPath>();
+            
             m_Position = d * m_Path.PathLength;
 
             // Calculate the angle between the two directions
@@ -108,6 +123,7 @@ public class SlidingRailAbility : MonoBehaviour
             m_Path = null;
             m_Speed = 0;
             isGrindingRail = false;
+            transform.GetChild(0).localEulerAngles = new Vector3(0, transform.GetChild(0).localEulerAngles.y, 0);
 
             StartCoroutine(EnableBackCollider());
         }
@@ -119,7 +135,7 @@ public class SlidingRailAbility : MonoBehaviour
         {
             m_Position = m_Path.StandardizeUnit(distanceAlongPath, m_PositionUnits);
             transform.position = m_Path.EvaluatePositionAtUnit(m_Position, m_PositionUnits);
-            transform.rotation = m_Path.EvaluateOrientationAtUnit(m_Position, m_PositionUnits);
+            transform.GetChild(0).rotation = m_Path.EvaluateOrientationAtUnit(m_Position, m_PositionUnits);
         }
     }
 
