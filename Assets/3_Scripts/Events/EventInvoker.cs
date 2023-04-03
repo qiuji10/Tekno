@@ -4,14 +4,19 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
+public enum EventInvokeType { Enter, Stay }
+
 public class EventInvoker : MonoBehaviour
 {
     [SerializeField] private InputActionReference interactKey;
+    [SerializeField] private EventInvokeType eventType = EventInvokeType.Stay;
 
     [SerializeField] private GameObject prompt;
     [SerializeField] private UnityEvent OnInteract;
 
-    private bool inRange;
+    [SerializeField] private bool triggerOnce;
+
+    private bool inRange, triggerDisable;
     private Camera cam;
 
     private void Awake()
@@ -31,18 +36,36 @@ public class EventInvoker : MonoBehaviour
 
     private void Interact(InputAction.CallbackContext context)
     {
-        if (inRange)
+        if (!triggerDisable && eventType == EventInvokeType.Stay && inRange)
         {
+            if (triggerOnce)
+            {
+                triggerDisable = true;
+                prompt.SetActive(false);
+            }
+
             OnInteract?.Invoke();
-            prompt.SetActive(false);
+            //prompt.SetActive(false);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!triggerDisable && other.CompareTag("Player"))
         {
-            prompt.SetActive(true);
+            if (prompt != null) prompt.SetActive(true);
+
+            if (eventType == EventInvokeType.Enter)
+            {
+                if (triggerOnce)
+                {
+                    triggerDisable = true;
+                    prompt.SetActive(false);
+                }
+
+                OnInteract?.Invoke();
+            }
+
             inRange = true;
         }
     }
@@ -51,7 +74,7 @@ public class EventInvoker : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (inRange && prompt != null)
+            if (!triggerDisable && inRange && prompt != null)
             {
                 prompt.transform.rotation = Quaternion.LookRotation(prompt.transform.position - cam.transform.position);
             }
@@ -62,7 +85,7 @@ public class EventInvoker : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            prompt.SetActive(false);
+            if (prompt != null) prompt.SetActive(false);
             inRange = false;
         }
     }

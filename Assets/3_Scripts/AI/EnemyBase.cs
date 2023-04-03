@@ -65,7 +65,10 @@ public class EnemyBase : MonoBehaviour, IKnockable
             float currentWeight = _anim.GetLayerWeight(1);
             _anim.SetLayerWeight(1, Mathf.SmoothDamp(currentWeight, 0, ref velocity, 0.1f));
         }
+    }
 
+    private void FixedUpdate()
+    {
         if (isKnockng && !_agent.enabled)
         {
             if (Physics.Raycast(transform.position + groundDetectOffset, -Vector3.up, detectDistance, ignoreLayer))
@@ -73,10 +76,10 @@ public class EnemyBase : MonoBehaviour, IKnockable
                 isKnockng = false;
                 transform.eulerAngles = Vector3.zero;
                 _rb.velocity = Vector3.zero;
-                //_rb.isKinematic = true;
+                _rb.isKinematic = true;
                 _rb.constraints = RigidbodyConstraints.None;
                 _agent.enabled = true;
-                _owner.StartBehaviour();
+                _owner.RestartBehaviour();
             }
         }
     }
@@ -127,17 +130,18 @@ public class EnemyBase : MonoBehaviour, IKnockable
 
         if (_agent.enabled) _agent.isStopped = true;
         _agent.enabled = false;
-        //_rb.isKinematic = false;
+        _rb.isKinematic = false;
         yield return null;
         _rb.velocity = Vector3.zero;
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
+
         _rb.AddForce(new Vector3(direction.x * directionMuliplier.x, directionMuliplier.y, direction.z * directionMuliplier.z) * power, ForceMode.VelocityChange);
-        
-        //// Limit maximum speed
-        //if (_rb.velocity.magnitude > maxKnockbackSpeed)
-        //{
-        //    _rb.velocity = _rb.velocity.normalized * maxKnockbackSpeed;
-        //}
+
+        // Limit maximum speed
+        if (_rb.velocity.magnitude > maxKnockbackSpeed)
+        {
+            _rb.velocity = _rb.velocity.normalized * maxKnockbackSpeed;
+        }
 
         yield return new WaitForSeconds(afterKnockedWaitTime);
         isKnockng = true;

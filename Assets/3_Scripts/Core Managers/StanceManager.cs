@@ -12,6 +12,7 @@ public class StanceManager : MonoBehaviour
 {
     public static Genre curStance;
     public static event Action<Track> OnStanceChange;
+    public static bool AllowPlayerSwitchStance;
 
     [Header("Audio References")]
     [SerializeField] private SimpleMusicPlayer musicPlayer;
@@ -41,6 +42,7 @@ public class StanceManager : MonoBehaviour
 
     private void Awake()
     {
+        AllowPlayerSwitchStance = true;
         musicPlayer = GetComponent<SimpleMusicPlayer>();
     }
 
@@ -52,6 +54,8 @@ public class StanceManager : MonoBehaviour
 
     private void SkipTrack(InputAction.CallbackContext context)
     {
+        if (!AllowPlayerSwitchStance) return;
+
         stanceAudio.time = 0;
         trackIndex++;
         trackIndex = trackIndex % tracks.Count;
@@ -60,6 +64,8 @@ public class StanceManager : MonoBehaviour
 
     private void RewindTrack(InputAction.CallbackContext context)
     {
+        if (!AllowPlayerSwitchStance) return;
+
         stanceAudio.time = 0;
         trackIndex = (trackIndex + tracks.Count - 1) % tracks.Count;
         PlayTrack(trackIndex);

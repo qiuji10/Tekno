@@ -8,8 +8,8 @@ public class PlayerController : MonoBehaviour, IKnockable
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
-    public bool allowedInput = true;
-    public bool allowedAction { get; set; } = true;
+    public static bool allowedInput = true;
+    public static bool allowedAction { get; set; } = true;
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 7;
@@ -47,6 +47,8 @@ public class PlayerController : MonoBehaviour, IKnockable
 
     private void Awake()
     {
+        allowedInput = allowedAction = true;
+
         if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.cyan * 0.5f);
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponentInChildren<Animator>();
@@ -97,6 +99,11 @@ public class PlayerController : MonoBehaviour, IKnockable
 
     private void FixedUpdate()
     {
+        if (_rb.isKinematic)
+            velocity = 0;
+
+        _anim.SetFloat(movement, velocity);
+
         if (!allowedInput) return;
 
         JumpVelocitySmoother();
@@ -166,8 +173,6 @@ public class PlayerController : MonoBehaviour, IKnockable
                 _rb.AddForce(_moveDir.normalized * moveSpeed * 10f * airSpeed, ForceMode.Force);
             }
         }
-
-        _anim.SetFloat(movement, velocity);
     }
 
     private void SpeedLimiter()

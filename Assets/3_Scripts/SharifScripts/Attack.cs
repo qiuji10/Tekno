@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +13,8 @@ public class Attack : MonoBehaviour
     private bool isCooldownFinish;
 
     [SerializeField] private InputActionReference attackAction;
+
+    public bool showDebug;
 
     private void Awake()
     {
@@ -60,6 +63,7 @@ public class Attack : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.DrawWireSphere(attackPos.position, attackRadius);
+        if (showDebug)
+            Gizmos.DrawWireSphere(attackPos.position, attackRadius);
     }
 }

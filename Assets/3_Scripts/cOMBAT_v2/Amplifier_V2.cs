@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.DualShock;
 using UnityEngine.UI;
+using TMPro;
 
 public enum KeyInput { None, Circle, Cross, Square, Triangle }
 
@@ -19,6 +19,7 @@ public class Amplifier_V2 : MonoBehaviour
     [SerializeField] Canvas canvas;
     [SerializeField] Transform sliderVisualParent;
     [SerializeField] Transform beatVisualParent;
+    [SerializeField] TMP_Text countdownText;
     [SerializeField] Image amplifierCoreImg;
     [SerializeField] RectTransform speakerHealthBar;
     [SerializeField] RectTransform amplifierHealthBar;
@@ -41,7 +42,7 @@ public class Amplifier_V2 : MonoBehaviour
     private List<BeatPoint> beatObjects = new List<BeatPoint>();
     private List<Slider> speakerSliders = new List<Slider>();
     private List<Slider> amplifierSliders = new List<Slider>();
-    private int index, totalRound, speakerHealth, amplifierHealth;
+    private int index, totalRound, speakerHealth, amplifierHealth, countdown = 4;
     private bool startGame, isSpawning;
 
     private UI_Shake speakerHealthShake, amplifierHealthShake;
@@ -57,6 +58,8 @@ public class Amplifier_V2 : MonoBehaviour
 
         speakerSliders = speakerHealthBar.GetComponentsInChildren<Slider>().ToList();
         amplifierSliders = amplifierHealthBar.GetComponentsInChildren<Slider>().ToList();
+
+        countdownText.gameObject.SetActive(false);
 
         isSpawning = true;
 
@@ -86,6 +89,7 @@ public class Amplifier_V2 : MonoBehaviour
     public void StartPlay()
     {
         LeanTween.reset();
+        StanceManager.AllowPlayerSwitchStance = false;
 
         eventInvoker.enabled = false;
 
@@ -113,7 +117,7 @@ public class Amplifier_V2 : MonoBehaviour
         speakerImg.rectTransform.LeanMoveLocal(new Vector2(-900, 0), timeToBeatCount);
         amplifierCoreImg.rectTransform.LeanMoveLocal(beatData[beatData.Count - 1].position, timeToBeatCount);
 
-        playerController.allowedInput = false;
+        PlayerController.allowedInput = false;
         startGame = true;
         canvas.gameObject.SetActive(true);
     }
@@ -141,7 +145,7 @@ public class Amplifier_V2 : MonoBehaviour
     private void Speaker_OnComboSuccess()
     {
         amplifierHealth--;
-
+        
         amplifierHealthShake.Shake();
 
         if (Gamepad.current != null) Gamepad.current.SetMotorSpeeds(2f, 3f);
@@ -179,6 +183,7 @@ public class Amplifier_V2 : MonoBehaviour
                 }
             }
 
+            StanceManager.AllowPlayerSwitchStance = true;
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
@@ -196,6 +201,7 @@ public class Amplifier_V2 : MonoBehaviour
                 amplifierSlider.value = 1f;
             }
 
+            StanceManager.AllowPlayerSwitchStance = true;
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
@@ -254,6 +260,20 @@ public class Amplifier_V2 : MonoBehaviour
                 beatObjects.Add(beatPoint);
                 index++;
 
+                if (index == beatData.Count)
+                {
+                    countdownText.text = "GO";
+                }
+                else if (index > beatData.Count - countdown)
+                {
+                    if (!countdownText.gameObject.activeInHierarchy)
+                    {
+                        countdownText.gameObject.SetActive(true);
+                    }
+                    countdown--;
+                    countdownText.text = countdown.ToString();
+                }
+
                 if (index > beatData.Count - 1)
                 {
                     isSpawning = false;
@@ -270,6 +290,11 @@ public class Amplifier_V2 : MonoBehaviour
 
             if (index == -1)
             {
+                if (countdownText.gameObject.activeInHierarchy)
+                {
+                    countdownText.gameObject.SetActive(false);
+                }
+
                 speaker.lastHitTime = Time.time;
             }
 
@@ -281,21 +306,11 @@ public class Amplifier_V2 : MonoBehaviour
                 float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
                 speaker.touchPoint = beatObjects[index].img.rectTransform.position;
                 speaker.key = beatData[index].key;
-                
-                //if (beatData[index].key == KeyInput.None)
-                //{
-                //    float timeToInput = GetTimeToInput(index);
-                //    Debug.Log(timeToInput);
-                //    speaker.timeToInput = timeToInput;
-                //}
-
                 speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutCirc();
 
             }
             else if (index == beatData.Count - 1)
             {
-                //Debug.Log("<color=cyan>stop trace</color>");
-                //speaker.startTrace = false;
                 speaker.currentBeat++;
                 index++;
             }
@@ -319,7 +334,7 @@ public class Amplifier_V2 : MonoBehaviour
     [Button]
     public void Resetter()
     {
-        playerController.allowedInput = true;
+        PlayerController.allowedInput = true;
         eventInvoker.enabled = true;
         speaker.OnHitFailure -= Speaker_OnHitFailure;
         speaker.OnComboSuccess -= Speaker_OnComboSuccess;
@@ -335,7 +350,8 @@ public class Amplifier_V2 : MonoBehaviour
         }
 
         beatObjects.Clear();
-        
+
+        countdown = 4;
         index = 0;
         isSpawning = true;
         startGame = false;
