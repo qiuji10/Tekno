@@ -76,7 +76,7 @@ public class EnemyBase : MonoBehaviour, IKnockable
                 isKnockng = false;
                 transform.eulerAngles = Vector3.zero;
                 _rb.velocity = Vector3.zero;
-                //_rb.isKinematic = true;
+                _rb.isKinematic = true;
                 _rb.constraints = RigidbodyConstraints.None;
                 _agent.enabled = true;
                 _owner.RestartBehaviour();

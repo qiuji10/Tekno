@@ -12,8 +12,17 @@ public class ThirdPerCam : MonoBehaviour
     [SerializeField] private InputActionReference moveAction;
     [SerializeField] private float rotationSpeed = 7f;
 
+    public static bool allowedRotation;
+
+    private void Awake()
+    {
+        allowedRotation = true;
+    }
+
     private void Update()
     {
+        if (!allowedRotation) return;
+
         Vector3 viewDir = player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
         orientation.forward = viewDir.normalized;
 

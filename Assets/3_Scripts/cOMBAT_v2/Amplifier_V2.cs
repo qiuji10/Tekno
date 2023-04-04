@@ -117,7 +117,7 @@ public class Amplifier_V2 : MonoBehaviour
         speakerImg.rectTransform.LeanMoveLocal(new Vector2(-900, 0), timeToBeatCount);
         amplifierCoreImg.rectTransform.LeanMoveLocal(beatData[beatData.Count - 1].position, timeToBeatCount);
 
-        playerController.allowedInput = false;
+        PlayerController.allowedInput = false;
         startGame = true;
         canvas.gameObject.SetActive(true);
     }
@@ -334,7 +334,7 @@ public class Amplifier_V2 : MonoBehaviour
     [Button]
     public void Resetter()
     {
-        playerController.allowedInput = true;
+        PlayerController.allowedInput = true;
         eventInvoker.enabled = true;
         speaker.OnHitFailure -= Speaker_OnHitFailure;
         speaker.OnComboSuccess -= Speaker_OnComboSuccess;

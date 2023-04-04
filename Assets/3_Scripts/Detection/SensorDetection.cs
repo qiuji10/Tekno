@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 public class SensorDetection : MonoBehaviour
 {
-    public float detectionRange = 5f;
-    public bool showGizmos = true;
-
     private List<Collider> detectedColliders = new List<Collider>();
 
     void OnTriggerEnter(Collider other)
@@ -40,14 +37,5 @@ public class SensorDetection : MonoBehaviour
         }
 
         return nearestObject;
-    }
-
-    void OnDrawGizmos()
-    {
-        if (showGizmos)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, detectionRange);
-        }
     }
 }
