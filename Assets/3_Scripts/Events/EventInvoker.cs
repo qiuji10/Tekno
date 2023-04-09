@@ -13,6 +13,7 @@ public class EventInvoker : MonoBehaviour
 
     [SerializeField] private GameObject prompt;
     [SerializeField] private UnityEvent OnInteract;
+    [SerializeField] private UnityEvent OnExit;
 
     [SerializeField] private bool triggerOnce;
 
@@ -86,6 +87,7 @@ public class EventInvoker : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             if (prompt != null) prompt.SetActive(false);
+            OnExit?.Invoke();
             inRange = false;
         }
     }

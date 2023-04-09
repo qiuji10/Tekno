@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,20 +8,23 @@ public enum CameraMode { FreeLook, Fixed }
 
 public class ThirdPerCam : MonoBehaviour
 {
-    [Header("References")]
+    [Header("Player References")]
     [SerializeField] private Transform orientation;
     [SerializeField] private Transform player;
     [SerializeField] private Transform playerObj;
     [SerializeField] private InputActionReference moveAction;
     [SerializeField] private float rotationSpeed = 7f;
 
-    private CameraMode camMode;
+    [Header("CM Reference")]
+    [SerializeField] private CinemachineFreeLook cm;
+    private CinemachineInputProvider cmInput;
 
     public static bool allowedRotation;
 
     private void Awake()
     {
         allowedRotation = true;
+        cmInput = cm.GetComponent<CinemachineInputProvider>();
     }
 
     private void Update()
@@ -38,8 +42,31 @@ public class ThirdPerCam : MonoBehaviour
             playerObj.forward = Vector3.Slerp(playerObj.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
     }
 
-    public void SetCamMode(CameraMode mode)
+    public void SetCamMode(CameraMode mode, float x = 0, float y = 0.5f, float time = 0.5f)
     {
+        switch (mode)
+        {
+            case CameraMode.FreeLook:
+                cmInput.enabled = true;
+                break;
+
+            case CameraMode.Fixed:
+
+                cmInput.enabled = false;
+
+                float startY = cm.m_YAxis.Value;
+                float startX = cm.m_XAxis.Value;
+
+                LeanTween.value(cm.gameObject, startY, y, time).setOnUpdate((float value) => {
+                    cm.m_YAxis.Value = value;
+                });
+
+                LeanTween.value(cm.gameObject, startX, x, time).setOnUpdate((float value) => {
+                    cm.m_XAxis.Value = value;
+                });
+
+                break;
+        }
 
     }
 }
