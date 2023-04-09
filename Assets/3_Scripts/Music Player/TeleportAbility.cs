@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 public class TeleportAbility : MonoBehaviour
 {
     [SerializeField] private InputActionReference teleportAction;
+    [SerializeField] private ChargingSystem charge;
+    [SerializeField] private MotherNode teleportChain;
     [SerializeField] private float teleportRange = 5f;
     [SerializeField] private float offsetBeatTime = 0.3f;
     [SerializeField] private Transform electricVFX;
@@ -22,7 +24,8 @@ public class TeleportAbility : MonoBehaviour
 
     private void Teleport(InputAction.CallbackContext context)
     {
-        if (Time.time > TempoManager._lastBeatTime - offsetBeatTime && Time.time < TempoManager._lastBeatTime + offsetBeatTime)
+
+        if (charge.isMaxCharge && Time.time > TempoManager._lastBeatTime - offsetBeatTime && Time.time < TempoManager._lastBeatTime + offsetBeatTime)
         {
             Collider[] collideData = Physics.OverlapSphere(transform.position, teleportRange);
             Transform nextTeleportPoint = null, prevTeleportPoint = null;
@@ -68,6 +71,17 @@ public class TeleportAbility : MonoBehaviour
         }
     }
 
+    public void TeleportToNextNode(Transform targetTeleportPoint)
+    {
+        if (charge.isMaxCharge)
+        {
+            Vector3 direction = (targetTeleportPoint.position - transform.position).normalized;
+            Vector3 centerPoint = Vector3.Lerp(transform.position, targetTeleportPoint.position, 0.5f);
+            Transform vfx = Instantiate(electricVFX, targetTeleportPoint.position, Quaternion.LookRotation(direction));
+            LeanTween.move(gameObject, targetTeleportPoint.position, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
+        }
+        
+    }
 
 
     private void OnDrawGizmosSelected()

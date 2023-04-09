@@ -15,7 +15,7 @@ public class ChargingSystem : MonoBehaviour
     private float currentChargeLevel = 0f;
     private float chargeRate = 0f;
     private float timeSinceLastPress = 0f;
-    private bool isMaxCharge;
+    public bool isMaxCharge;
 
     public Slider chargeSlider;
 
