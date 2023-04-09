@@ -25,6 +25,11 @@ public class SensorDetection : MonoBehaviour
 
         foreach (Collider detectedCollider in detectedColliders)
         {
+            if (detectedCollider == null)
+            {
+                continue;
+            }
+
             if (detectedCollider.TryGetComponent<T>(out T detectedObject))
             {
                 float distanceToCollider = Vector3.Distance(transform.position, detectedCollider.transform.position);
