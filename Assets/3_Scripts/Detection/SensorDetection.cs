@@ -21,7 +21,7 @@ public class SensorDetection : MonoBehaviour
     public T GetNearestObject<T>()
     {
         T nearestObject = default(T);
-        float nearestDistance = float.MaxValue;
+        float nearestDistance = Mathf.Infinity;
 
         foreach (Collider detectedCollider in detectedColliders)
         {

@@ -81,8 +81,8 @@ public class HookAbility : MonoBehaviour
 
                 playerTR.SetParent(pendulum.transform);
                 playerTR.localPosition = grabOffset;
-                playerTR.eulerAngles = Vector3.zero;
-                playerTR.GetChild(0).eulerAngles = Vector3.zero;
+                playerTR.localEulerAngles = Vector3.zero;
+                playerTR.GetChild(0).localEulerAngles = Vector3.zero;
 
                 _rb.isKinematic = true;
                 _rb.constraints = RigidbodyConstraints.None;

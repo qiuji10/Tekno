@@ -45,8 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b6f33ea8031e8d46bb56c8d0a57de09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRange: 10
-  showGizmos: 0
 --- !u!135 &205935432
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2190,6 +2188,7 @@ GameObject:
   - component: {fileID: 4485110921945096258}
   - component: {fileID: 1333158407432279658}
   - component: {fileID: 5857127735591011523}
+  - component: {fileID: 3416496687562838420}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -2260,7 +2259,7 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: 6af926b246c2a064e92da170cb369b94, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.25
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -2305,7 +2304,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orientation: {fileID: 6397968323150439672}
-  allowedInput: 1
   moveSpeed: 11
   airSpeed: 1.2
   moveDrag: 4
@@ -2415,6 +2413,22 @@ MonoBehaviour:
   glitchVolume: {fileID: 7138367317829067982}
   glitchFadeIn: 0.25
   glitchFadeOut: 0.25
+--- !u!114 &3416496687562838420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6397968323028654099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30e627521936a5d439f227248f590ed3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Path: {fileID: 0}
+  slidingSpeed: 30
+  jumpAction: {fileID: -5402125171716273264, guid: 1870834d611a202418d6e474a9fb0619,
+    type: 3}
 --- !u!1 &6397968323150439673
 GameObject:
   m_ObjectHideFlags: 0

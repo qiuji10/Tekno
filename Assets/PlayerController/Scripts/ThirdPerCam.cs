@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum CameraMode { FreeLook, Fixed }
+
 public class ThirdPerCam : MonoBehaviour
 {
     [Header("References")]
@@ -11,6 +13,8 @@ public class ThirdPerCam : MonoBehaviour
     [SerializeField] private Transform playerObj;
     [SerializeField] private InputActionReference moveAction;
     [SerializeField] private float rotationSpeed = 7f;
+
+    private CameraMode camMode;
 
     public static bool allowedRotation;
 
@@ -32,5 +36,10 @@ public class ThirdPerCam : MonoBehaviour
 
         if (inputDir != Vector3.zero)
             playerObj.forward = Vector3.Slerp(playerObj.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
+    }
+
+    public void SetCamMode(CameraMode mode)
+    {
+
     }
 }
