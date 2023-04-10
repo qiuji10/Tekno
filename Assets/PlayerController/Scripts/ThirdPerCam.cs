@@ -57,11 +57,11 @@ public class ThirdPerCam : MonoBehaviour
                 float startY = cm.m_YAxis.Value;
                 float startX = cm.m_XAxis.Value;
 
-                LeanTween.value(cm.gameObject, startY, y, time).setOnUpdate((float value) => {
+                LeanTween.value(cm.gameObject, startY, y, time).setEaseInOutCirc().setOnUpdate((float value) => {
                     cm.m_YAxis.Value = value;
                 });
 
-                LeanTween.value(cm.gameObject, startX, x, time).setOnUpdate((float value) => {
+                LeanTween.value(cm.gameObject, startX, x, time).setEaseInOutCirc().setOnUpdate((float value) => {
                     cm.m_XAxis.Value = value;
                 });
 
