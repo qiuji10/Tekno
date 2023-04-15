@@ -42,26 +42,28 @@ public class ThirdPerCam : MonoBehaviour
             playerObj.forward = Vector3.Slerp(playerObj.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
     }
 
-    public void SetCamMode(CameraMode mode, float x = 0, float y = 0.5f, float time = 0.5f)
+    public void SetCamMode(CameraMode mode, Vector2 axisValue, Vector2 axisSpeed, float time = 0.5f)
     {
         switch (mode)
         {
             case CameraMode.FreeLook:
-                cmInput.enabled = true;
+                cm.m_XAxis.m_MaxSpeed = 300;
+                cm.m_YAxis.m_MaxSpeed = 1;
                 break;
 
             case CameraMode.Fixed:
 
-                cmInput.enabled = false;
+                cm.m_XAxis.m_MaxSpeed = axisSpeed.x;
+                cm.m_YAxis.m_MaxSpeed = axisSpeed.y;
 
                 float startY = cm.m_YAxis.Value;
                 float startX = cm.m_XAxis.Value;
 
-                LeanTween.value(cm.gameObject, startY, y, time).setEaseInOutCirc().setOnUpdate((float value) => {
+                LeanTween.value(cm.gameObject, startY, axisValue.y, time).setEaseInOutCirc().setOnUpdate((float value) => {
                     cm.m_YAxis.Value = value;
                 });
 
-                LeanTween.value(cm.gameObject, startX, x, time).setEaseInOutCirc().setOnUpdate((float value) => {
+                LeanTween.value(cm.gameObject, startX, axisValue.x, time).setEaseInOutCirc().setOnUpdate((float value) => {
                     cm.m_XAxis.Value = value;
                 });
 

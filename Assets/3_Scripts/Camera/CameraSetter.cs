@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CameraSetter : MonoBehaviour
 {
-    [SerializeField] private float xValue;
-    [SerializeField] private float yValue;
+    [SerializeField] private Vector2 axisValue;
+    [SerializeField] private Vector2 axisSpeed;
 
     private ThirdPerCam cam;
 
@@ -16,11 +16,11 @@ public class CameraSetter : MonoBehaviour
 
     public void SetFreeLookCam()
     {
-        cam.SetCamMode(CameraMode.FreeLook, xValue, yValue);
+        cam.SetCamMode(CameraMode.FreeLook, axisValue, axisSpeed);
     }
 
     public void SetFixedCam()
     {
-        cam.SetCamMode(CameraMode.Fixed, xValue, yValue);
+        cam.SetCamMode(CameraMode.Fixed, axisValue, axisSpeed);
     }
 }

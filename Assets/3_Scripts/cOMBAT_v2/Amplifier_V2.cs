@@ -188,6 +188,9 @@ public class Amplifier_V2 : MonoBehaviour
             Resetter();
             amplifierHealth = 3;
             speakerHealth = 3;
+
+            yield return new WaitForSeconds(0.75f);
+            eventInvoker.enabled = true;
         }
         else if (speakerHealth <= 0)
         {
@@ -219,6 +222,9 @@ public class Amplifier_V2 : MonoBehaviour
                     knockable.Knock(new Vector3(direction.x, 0.1f, direction.z), knockBackPower);
                 }
             }
+
+            yield return new WaitForSeconds(0.75f);
+            eventInvoker.enabled = true;
         }
         else
         {
@@ -335,7 +341,7 @@ public class Amplifier_V2 : MonoBehaviour
     public void Resetter()
     {
         PlayerController.allowedInput = true;
-        eventInvoker.enabled = true;
+        
         speaker.OnHitFailure -= Speaker_OnHitFailure;
         speaker.OnComboSuccess -= Speaker_OnComboSuccess;
 
