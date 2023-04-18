@@ -17,12 +17,15 @@ public class PlatformMove : MonoBehaviour, IPlatform
     private float moveTime;
     private float scaleFactor;
 
+    //Koreography Sync with Stance Manager
     private Track track;
     public static Track currentTrack;
 
+    //IPlatform Interface
+    private bool playerOnPlatform;
     private GameObject parental;
     public Transform player { get; set; }
-    public bool PlayerOnPlatform { get; set; }
+    public bool PlayerOnPlatform {get; set;}
 
     private void OnEnable()
     {
