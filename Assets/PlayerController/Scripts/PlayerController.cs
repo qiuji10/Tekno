@@ -39,6 +39,8 @@ public class PlayerController : MonoBehaviour, IKnockable
     [SerializeField] private InputActionReference movementAction;
     [SerializeField] private InputActionReference jumpAction;
 
+    private Transform playerObj;
+    private Transform camPos;
     private Rigidbody _rb;
     private Animator _anim;
     public Animator Anim { get { return _anim; } set { _anim = value; } }
@@ -52,6 +54,8 @@ public class PlayerController : MonoBehaviour, IKnockable
         if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.cyan * 0.5f);
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponentInChildren<Animator>();
+        camPos = Camera.main.transform;
+        playerObj = transform.GetChild(0);
 
         jump = Animator.StringToHash("Jump");
         jumpGrounded = Animator.StringToHash("JumpGrounded");
@@ -94,6 +98,7 @@ public class PlayerController : MonoBehaviour, IKnockable
 
     private void Update()
     {
+        Rotation();
         IsGround();
     }
 
@@ -173,6 +178,19 @@ public class PlayerController : MonoBehaviour, IKnockable
                 _rb.AddForce(_moveDir.normalized * moveSpeed * 10f * airSpeed, ForceMode.Force);
             }
         }
+    }
+
+    private void Rotation()
+    {
+        Vector3 viewDir = transform.position - new Vector3(camPos.position.x, transform.position.y, camPos.position.z);
+        orientation.forward = viewDir.normalized;
+
+        Vector2 move = movementAction.action.ReadValue<Vector2>();
+
+        Vector3 inputDir = orientation.forward * move.y + orientation.right * move.x;
+
+        if (inputDir != Vector3.zero)
+            playerObj.forward = Vector3.Slerp(playerObj.forward, inputDir.normalized, Time.deltaTime * 7);
     }
 
     private void SpeedLimiter()
