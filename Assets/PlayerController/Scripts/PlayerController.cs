@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour, IKnockable
     private void OnDisable()
     {
         jumpAction.action.performed -= Jump;
-        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 
     private void StanceManager_OnStanceChange(Track track)

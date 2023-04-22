@@ -33,8 +33,10 @@ public class MaterialModifier : MonoBehaviour
         ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
         m_Materials[1].SetColor("_BaseColor", baseColor);
         m_Materials[1].SetColor("_Emission", emissionColor);
+        m_Materials[2].SetColor("_TextureColor", blueHDR);
+        m_Materials[2].SetTexture("_Texture", blueTexture);
 
-        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+        //StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }
 
     private void StanceManager_OnStanceChange(Track track)
@@ -66,7 +68,7 @@ public class MaterialModifier : MonoBehaviour
 
     private void OnDisable()
     {
-        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
+        //StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 
     public void StopCoroutines()
@@ -88,9 +90,42 @@ public class MaterialModifier : MonoBehaviour
         StartCoroutine(VolumeFader(glitchVolume, glitchFadeOut, 0f, false));
     }
 
-    public void ChangeJacket()
+    public void StanceChange()
     {
+        string baseString = null, emissionString = null;
+        Texture tex = null;
+        Color texColor = Color.white;
 
+        switch (StanceManager.curStance)
+        {
+            case Genre.House:
+                baseString = "#988C00";
+                emissionString = "#8E7C00";
+                tex = yellowTexture;
+                texColor = yellowHDR;
+                break;
+            case Genre.Techno:
+                baseString = "#0042FF";
+                emissionString = "#0054FF";
+                tex = blueTexture;
+                texColor = blueHDR;
+                break;
+            case Genre.Electronic:
+
+                baseString = "#009A04";
+                emissionString = "#00BC00";
+                tex = greenTexture;
+                texColor = greenHDR;
+                break;
+        }
+
+        ColorUtility.TryParseHtmlString(baseString, out Color baseColor);
+        ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
+        m_Materials[1].SetColor("_BaseColor", baseColor);
+        m_Materials[1].SetColor("_Emission", emissionColor);
+
+        m_Materials[2].SetColor("_TextureColor", texColor);
+        m_Materials[2].SetTexture("_Texture", tex);
     }
 
     IEnumerator ShaderFader(string property, float fadeTime, float value, bool increment)

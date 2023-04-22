@@ -86,7 +86,6 @@ public class StanceManager : MonoBehaviour
         stanceAudio.volume = tracks[index].volume;
         musicPlayer.LoadSong(tracks[index].koreography);
         curStance = tracks[index].genre;
-
         if (!firstTimeIgnored)
         {
             firstTimeIgnored = true;
@@ -102,8 +101,8 @@ public class StanceManager : MonoBehaviour
             }
 
             AllowPlayerSwitchStance = false;
-            OnStanceChangeStart?.Invoke(tracks[index]);
             StartCoroutine(EnableInput(changeStanceTime));
+            OnStanceChangeStart?.Invoke(tracks[index]);
         }
         //stanceAudio.Play();
 
