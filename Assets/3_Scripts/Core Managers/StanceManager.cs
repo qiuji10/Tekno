@@ -93,10 +93,14 @@ public class StanceManager : MonoBehaviour
         }
         else
         {
-            cart.m_Position = 0;
-            director.time = 0;
-            director.enabled = true;
-            director.Play();
+            if (director)
+            {
+                cart.m_Position = 0;
+                director.time = 0;
+                director.enabled = true;
+                director.Play();
+            }
+
             AllowPlayerSwitchStance = false;
             OnStanceChangeStart?.Invoke(tracks[index]);
             StartCoroutine(EnableInput(changeStanceTime));
@@ -127,7 +131,7 @@ public class StanceManager : MonoBehaviour
         yield return new WaitForSeconds(time);
         PlayerController.allowedInput = true;
         AllowPlayerSwitchStance = true;
-        director.enabled = false;
+        if (director) director.enabled = false;
     }
 
 }
