@@ -27,6 +27,13 @@ public class MaterialModifier : MonoBehaviour
 
     private void OnEnable()
     {
+        string baseString = "#0042FF";
+        string emissionString = "#0054FF";
+        ColorUtility.TryParseHtmlString(baseString, out Color baseColor);
+        ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
+        m_Materials[1].SetColor("_BaseColor", baseColor);
+        m_Materials[1].SetColor("_Emission", emissionColor);
+
         StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }
 
@@ -81,14 +88,9 @@ public class MaterialModifier : MonoBehaviour
         StartCoroutine(VolumeFader(glitchVolume, glitchFadeOut, 0f, false));
     }
 
-    public void SelectGlitchyEffectOn(int index)
+    public void ChangeJacket()
     {
-        StartCoroutine(ShaderFader(index, "_GlitchPower", glitchFadeIn, 1f, true));
-    }
 
-    public void SelectGlitchyEffectOff(int index)
-    {
-        StartCoroutine(ShaderFader(index, "_GlitchPower", glitchFadeOut, 0f, false));
     }
 
     IEnumerator ShaderFader(string property, float fadeTime, float value, bool increment)
@@ -129,7 +131,7 @@ public class MaterialModifier : MonoBehaviour
 
         if (increment)
         {
-            while (m_Materials[0].GetFloat(property) < value)
+            while (m_Materials[index].GetFloat(property) < value)
             {
                 timer += Time.deltaTime;
                 m_Materials[index].SetFloat(property, timer / fadeTime);

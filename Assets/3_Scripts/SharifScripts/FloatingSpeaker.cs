@@ -55,7 +55,7 @@ public class FloatingSpeaker : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
         targetPosition = waypoint.position;
         Vector3 targetPositionXZ = new Vector3(targetPosition.x, transform.position.y, targetPosition.z);
