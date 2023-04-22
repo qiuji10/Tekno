@@ -137,6 +137,8 @@ public class PlayerController : MonoBehaviour, IKnockable
         {
             _rb.drag = 0;
         }
+
+        _anim.SetBool("JumpGrounded", isGround);
     }
 
     private void Movement()
@@ -209,10 +211,12 @@ public class PlayerController : MonoBehaviour, IKnockable
         if (_rb.velocity.y < 0.5f)
         {
             _rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+            _anim.SetBool("JumpDown", true);
         }
         else if (_rb.velocity.y > 0.5f)
         {
             _rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+            _anim.SetBool("JumpDown", false);
         }
     }
 

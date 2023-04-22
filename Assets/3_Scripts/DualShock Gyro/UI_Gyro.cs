@@ -16,7 +16,10 @@ public class UI_Gyro : MonoBehaviour
 
     void Start()
     {
-        controller = DS4.getConroller();
+        if (Gamepad.current != null)
+            controller = DS4.getConroller();
+        
+
         imageRect = GetComponent<RectTransform>();
 
         minPos.x = imageRect.anchoredPosition.x - space;
@@ -28,6 +31,8 @@ public class UI_Gyro : MonoBehaviour
 
     void Update()
     {
+        
+
         if (controller != null)
         {
             Vector2 newPos = imageRect.anchoredPosition;
