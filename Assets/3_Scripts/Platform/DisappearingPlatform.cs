@@ -20,13 +20,13 @@ public class DisappearingPlatform : MonoBehaviour
     // Add OnEnable implementation
     private void OnEnable()
     {
-        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }
 
     // Add OnDisable implementation
     private void OnDisable()
     {
-        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 
     // Add OnStanceChange implementation

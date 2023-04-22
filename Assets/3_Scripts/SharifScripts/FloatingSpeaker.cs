@@ -10,7 +10,9 @@ public class FloatingSpeaker : MonoBehaviour
     public float smoothTimeXZ = 0f;
     public float smoothTimeY = 0.2f;
     public float beatOffsetY = 5f;
-    public float lookAtSmoothTime = 0f; // added variable for look at smoothing
+    public float rotationSpeed = 10f; // added variable for look at smoothing
+
+    [SerializeField] private List<MeshRenderer> speakerVisuals = new List<MeshRenderer>();
 
     private Vector3 velocityXZ = Vector3.zero;
     private Vector3 velocityY = Vector3.zero;
@@ -20,16 +22,37 @@ public class FloatingSpeaker : MonoBehaviour
     private void OnEnable()
     {
         TempoManager.OnBeat += TempoManager_OnBeat;
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChangeStart;
     }
 
     private void OnDisable()
     {
         TempoManager.OnBeat -= TempoManager_OnBeat;
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChangeStart;
+    }
+
+    private void StanceManager_OnStanceChangeStart(Track obj)
+    {
+        foreach (var visual in speakerVisuals)
+        {
+            visual.enabled = false;
+        }
+
+        StartCoroutine(EnableVisuals());
     }
 
     private void TempoManager_OnBeat()
     {
         isOnBeat = true;
+    }
+
+    IEnumerator EnableVisuals()
+    {
+        yield return new WaitForSeconds(2.333f);
+        foreach (var visual in speakerVisuals)
+        {
+            visual.enabled = true;
+        }
     }
 
     void Update()
@@ -46,8 +69,12 @@ public class FloatingSpeaker : MonoBehaviour
             isOnBeat = false;
         }
 
+        //transform.position = Vector3.SmoothDamp(transform.position, targetPositionY, ref velocityY, smoothTimeY);
+        //Quaternion targetRotation = Quaternion.LookRotation(player.position);
+        //transform.rotation = Quaternion.Euler(0f, targetRotation.eulerAngles.y, 0f);
+
         transform.position = Vector3.SmoothDamp(transform.position, targetPositionY, ref velocityY, smoothTimeY);
         Quaternion targetRotation = Quaternion.LookRotation(player.position);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime / lookAtSmoothTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0f, targetRotation.eulerAngles.y, 0f), Time.deltaTime * rotationSpeed); // apply rotation speed adjustment
     }
 }
