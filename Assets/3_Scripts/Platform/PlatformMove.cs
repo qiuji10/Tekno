@@ -14,14 +14,18 @@ public class PlatformMove : MonoBehaviour, IPlatform
     private bool isMoving;
     private int bpm = 140; // Beats per minute
     private float beatDuration; // Duration of one beat in seconds
-    public float moveTime;
+    private float moveTime;
+    private float scaleFactor;
 
+    //Koreography Sync with Stance Manager
     private Track track;
     public static Track currentTrack;
 
+    //IPlatform Interface
+    private bool playerOnPlatform;
     private GameObject parental;
     public Transform player { get; set; }
-    public bool PlayerOnPlatform { get; set; }
+    public bool PlayerOnPlatform {get; set;}
 
     private void OnEnable()
     {
@@ -35,19 +39,19 @@ public class PlatformMove : MonoBehaviour, IPlatform
         {
             eventID = "120_House_PlatformMove";
             bpm = 120;
-            beatDuration = 60f / bpm;
+            scaleFactor = 0.25f;
         }
         else if (obj.genre == Genre.Techno)
         {
             eventID = "140_Techno_PlatformMove";
             bpm = 140;
-            beatDuration = 60f / bpm;
+            scaleFactor = 1.0f;
         }
         else if (obj.genre == Genre.Electronic)
         {
             eventID = "160_Electro_PlatformMove";
             bpm = 160;
-            beatDuration = 60f / bpm;
+            scaleFactor = 4.0f;
         }
 
         // Set the current track
@@ -64,7 +68,6 @@ public class PlatformMove : MonoBehaviour, IPlatform
     {
         // Set the track field to the current track
         track = currentTrack;
-        beatDuration = 60f / bpm;
     }
 
     private void Update()
@@ -93,7 +96,8 @@ public class PlatformMove : MonoBehaviour, IPlatform
     private void MoveToPoint(Vector3 targetPosition)
     {
         float distance = Vector3.Distance(transform.position, targetPosition);
-        float duration = distance / beatDuration;
+
+        float duration = ((distance / 60) * bpm) / scaleFactor;
 
         moveTime += Time.deltaTime;
         transform.position = Vector3.Lerp(transform.position, targetPosition, moveTime / duration);
