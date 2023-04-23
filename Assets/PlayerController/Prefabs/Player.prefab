@@ -82,13 +82,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 579946356}
-  m_LocalRotation: {x: 0, y: 0.7050057, z: 0, w: 0.7092017}
+  m_LocalRotation: {x: -0, y: 0.7050057, z: -0, w: 0.7092017}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6397968323028654103}
-  m_RootOrder: 8
+  m_Father: {fileID: 8635826427935689999}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 89.66, z: 0}
 --- !u!114 &579946357
 MonoBehaviour:
@@ -2280,7 +2280,6 @@ Transform:
   - {fileID: 2595096051698301623}
   - {fileID: 7138367317829067983}
   - {fileID: 205935430}
-  - {fileID: 579946358}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4587,31 +4586,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &8973128282939902881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8976605125354837941}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb0b3e6fe33c4664ab8154b71fd6e3fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Materials:
-  - {fileID: 2100000, guid: a2bb182013f2be2408301895d1496de5, type: 2}
-  - {fileID: 2100000, guid: 23cc5827313b7bd489d56c21fd8e0171, type: 2}
-  - {fileID: 2100000, guid: 35fd461e1dd05534f9b76095d973b3a2, type: 2}
-  glitchVolume: {fileID: 7138367317829067982}
-  glitchFadeIn: 0.25
-  glitchFadeOut: 0.25
-  blueHDR: {r: 0, g: 2.3336885, b: 5.2780313, a: 0}
-  yellowHDR: {r: 5.2780313, g: 4.3235736, b: 0, a: 0}
-  greenHDR: {r: 0.24870306, g: 5.2780313, b: 0.14967056, a: 0}
-  blueTexture: {fileID: 2800000, guid: 807d8564eb7b13749a58ef7682250bc4, type: 3}
-  yellowTexture: {fileID: 2800000, guid: 0f0939cee9626a4419d8171f262395b0, type: 3}
-  greenTexture: {fileID: 2800000, guid: cdd534df1ba3de943a68f70fb2174dc0, type: 3}
 --- !u!114 &1773194813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4641,3 +4615,28 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &8973128282939902881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8976605125354837941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb0b3e6fe33c4664ab8154b71fd6e3fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Materials:
+  - {fileID: 2100000, guid: a2bb182013f2be2408301895d1496de5, type: 2}
+  - {fileID: 2100000, guid: 23cc5827313b7bd489d56c21fd8e0171, type: 2}
+  - {fileID: 2100000, guid: 35fd461e1dd05534f9b76095d973b3a2, type: 2}
+  glitchVolume: {fileID: 7138367317829067982}
+  glitchFadeIn: 0.25
+  glitchFadeOut: 0.25
+  blueHDR: {r: 0, g: 2.3336885, b: 5.2780313, a: 0}
+  yellowHDR: {r: 5.2780313, g: 4.3235736, b: 0, a: 0}
+  greenHDR: {r: 0.24870306, g: 5.2780313, b: 0.14967056, a: 0}
+  blueTexture: {fileID: 2800000, guid: 807d8564eb7b13749a58ef7682250bc4, type: 3}
+  yellowTexture: {fileID: 2800000, guid: 0f0939cee9626a4419d8171f262395b0, type: 3}
+  greenTexture: {fileID: 2800000, guid: cdd534df1ba3de943a68f70fb2174dc0, type: 3}
