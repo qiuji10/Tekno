@@ -7,7 +7,7 @@ public class TeleportAbility : MonoBehaviour
 {
     [SerializeField] private InputActionReference teleportAction;
     [SerializeField] private ChargingSystem charge;
-    [SerializeField] private MotherNode teleportChain;
+    [SerializeField] public MotherNode motherNode;
     [SerializeField] private float teleportRange = 5f;
     [SerializeField] private float offsetBeatTime = 0.3f;
     [SerializeField] private Transform electricVFX;
@@ -24,51 +24,54 @@ public class TeleportAbility : MonoBehaviour
 
     private void Teleport(InputAction.CallbackContext context)
     {
-
-        if (charge.isMaxCharge && Time.time > TempoManager._lastBeatTime - offsetBeatTime && Time.time < TempoManager._lastBeatTime + offsetBeatTime)
+        if (charge.isMaxCharge && motherNode != null)
         {
-            Collider[] collideData = Physics.OverlapSphere(transform.position, teleportRange);
-            Transform nextTeleportPoint = null, prevTeleportPoint = null;
-            Vector3 teleportDirection = Vector3.zero;
-            int teleportNodeCount = 0;
-
-            foreach (Collider collide in collideData)
-            {
-                if (collide.TryGetComponent(out TeleportNode tpNode))
-                {
-                    if (tpNode.nextTeleportPoint != null)
-                    {
-                        nextTeleportPoint = tpNode.nextTeleportPoint;
-                        teleportDirection += nextTeleportPoint.position - transform.position;
-                        teleportNodeCount++;
-                    }
-
-                    if (tpNode.prevTeleportPoint != null)
-                    {
-                        prevTeleportPoint = tpNode.prevTeleportPoint;
-                        teleportDirection += prevTeleportPoint.position - transform.position;
-                        teleportNodeCount++;
-                    }
-
-                    break;
-                }
-            }
-
-            if (nextTeleportPoint == null && prevTeleportPoint == null) return;
-            Vector3 targetPosition = (nextTeleportPoint != null ? nextTeleportPoint.position : prevTeleportPoint.position);
-            Vector3 direction = (targetPosition - transform.position).normalized;
-            Vector3 centerPoint = Vector3.Lerp(transform.position, targetPosition, 0.5f);
-            Transform vfx = Instantiate(electricVFX, targetPosition, Quaternion.LookRotation(direction));
-
-            if (nextTeleportPoint != null)
-            {
-                LeanTween.move(gameObject, nextTeleportPoint, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
-            }
-            else
-            {
-                LeanTween.move(gameObject, prevTeleportPoint, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
-            }
+            motherNode.canTeleport();
         }
+        //if (charge.isMaxCharge && Time.time > TempoManager._lastBeatTime - offsetBeatTime && Time.time < TempoManager._lastBeatTime + offsetBeatTime)
+        //{
+        //    Collider[] collideData = Physics.OverlapSphere(transform.position, teleportRange);
+        //    Transform nextTeleportPoint = null, prevTeleportPoint = null;
+        //    Vector3 teleportDirection = Vector3.zero;
+        //    int teleportNodeCount = 0;
+
+        //    foreach (Collider collide in collideData)
+        //    {
+        //        if (collide.TryGetComponent(out TeleportNode tpNode))
+        //        {
+        //            if (tpNode.nextTeleportPoint != null)
+        //            {
+        //                nextTeleportPoint = tpNode.nextTeleportPoint;
+        //                teleportDirection += nextTeleportPoint.position - transform.position;
+        //                teleportNodeCount++;
+        //            }
+
+        //            if (tpNode.prevTeleportPoint != null)
+        //            {
+        //                prevTeleportPoint = tpNode.prevTeleportPoint;
+        //                teleportDirection += prevTeleportPoint.position - transform.position;
+        //                teleportNodeCount++;
+        //            }
+
+        //            break;
+        //        }
+        //    }
+
+        //    if (nextTeleportPoint == null && prevTeleportPoint == null) return;
+        //    Vector3 targetPosition = (nextTeleportPoint != null ? nextTeleportPoint.position : prevTeleportPoint.position);
+        //    Vector3 direction = (targetPosition - transform.position).normalized;
+        //    Vector3 centerPoint = Vector3.Lerp(transform.position, targetPosition, 0.5f);
+        //    Transform vfx = Instantiate(electricVFX, targetPosition, Quaternion.LookRotation(direction));
+
+        //    if (nextTeleportPoint != null)
+        //    {
+        //        LeanTween.move(gameObject, nextTeleportPoint, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
+        //    }
+        //    else
+        //    {
+        //        LeanTween.move(gameObject, prevTeleportPoint, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
+        //    }
+        //}
     }
 
     public void TeleportToNextNode(Transform targetTeleportPoint)

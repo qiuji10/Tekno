@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour, IKnockable
     [SerializeField] private bool isGround;
 
     [Header("Animation Blend")]
+    [SerializeField] private float stanceChangeTime = 2.333f;
     [SerializeField] private float animMoveSpeed = 0.8f;
     [SerializeField] private float acceleration = 5f;
     [SerializeField] private float deceleration = 5f;
@@ -45,7 +46,7 @@ public class PlayerController : MonoBehaviour, IKnockable
     private Animator _anim;
     public Animator Anim { get { return _anim; } set { _anim = value; } }
 
-    private int movement, jump, jumpGrounded;
+    private int movement, jump, jumpGrounded, switchStance;
 
     private void Awake()
     {
@@ -60,22 +61,25 @@ public class PlayerController : MonoBehaviour, IKnockable
         jump = Animator.StringToHash("Jump");
         jumpGrounded = Animator.StringToHash("JumpGrounded");
         movement = Animator.StringToHash("Movement");
+        switchStance = Animator.StringToHash("SwitchStance");
     }
 
     private void OnEnable()
     {
         jumpAction.action.performed += Jump;
-        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }
 
     private void OnDisable()
     {
         jumpAction.action.performed -= Jump;
-        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 
     private void StanceManager_OnStanceChange(Track track)
     {
+        _anim.SetTrigger(switchStance);
+
         switch (track.genre)
         {
             case Genre.House:
@@ -137,6 +141,8 @@ public class PlayerController : MonoBehaviour, IKnockable
         {
             _rb.drag = 0;
         }
+
+        _anim.SetBool("JumpGrounded", isGround);
     }
 
     private void Movement()
@@ -182,6 +188,8 @@ public class PlayerController : MonoBehaviour, IKnockable
 
     private void Rotation()
     {
+        if (!allowedInput) return;
+
         Vector3 viewDir = transform.position - new Vector3(camPos.position.x, transform.position.y, camPos.position.z);
         orientation.forward = viewDir.normalized;
 
@@ -209,10 +217,12 @@ public class PlayerController : MonoBehaviour, IKnockable
         if (_rb.velocity.y < 0.5f)
         {
             _rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+            _anim.SetBool("JumpDown", true);
         }
         else if (_rb.velocity.y > 0.5f)
         {
             _rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+            _anim.SetBool("JumpDown", false);
         }
     }
 

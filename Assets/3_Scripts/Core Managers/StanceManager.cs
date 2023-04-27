@@ -1,18 +1,23 @@
-using SonicBloom.Koreo;
+using Cinemachine;
 using SonicBloom.Koreo.Players;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Playables;
 
 public enum Genre { House, Techno, Electronic }
 
 public class StanceManager : MonoBehaviour
 {
     public static Genre curStance;
-    public static event Action<Track> OnStanceChange;
+    public static event Action<Track> OnStanceChangeStart;
     public static bool AllowPlayerSwitchStance;
+    public static float changeStanceTime = 2.333f;
+
+    [SerializeField] PlayableDirector director;
+    private CinemachineDollyCart cart;
 
     [Header("Audio References")]
     [SerializeField] private SimpleMusicPlayer musicPlayer;
@@ -27,6 +32,8 @@ public class StanceManager : MonoBehaviour
     [Header("Input Action References")]
     [SerializeField] private InputActionReference skipTrackAction;
     [SerializeField] private InputActionReference rewindTrackAction;
+
+    private bool firstTimeIgnored;
 
     private void OnEnable()
     {
@@ -43,6 +50,7 @@ public class StanceManager : MonoBehaviour
     private void Awake()
     {
         AllowPlayerSwitchStance = true;
+        cart = director.GetComponent<CinemachineDollyCart>();
         musicPlayer = GetComponent<SimpleMusicPlayer>();
     }
 
@@ -73,10 +81,29 @@ public class StanceManager : MonoBehaviour
 
     private void PlayTrack(int index)
     {
+        if (!AllowPlayerSwitchStance) return;
+
         stanceAudio.volume = tracks[index].volume;
         musicPlayer.LoadSong(tracks[index].koreography);
         curStance = tracks[index].genre;
-        OnStanceChange?.Invoke(tracks[index]);
+        if (!firstTimeIgnored)
+        {
+            firstTimeIgnored = true;
+        }
+        else
+        {
+            if (director)
+            {
+                cart.m_Position = 0;
+                director.time = 0;
+                director.enabled = true;
+                director.Play();
+            }
+
+            AllowPlayerSwitchStance = false;
+            StartCoroutine(EnableInput(changeStanceTime));
+            OnStanceChangeStart?.Invoke(tracks[index]);
+        }
         //stanceAudio.Play();
 
         // here should ability switch
@@ -96,4 +123,14 @@ public class StanceManager : MonoBehaviour
                 break;
         }
     }
+
+    private IEnumerator EnableInput(float time)
+    {
+        PlayerController.allowedInput = false;
+        yield return new WaitForSeconds(time);
+        PlayerController.allowedInput = true;
+        AllowPlayerSwitchStance = true;
+        if (director) director.enabled = false;
+    }
+
 }
