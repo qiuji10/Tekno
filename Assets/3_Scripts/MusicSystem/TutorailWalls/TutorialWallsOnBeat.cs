@@ -16,12 +16,12 @@ public class TutorialWallsOnBeat : MonoBehaviour
     Color gridColor = Color.clear;
     private void OnEnable()
     {
-        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }
 
     private void OnDisable()
     {
-        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
       
     }
 

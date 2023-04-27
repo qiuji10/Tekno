@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8158341519606202506}
-  - component: {fileID: 8158341519606202507}
   - component: {fileID: 8158341519606202501}
+  - component: {fileID: 8158341519606202507}
   m_Layer: 0
   m_Name: TriggerBox
   m_TagString: Untagged
@@ -33,6 +33,18 @@ Transform:
   m_Father: {fileID: 8158341519912993229}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8158341519606202501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8158341519606202504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0396f19c383867546beec36e88938153, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!65 &8158341519606202507
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46,18 +58,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &8158341519606202501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8158341519606202504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0396f19c383867546beec36e88938153, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8158341519912993270
 GameObject:
   m_ObjectHideFlags: 0
@@ -86,7 +86,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8158341519912993270}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 29.6, y: 9.74, z: -27.19}
   m_LocalScale: {x: 8.384304, y: 1.2504644, z: 8.743999}
   m_ConstrainProportionsScale: 0
@@ -170,10 +170,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c8fe1b604993d347a12de4488049d0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerOnPlatform: 0
   shakeDuration: 1
-  shakeTimer: 2
+  shakeTimer: 5
   dropDistance: 10
+  parental: {fileID: 0}
 --- !u!54 &5502605410175084932
 Rigidbody:
   m_ObjectHideFlags: 0

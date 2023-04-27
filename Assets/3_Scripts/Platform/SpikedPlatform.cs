@@ -1,6 +1,7 @@
 using SonicBloom.Koreo;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpikedPlatform : MonoBehaviour
@@ -15,8 +16,9 @@ public class SpikedPlatform : MonoBehaviour
     private int bpm = 140; // Beats per minute
     private float beatDuration; // Duration of one beat in seconds
     private float moveTime;
-    private float distanceToTravel; // Distance the Spikes need to travel
+    private float distance; // Distance the Spikes need to travel
     private Vector3 startingPosition;
+    private float scaleFactor;
 
     private bool isMoving;
     private int intValueEvt;
@@ -26,7 +28,7 @@ public class SpikedPlatform : MonoBehaviour
 
     private void OnEnable()
     {
-        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }
 
     private void StanceManager_OnStanceChange(Track obj)
@@ -34,21 +36,21 @@ public class SpikedPlatform : MonoBehaviour
         // Determine which event ID to use based on the track's genre
         if (obj.genre == Genre.House)
         {
-            eventID = "120_House_IntPayload";
+            eventID = "120_House_PlatformMove";
             bpm = 120;
-            beatDuration = 60f / bpm;
+            scaleFactor = 0.25f;
         }
         else if (obj.genre == Genre.Techno)
         {
-            eventID = "140_Techno_IntPayload";
+            eventID = "140_Techno_PlatformMove";
             bpm = 140;
-            beatDuration = 60f / bpm;
+            scaleFactor = 1.0f;
         }
         else if (obj.genre == Genre.Electronic)
         {
-            eventID = "160_Electro_IntPayload";
+            eventID = "160_Electro_PlatformMove";
             bpm = 160;
-            beatDuration = 60f / bpm;
+            scaleFactor = 4.0f;
         }
 
         // Set the current track
@@ -58,7 +60,7 @@ public class SpikedPlatform : MonoBehaviour
 
     private void OnDisable()
     {
-        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 
     private void Awake()
@@ -87,16 +89,16 @@ public class SpikedPlatform : MonoBehaviour
     private void MoveToPoint(Vector3 targetPosition)
     {
         startingPosition = Spikes.transform.position;
-        distanceToTravel = Vector3.Distance(startingPosition, targetPosition);
-        float duration = distanceToTravel / beatDuration;
+        distance = Vector3.Distance(startingPosition, targetPosition);
+        float duration = ((distance / 60) * bpm) / scaleFactor;
 
         moveTime += Time.deltaTime;
-        float t = moveTime / duration;
-        Spikes.transform.position = Vector3.Lerp(startingPosition, targetPosition, t);
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveTime / duration);
 
         if (moveTime >= duration)
         {
             moveTime = 0f;
+            isMoving = false;
         }
     }
 

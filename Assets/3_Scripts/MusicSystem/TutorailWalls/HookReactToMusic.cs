@@ -15,12 +15,12 @@ public class HookReactToMusic : MonoBehaviour
     Color gridColor = new Color(1.72079539f, 1.57664502f, 0, 0);
     private void OnEnable()
     {
-        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }
 
     private void OnDisable()
     {
-        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
 
     }
 

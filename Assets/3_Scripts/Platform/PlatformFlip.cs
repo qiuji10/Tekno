@@ -11,8 +11,6 @@ public class PlatformFlip : MonoBehaviour
     public GameObject platform;
 
     [Header("Flip Settings")]
-    public float flipSpeed = 1f;
-    public float flipInterval;
     public float flipDuration;
     private bool flipping = false;
 
@@ -37,7 +35,7 @@ public class PlatformFlip : MonoBehaviour
 
     private void OnEnable()
     {
-        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }
 
     private void StanceManager_OnStanceChange(Track obj)
@@ -70,7 +68,7 @@ public class PlatformFlip : MonoBehaviour
 
     private void OnDisable()
     {
-        StanceManager.OnStanceChange -= StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 
     IEnumerator Flip()

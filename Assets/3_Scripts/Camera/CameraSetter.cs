@@ -1,26 +1,19 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraSetter : MonoBehaviour
 {
-    [SerializeField] private Vector2 axisValue;
-    [SerializeField] private Vector2 axisSpeed;
+    [SerializeField] private CinemachineVirtualCameraBase InUsedCam;
 
-    private ThirdPerCam cam;
-
-    private void Awake()
+    public void LoadCam()
     {
-        cam = Camera.main.GetComponent<ThirdPerCam>();
+        InUsedCam.Priority = 11;
     }
 
-    public void SetFreeLookCam()
+    public void UnloadCam()
     {
-        cam.SetCamMode(CameraMode.FreeLook, axisValue, axisSpeed);
-    }
-
-    public void SetFixedCam()
-    {
-        cam.SetCamMode(CameraMode.Fixed, axisValue, axisSpeed);
+        InUsedCam.Priority = 9;
     }
 }

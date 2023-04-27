@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,10 +9,10 @@ public enum EventInvokeType { Enter, Stay }
 
 public class EventInvoker : MonoBehaviour
 {
-    [SerializeField] private InputActionReference interactKey;
+    [SerializeField, ShowIf("IS_STAY")] private InputActionReference interactKey;
     [SerializeField] private EventInvokeType eventType = EventInvokeType.Stay;
 
-    [SerializeField] private GameObject prompt;
+    [SerializeField, ShowIf("IS_STAY")] private GameObject prompt;
     [SerializeField] private UnityEvent OnInteract;
     [SerializeField] private UnityEvent OnExit;
 
@@ -91,4 +92,7 @@ public class EventInvoker : MonoBehaviour
             inRange = false;
         }
     }
+
+    private bool IS_ENTER() { return eventType == EventInvokeType.Enter; }
+    private bool IS_STAY() { return eventType == EventInvokeType.Stay; }
 }

@@ -17,7 +17,7 @@ public class PlayerStatus : MonoBehaviour, IDamagable
     private void Awake()
     {
         //checkpointManager = FindObjectOfType<CheckpointManager>();
-        matModifier = GetComponent<MaterialModifier>();
+        matModifier = GetComponentInChildren<MaterialModifier>();
     }
 
     public void Damage(int damage)

@@ -16,9 +16,27 @@ public class MaterialModifier : MonoBehaviour
     [SerializeField] private float glitchFadeIn = 0.25f;
     [SerializeField] private float glitchFadeOut = 0.25f;
 
+    [Header("Shirt")]
+    [SerializeField, ColorUsage(true, true)] private Color blueHDR;
+    [SerializeField, ColorUsage(true, true)] private Color yellowHDR;
+    [SerializeField, ColorUsage(true, true)] private Color greenHDR;
+
+    [SerializeField] private Texture2D blueTexture;
+    [SerializeField] private Texture2D yellowTexture;
+    [SerializeField] private Texture2D greenTexture;
+
     private void OnEnable()
     {
-        StanceManager.OnStanceChange += StanceManager_OnStanceChange;
+        string baseString = "#0042FF";
+        string emissionString = "#0054FF";
+        ColorUtility.TryParseHtmlString(baseString, out Color baseColor);
+        ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
+        m_Materials[1].SetColor("_BaseColor", baseColor);
+        m_Materials[1].SetColor("_Emission", emissionColor);
+        m_Materials[2].SetColor("_TextureColor", blueHDR);
+        m_Materials[2].SetTexture("_Texture", blueTexture);
+
+        //StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }
 
     private void StanceManager_OnStanceChange(Track track)
@@ -50,7 +68,7 @@ public class MaterialModifier : MonoBehaviour
 
     private void OnDisable()
     {
-        
+        //StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 
     public void StopCoroutines()
@@ -72,6 +90,44 @@ public class MaterialModifier : MonoBehaviour
         StartCoroutine(VolumeFader(glitchVolume, glitchFadeOut, 0f, false));
     }
 
+    public void StanceChange()
+    {
+        string baseString = null, emissionString = null;
+        Texture tex = null;
+        Color texColor = Color.white;
+
+        switch (StanceManager.curStance)
+        {
+            case Genre.House:
+                baseString = "#988C00";
+                emissionString = "#8E7C00";
+                tex = yellowTexture;
+                texColor = yellowHDR;
+                break;
+            case Genre.Techno:
+                baseString = "#0042FF";
+                emissionString = "#0054FF";
+                tex = blueTexture;
+                texColor = blueHDR;
+                break;
+            case Genre.Electronic:
+
+                baseString = "#009A04";
+                emissionString = "#00BC00";
+                tex = greenTexture;
+                texColor = greenHDR;
+                break;
+        }
+
+        ColorUtility.TryParseHtmlString(baseString, out Color baseColor);
+        ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
+        m_Materials[1].SetColor("_BaseColor", baseColor);
+        m_Materials[1].SetColor("_Emission", emissionColor);
+
+        m_Materials[2].SetColor("_TextureColor", texColor);
+        m_Materials[2].SetTexture("_Texture", tex);
+    }
+
     IEnumerator ShaderFader(string property, float fadeTime, float value, bool increment)
     {
         float timer = 0;
@@ -84,14 +140,6 @@ public class MaterialModifier : MonoBehaviour
                 m_Materials[0].SetFloat(property, timer / fadeTime);
                 m_Materials[1].SetFloat(property, timer / fadeTime);
                 m_Materials[2].SetFloat(property, timer / fadeTime);
-                m_Materials[3].SetFloat(property, timer / fadeTime);
-                m_Materials[4].SetFloat(property, timer / fadeTime);
-                m_Materials[5].SetFloat(property, timer / fadeTime);
-                m_Materials[6].SetFloat(property, timer / fadeTime);
-                m_Materials[7].SetFloat(property, timer / fadeTime);
-                m_Materials[8].SetFloat(property, timer / fadeTime);
-                m_Materials[9].SetFloat(property, timer / fadeTime);
-                m_Materials[10].SetFloat(property, timer / fadeTime);
                 yield return null;
             }
         }
@@ -103,14 +151,6 @@ public class MaterialModifier : MonoBehaviour
                 m_Materials[0].SetFloat(property, timer / fadeTime);
                 m_Materials[1].SetFloat(property, timer / fadeTime);
                 m_Materials[2].SetFloat(property, timer / fadeTime);
-                m_Materials[3].SetFloat(property, timer / fadeTime);
-                m_Materials[4].SetFloat(property, timer / fadeTime);
-                m_Materials[5].SetFloat(property, timer / fadeTime);
-                m_Materials[6].SetFloat(property, timer / fadeTime);
-                m_Materials[7].SetFloat(property, timer / fadeTime);
-                m_Materials[8].SetFloat(property, timer / fadeTime);
-                m_Materials[9].SetFloat(property, timer / fadeTime);
-                m_Materials[10].SetFloat(property, timer / fadeTime);
                 yield return null;
             }
         }
@@ -118,14 +158,32 @@ public class MaterialModifier : MonoBehaviour
         m_Materials[0].SetFloat(property, value);
         m_Materials[1].SetFloat(property, value);
         m_Materials[2].SetFloat(property, value);
-        m_Materials[3].SetFloat(property, value);
-        m_Materials[4].SetFloat(property, value);
-        m_Materials[5].SetFloat(property, value);
-        m_Materials[6].SetFloat(property, value);
-        m_Materials[7].SetFloat(property, value);
-        m_Materials[8].SetFloat(property, value);
-        m_Materials[9].SetFloat(property, value);
-        m_Materials[10].SetFloat(property, value);
+    }
+
+    IEnumerator ShaderFader(int index, string property, float fadeTime, float value, bool increment)
+    {
+        float timer = 0;
+
+        if (increment)
+        {
+            while (m_Materials[index].GetFloat(property) < value)
+            {
+                timer += Time.deltaTime;
+                m_Materials[index].SetFloat(property, timer / fadeTime);
+                yield return null;
+            }
+        }
+        else
+        {
+            while (m_Materials[index].GetFloat(property) > value)
+            {
+                timer -= Time.deltaTime;
+                m_Materials[0].SetFloat(property, timer / fadeTime);
+                yield return null;
+            }
+        }
+
+        m_Materials[index].SetFloat(property, value);
     }
 
     IEnumerator VolumeFader(Volume volume, float fadeTime, float value, bool increment)
