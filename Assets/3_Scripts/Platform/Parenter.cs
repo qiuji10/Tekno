@@ -16,8 +16,12 @@ public class Parenter : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             other.transform.SetParent(transform.parent); 
-            platform.PlayerOnPlatform = true;
-            platform.player = other.transform;
+
+            if (platform != null)
+            {
+                platform.PlayerOnPlatform = true;
+                platform.player = other.transform;
+            }
         }
     }
 
@@ -26,8 +30,12 @@ public class Parenter : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             other.transform.SetParent(null);
-            platform.PlayerOnPlatform = false;
-            platform.player = null;
+
+            if (platform != null)
+            {
+                platform.PlayerOnPlatform = false;
+                platform.player = null;
+            }
         }
     }
 }

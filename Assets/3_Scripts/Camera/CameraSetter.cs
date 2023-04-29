@@ -6,6 +6,15 @@ using UnityEngine;
 public class CameraSetter : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCameraBase InUsedCam;
+    [SerializeField] private bool isFollow;
+    [SerializeField] private bool isLook;
+
+    private void Awake()
+    {
+        Transform player = GameObject.FindGameObjectWithTag("Player").transform;
+        if (isFollow) InUsedCam.Follow = player;
+        if (isLook) InUsedCam.LookAt = player;
+    }
 
     public void LoadCam()
     {
@@ -15,5 +24,10 @@ public class CameraSetter : MonoBehaviour
     public void UnloadCam()
     {
         InUsedCam.Priority = 9;
+    }
+
+    public void SwitchCam(CinemachineVirtualCameraBase newVcam)
+    {
+        InUsedCam = newVcam;
     }
 }
