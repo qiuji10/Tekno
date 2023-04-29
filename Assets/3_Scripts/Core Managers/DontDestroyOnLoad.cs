@@ -8,4 +8,9 @@ public class DontDestroyOnLoad : MonoBehaviour
     {
         DontDestroyOnLoad(this.gameObject);
     }
+
+    private void OnTransformParentChanged()
+    {
+        if (transform.parent == null) DontDestroyOnLoad(gameObject);
+    }
 }

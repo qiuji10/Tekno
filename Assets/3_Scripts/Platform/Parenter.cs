@@ -11,6 +11,18 @@ public class Parenter : MonoBehaviour
         platform = GetComponentInParent<IPlatform>();
     }
 
+    public void FindAndDetach(string name)
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).gameObject.name == name)
+            {
+                transform.GetChild(i).SetParent(null);
+                break;
+            }
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

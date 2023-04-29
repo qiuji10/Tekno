@@ -32,14 +32,18 @@ public class GameSceneManager : MonoBehaviour
     {
         AsyncOperation loadingScene = SceneManager.LoadSceneAsync(sceneName, mode);
 
-        List<GameObject> objects = objectsToBeTransfer;
-
         while (!loadingScene.isDone)
         {
             yield return null;
         }
 
-        //if (activateScene) SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
+        Scene newScene = SceneManager.GetSceneByName(sceneName);
+        
+        if (newScene.name == "Q1 Map Test")
+        {
+            SceneManager.SetActiveScene(newScene);
+        }
+        
         //Scene curScene = SceneManager.GetActiveScene();
         
         //GameSceneManager[] sceneManagers = FindObjectsOfType<GameSceneManager>();
