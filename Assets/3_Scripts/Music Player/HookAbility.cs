@@ -24,7 +24,7 @@ public class HookAbility : MonoBehaviour
     [SerializeField] private Image hookViableVisual;
 
     private PlayerController _playerController;
-    private ThirdPerCam _cam;
+    //private ThirdPerCam _cam;
     private Rigidbody _rb;
     private Pendulum pendulum;
 
@@ -35,7 +35,7 @@ public class HookAbility : MonoBehaviour
     {
         _playerController = GetComponent<PlayerController>();
         _rb = GetComponent<Rigidbody>();
-        _cam = Camera.main.GetComponent<ThirdPerCam>();
+        //_cam = Camera.main.GetComponent<ThirdPerCam>();
         hookViableVisual.fillAmount = 1 - successRatio;
     }
 
@@ -87,7 +87,7 @@ public class HookAbility : MonoBehaviour
                 _rb.isKinematic = true;
                 _rb.constraints = RigidbodyConstraints.None;
 
-                _cam.enabled = false;
+                //_cam.enabled = false;
                 _playerController.Anim.SetTrigger("StartSwing");
                 _playerController.enabled = false;
 
@@ -133,7 +133,7 @@ public class HookAbility : MonoBehaviour
 
         _playerController.transform.SetParent(null);
         
-        _cam.enabled = true;
+        //_cam.enabled = true;
         _playerController.enabled = true;
         _playerController.transform.eulerAngles = Vector3.zero;
         _playerController.Anim.SetTrigger("EndSwing");
