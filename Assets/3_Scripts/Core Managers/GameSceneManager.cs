@@ -3,10 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEngine.Events;
 
 public class GameSceneManager : MonoBehaviour
 {
     public static event Action<Scene> OnNewSceneLoaded;
+
+    public UnityEvent OnSceneInitialization;
+
+    public List<GameObject> objectsToBeTransfer = new List<GameObject>();
+
+    private void Awake()
+    {
+        OnSceneInitialization?.Invoke();
+    }
 
     public void LoadScene(string sceneName)
     {
@@ -27,6 +37,36 @@ public class GameSceneManager : MonoBehaviour
             yield return null;
         }
 
+        Scene newScene = SceneManager.GetSceneByName(sceneName);
+        
+        if (newScene.name == "Q1 Map Test")
+        {
+            SceneManager.SetActiveScene(newScene);
+        }
+        
+        //Scene curScene = SceneManager.GetActiveScene();
+        
+        //GameSceneManager[] sceneManagers = FindObjectsOfType<GameSceneManager>();
+        //Debug.Log(curScene.name);
+        //foreach (GameSceneManager sceneManager in sceneManagers)
+        //{
+        //    if (sceneManager.gameObject.scene != curScene)
+        //    {
+        //        Debug.Log("heyhey");
+        //        sceneManager.objectsToBeTransfer = objects;
+        //    }
+        //}
+
+        //foreach (GameObject obj in objects)
+        //{
+        //    SceneManager.MoveGameObjectToScene(obj, curScene);
+        //}
+
         OnNewSceneLoaded?.Invoke(SceneManager.GetActiveScene());
+    }
+
+    public void UnloadScene(string sceneName)
+    {
+        SceneManager.UnloadSceneAsync(sceneName);
     }
 }

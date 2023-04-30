@@ -11,13 +11,29 @@ public class Parenter : MonoBehaviour
         platform = GetComponentInParent<IPlatform>();
     }
 
+    public void FindAndDetach(string name)
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).gameObject.name == name)
+            {
+                transform.GetChild(i).SetParent(null);
+                break;
+            }
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             other.transform.SetParent(transform.parent); 
-            platform.PlayerOnPlatform = true;
-            platform.player = other.transform;
+
+            if (platform != null)
+            {
+                platform.PlayerOnPlatform = true;
+                platform.player = other.transform;
+            }
         }
     }
 
@@ -26,8 +42,12 @@ public class Parenter : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             other.transform.SetParent(null);
-            platform.PlayerOnPlatform = false;
-            platform.player = null;
+
+            if (platform != null)
+            {
+                platform.PlayerOnPlatform = false;
+                platform.player = null;
+            }
         }
     }
 }

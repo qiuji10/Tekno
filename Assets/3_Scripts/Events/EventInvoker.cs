@@ -14,9 +14,11 @@ public class EventInvoker : MonoBehaviour
 
     [SerializeField, ShowIf("IS_STAY")] private GameObject prompt;
     [SerializeField] private UnityEvent OnInteract;
+    [SerializeField] private UnityEvent OnInteractDelay;
     [SerializeField] private UnityEvent OnExit;
 
     [SerializeField] private bool triggerOnce;
+    [SerializeField] private float triggerDelay;
 
     private bool inRange, triggerDisable;
     private Camera cam;
@@ -47,6 +49,7 @@ public class EventInvoker : MonoBehaviour
             }
 
             OnInteract?.Invoke();
+            StartCoroutine(DelayEvent());
             //prompt.SetActive(false);
         }
     }
@@ -62,10 +65,11 @@ public class EventInvoker : MonoBehaviour
                 if (triggerOnce)
                 {
                     triggerDisable = true;
-                    prompt.SetActive(false);
+                    if (prompt != null) prompt.SetActive(false);
                 }
 
                 OnInteract?.Invoke();
+                StartCoroutine(DelayEvent());
             }
 
             inRange = true;
@@ -91,6 +95,12 @@ public class EventInvoker : MonoBehaviour
             OnExit?.Invoke();
             inRange = false;
         }
+    }
+
+    private IEnumerator DelayEvent()
+    {
+        yield return new WaitForSeconds(triggerDelay);
+        OnInteractDelay?.Invoke();
     }
 
     private bool IS_ENTER() { return eventType == EventInvokeType.Enter; }
