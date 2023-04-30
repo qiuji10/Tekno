@@ -76,13 +76,10 @@ public class TeleportAbility : MonoBehaviour
 
     public void TeleportToNextNode(Transform targetTeleportPoint)
     {
-        if (charge.isMaxCharge)
-        {
-            Vector3 direction = (targetTeleportPoint.position - transform.position).normalized;
-            Vector3 centerPoint = Vector3.Lerp(transform.position, targetTeleportPoint.position, 0.5f);
-            Transform vfx = Instantiate(electricVFX, targetTeleportPoint.position, Quaternion.LookRotation(direction));
-            LeanTween.move(gameObject, targetTeleportPoint.position, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
-        }
+        Vector3 direction = (targetTeleportPoint.position - transform.position).normalized;
+        Vector3 centerPoint = Vector3.Lerp(transform.position, targetTeleportPoint.position, 0.5f);
+        Transform vfx = Instantiate(electricVFX, targetTeleportPoint.position, Quaternion.LookRotation(direction));
+        LeanTween.move(gameObject, targetTeleportPoint.position, TempoManager.GetTimeToBeatCount(1f)).setOnComplete(() => Destroy(vfx.gameObject, 0.35f));
         
     }
 
