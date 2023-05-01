@@ -6,7 +6,7 @@ public class MotherNode : MonoBehaviour
 {
     [SerializeField] public List<Transform> teleportPoints = new List<Transform>();
     [SerializeField] private TeleportAbility teleportAbility;
-    private int currentNodeIndex = 0;
+    //private int currentNodeIndex = 0;
     private bool playerInRange = false;
 
     private void OnTriggerEnter(Collider other)
