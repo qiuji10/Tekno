@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerReturn: MonoBehaviour
 {
-    public GameObject playerObject;
     private CheckpointManager checkpointManager;
     private Transform playerTransform;
 
@@ -10,7 +9,7 @@ public class PlayerReturn: MonoBehaviour
     {
         // Get references to the CheckpointManager and player Transform
         checkpointManager = FindObjectOfType<CheckpointManager>();
-        playerTransform = playerObject.transform;
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     private void OnTriggerEnter(Collider other)

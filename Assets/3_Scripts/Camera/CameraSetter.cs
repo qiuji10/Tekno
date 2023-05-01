@@ -28,6 +28,8 @@ public class CameraSetter : MonoBehaviour
 
     public void SwitchCam(CinemachineVirtualCameraBase newVcam)
     {
+        UnloadCam();
         InUsedCam = newVcam;
+        LoadCam();
     }
 }
