@@ -1,13 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
-public class PlayerStatus : MonoBehaviour, IDamagable 
+public class PlayerStatus : MonoBehaviour 
 {
     private int health = 1000;
     public static int life = 5;
 
     public int Health { get { return health; } }
-    public bool IsAlive => health > 0;
     private bool isGlitchy;
     //private CheckpointManager checkpointManager;
     private MaterialModifier matModifier;

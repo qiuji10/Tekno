@@ -137,9 +137,10 @@ public class MaterialModifier : MonoBehaviour
             while (m_Materials[0].GetFloat(property) < value)
             {
                 timer += Time.deltaTime;
-                m_Materials[0].SetFloat(property, timer / fadeTime);
-                m_Materials[1].SetFloat(property, timer / fadeTime);
-                m_Materials[2].SetFloat(property, timer / fadeTime);
+                float ratio = Mathf.Clamp(timer / fadeTime, 0f, 1f);
+                m_Materials[0].SetFloat(property, ratio);
+                m_Materials[1].SetFloat(property, ratio);
+                m_Materials[2].SetFloat(property, ratio);
                 yield return null;
             }
         }
@@ -148,9 +149,10 @@ public class MaterialModifier : MonoBehaviour
             while (m_Materials[0].GetFloat(property) > value)
             {
                 timer -= Time.deltaTime;
-                m_Materials[0].SetFloat(property, timer / fadeTime);
-                m_Materials[1].SetFloat(property, timer / fadeTime);
-                m_Materials[2].SetFloat(property, timer / fadeTime);
+                float ratio = Mathf.Clamp(timer / fadeTime, 0f, 1f);
+                m_Materials[0].SetFloat(property, ratio);
+                m_Materials[1].SetFloat(property, ratio);
+                m_Materials[2].SetFloat(property, ratio);
                 yield return null;
             }
         }
@@ -169,7 +171,7 @@ public class MaterialModifier : MonoBehaviour
             while (volume.weight < value)
             {
                 timer += Time.deltaTime;
-                volume.weight = timer / fadeTime;
+                volume.weight = Mathf.Clamp(timer / fadeTime, 0f, 1f);
                 yield return null;
             }
 
@@ -183,7 +185,7 @@ public class MaterialModifier : MonoBehaviour
             while (volume.weight > value)
             {
                 timer -= Time.deltaTime;
-                volume.weight = timer / fadeTime;
+                volume.weight = Mathf.Clamp(timer / fadeTime, 0f, 1f);
                 yield return null;
             }
 

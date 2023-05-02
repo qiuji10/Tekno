@@ -1,15 +1,13 @@
 using NaughtyAttributes;
 using NodeCanvas.Framework;
-using NodeCanvas.Tasks.Actions;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyBase : MonoBehaviour, IKnockable
 {
     public DamageTrigger damageTrigger;
+    public float walkingSpeed, chasingSpeed, rotationSpeed;
 
     [Header("Knockback Settings")]
     [SerializeField] private float afterKnockedWaitTime;
@@ -22,9 +20,11 @@ public class EnemyBase : MonoBehaviour, IKnockable
     [SerializeField] private float detectDistance;
     [SerializeField] private Vector3 groundDetectOffset;
 
-    [Header("Breaking Objects")]
+    [Header("Extra Objects")]
     [SerializeField] private BreakingObject vrHeadset;
+    [SerializeField] private Transform warningPrompt;
 
+    private Transform _camTR;
     private NavMeshAgent _agent;
     private Rigidbody _rb;
     private Animator _anim;
@@ -39,8 +39,18 @@ public class EnemyBase : MonoBehaviour, IKnockable
         _rb = GetComponent<Rigidbody>();
         _owner = GetComponent<GraphOwner>();
         _anim = GetComponentInChildren<Animator>();
+        _camTR = Camera.main.transform;
 
         ignoreLayer = ~(1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Player"));
+
+        maxKnockbackSpeed = Random.Range(3.5f, 5f);
+        chasingSpeed = Random.Range(5f, 12f);
+        walkingSpeed = Random.Range(1f, 1.5f);
+        rotationSpeed = Random.Range(1f, 5f);
+        _agent.angularSpeed = Random.Range(10, 300f);
+
+        _anim.SetFloat("ChaseBlendTree", Random.Range(0f, 1f));
+        _anim.SetFloat("IdleBlendTree", Random.Range(0f, 1f));
 
         isKnockng = false;
     }
@@ -54,7 +64,7 @@ public class EnemyBase : MonoBehaviour, IKnockable
         if (_agent.velocity != Vector3.zero)
         {
             float currentWeight = _anim.GetLayerWeight(1);
-            _anim.SetLayerWeight(1, Mathf.SmoothDamp(currentWeight, 1, ref velocity, 0.1f));
+            _anim.SetLayerWeight(1, Mathf.SmoothDamp(currentWeight, walkingSpeed, ref velocity, 0.1f));
         }
         else if (currentAngularVelocity > 1f)
         {
@@ -65,6 +75,8 @@ public class EnemyBase : MonoBehaviour, IKnockable
             float currentWeight = _anim.GetLayerWeight(1);
             _anim.SetLayerWeight(1, Mathf.SmoothDamp(currentWeight, 0, ref velocity, 0.1f));
         }
+
+        warningPrompt.rotation = Quaternion.LookRotation(warningPrompt.position - _camTR.position);
     }
 
     private void FixedUpdate()
@@ -99,14 +111,14 @@ public class EnemyBase : MonoBehaviour, IKnockable
     [Button]
     public void FreeEnemy()
     {
+        IBlackboard blackboard = _owner.graph.blackboard;
+        blackboard.SetVariableValue("FreeEnemy", true);
 
-        //IBlackboard blackboard = _owner.graph.blackboard;
-        //blackboard.SetVariableValue("FreeEnemy", true);
         isFree = true;
         vrHeadset.BreakObjects();
-        _owner.StopBehaviour();
+        //_owner.StopBehaviour();
         _rb.velocity = Vector3.zero;
-        _rb.isKinematic = true;
+        //_rb.isKinematic = true;
         if (_agent.enabled) _agent.isStopped = true;
         _anim.SetLayerWeight(1, 0);
         _anim.SetLayerWeight(2, 0);

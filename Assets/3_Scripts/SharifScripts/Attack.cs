@@ -51,7 +51,6 @@ public class Attack : MonoBehaviour
             {
                 Vector3 forceDirection = (enemy.transform.position - attackPos.position).normalized;
                 knockable.Knock(forceDirection, 100);
-                Debug.Log(enemy.name);
             }
             
         }
