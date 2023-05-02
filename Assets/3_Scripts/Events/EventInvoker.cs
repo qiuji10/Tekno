@@ -23,7 +23,7 @@ public class EventInvoker : MonoBehaviour
     private bool inRange, triggerDisable;
     private Camera cam;
 
-    private void Awake()
+    private void Start()
     {
         cam = Camera.main;
     }

@@ -25,4 +25,19 @@ public class PlayerData : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
     }
+
+    private void Start()
+    {
+        controller = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+    }
+
+    public void EnablePlayerController()
+    {
+        controller.enabled = true;
+    }
+
+    public void DisablePlayerController()
+    {
+        controller.enabled = false;
+    }
 }

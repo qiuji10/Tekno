@@ -9,7 +9,7 @@ public class CameraSetter : MonoBehaviour
     [SerializeField] private bool isFollow;
     [SerializeField] private bool isLook;
 
-    private void Awake()
+    private void Start()
     {
         Transform player = GameObject.FindGameObjectWithTag("Player").transform;
         if (isFollow) InUsedCam.Follow = player;

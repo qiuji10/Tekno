@@ -160,32 +160,6 @@ public class MaterialModifier : MonoBehaviour
         m_Materials[2].SetFloat(property, value);
     }
 
-    IEnumerator ShaderFader(int index, string property, float fadeTime, float value, bool increment)
-    {
-        float timer = 0;
-
-        if (increment)
-        {
-            while (m_Materials[index].GetFloat(property) < value)
-            {
-                timer += Time.deltaTime;
-                m_Materials[index].SetFloat(property, timer / fadeTime);
-                yield return null;
-            }
-        }
-        else
-        {
-            while (m_Materials[index].GetFloat(property) > value)
-            {
-                timer -= Time.deltaTime;
-                m_Materials[0].SetFloat(property, timer / fadeTime);
-                yield return null;
-            }
-        }
-
-        m_Materials[index].SetFloat(property, value);
-    }
-
     IEnumerator VolumeFader(Volume volume, float fadeTime, float value, bool increment)
     {
         float timer = 0;
@@ -198,6 +172,9 @@ public class MaterialModifier : MonoBehaviour
                 volume.weight = timer / fadeTime;
                 yield return null;
             }
+
+            volume.weight = value;
+            yield break;
         }
         else
         {
@@ -209,8 +186,11 @@ public class MaterialModifier : MonoBehaviour
                 volume.weight = timer / fadeTime;
                 yield return null;
             }
+
+            volume.weight = value;
+            yield break;
         }
 
-        volume.weight = value;
+        
     }
 }

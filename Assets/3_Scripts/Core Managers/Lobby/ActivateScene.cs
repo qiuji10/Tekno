@@ -7,8 +7,9 @@ public class ActivateScene : MonoBehaviour
 {
     public string sceneName;
 
-    private void Start()
+    private void OnTriggerEnter(Collider col)
     {
-        SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
+        if (col.CompareTag("Player"))
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
     }
 }
