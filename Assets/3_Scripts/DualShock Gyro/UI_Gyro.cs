@@ -38,8 +38,8 @@ public class UI_Gyro : MonoBehaviour
             Vector2 newPos = imageRect.anchoredPosition;
             Quaternion rotation = DS4.getRotation();
             newPos.y -= rotation.x * sensitivity;
-            //newPos.x -= rotation.z * sensitivity;
-            //newPos.x = Mathf.Clamp(newPos.x, minPos.x, maxPos.x);
+            newPos.x -= rotation.z * sensitivity;
+            newPos.x = Mathf.Clamp(newPos.x, minPos.x, maxPos.x);
             newPos.y = Mathf.Clamp(newPos.y, minPos.y, maxPos.y);
             imageRect.anchoredPosition = newPos;
         }
