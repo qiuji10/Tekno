@@ -122,7 +122,7 @@ public class Minigame_Speaker : MonoBehaviour
 
                     if (successInput == totalInputNeeded)
                     {
-                        data.promptText.text = "<color=blue>Hacked!</color>";
+                        data.promptText.text = "<color=blue>GREAT!</color>";
                         OnComboSuccess?.Invoke();
                     }
                 }
