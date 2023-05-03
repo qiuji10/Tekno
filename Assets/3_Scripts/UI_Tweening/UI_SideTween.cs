@@ -47,7 +47,7 @@ public class UI_SideTween : MonoBehaviour
     IEnumerator EnlargeElement(float scale)
     {
         yield return new WaitForSeconds(duration / 2);
-        element.DOScale(scale, duration);
+        transform.LeanScale(new Vector3(scale, scale, 1), duration);
         yield return null;
     }
 }

@@ -30,10 +30,16 @@ public class Minigame_Speaker : MonoBehaviour
 
     public LTDescr speakerMovement { get; set; }
     private RectTransform rect;
+    private MinigameData data;
 
     private void Awake()
     {
         rect = GetComponent<RectTransform>();
+    }
+
+    private void Start()
+    {
+        data = MinigameData.Instance;
     }
 
     private void OnEnable()
@@ -52,12 +58,6 @@ public class Minigame_Speaker : MonoBehaviour
         triangleAction.action.performed -= OnPressed;
     }
 
-    [Button]
-    public void tep()
-    {
-        successParticle.StartParticleEmission();
-    }
-
     private void Update()
     {
         if (startTrace && !failed)
@@ -71,8 +71,9 @@ public class Minigame_Speaker : MonoBehaviour
             {
                 if (detectedEnterRegion)
                 {
-                    Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
+                    //Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
                     OnHitFailure?.Invoke();
+                    data.promptText.text = "<color=red>out of time</color>";
                     failParticle.StartParticleEmission();
                     detectedEnterRegion = false;
                     startTrace = false;
@@ -85,8 +86,9 @@ public class Minigame_Speaker : MonoBehaviour
             {
                 if (Time.time > TempoManager._lastBeatTime + timeToInput + offsetTime)
                 {
-                    Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
+                    //Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
                     OnHitFailure?.Invoke();
+                    data.promptText.text = "<color=red>out of time</color>";
                     failParticle.StartParticleEmission();
                     detectedEnterRegion = false;
                     startTrace = false;
@@ -110,21 +112,24 @@ public class Minigame_Speaker : MonoBehaviour
                 // TODO: Offset in future for calibration
                 if (RectTransformUtility.RectangleContainsScreenPoint(rect, touchPoint))
                 {
-                    Debug.Log("<color=green>success</color>");
+                    //Debug.Log("<color=green>success</color>");
                     lastHitTime = Time.time;
                     startTrace = false;
                     detectedEnterRegion = false;
                     successParticle.StartParticleEmission();
                     successInput++;
+                    data.promptText.text = "<color=blue>Hacking in progress...</color>";
 
                     if (successInput == totalInputNeeded)
                     {
+                        data.promptText.text = "<color=blue>Hacked!</color>";
                         OnComboSuccess?.Invoke();
                     }
                 }
                 else
                 {
-                    Debug.Log("<color=red>fail</color>");
+                    //Debug.Log("<color=red>fail</color>");
+                    data.promptText.text = "<color=red>Too early</color>";
                     OnHitFailure?.Invoke();
                     failParticle.StartParticleEmission();
                     startTrace = false;
@@ -135,7 +140,8 @@ public class Minigame_Speaker : MonoBehaviour
             }
             else
             {
-                Debug.Log("<color=yellow>wrong key</color>");
+                //Debug.Log("<color=yellow>wrong key</color>");
+                data.promptText.text = "<color=red>wrong input</color>";
                 OnHitFailure?.Invoke();
                 failParticle.StartParticleEmission();
                 startTrace = false;
@@ -146,7 +152,8 @@ public class Minigame_Speaker : MonoBehaviour
         }
         else
         {
-            Debug.Log("<color=cyan>out of time range</color>");
+            //Debug.Log("<color=cyan>out of time range</color>");
+            data.promptText.text = "<color=red>out of time</color>";
             OnHitFailure?.Invoke();
             failParticle.StartParticleEmission();
             startTrace = false;

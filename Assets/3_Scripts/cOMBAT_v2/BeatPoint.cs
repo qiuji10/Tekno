@@ -8,19 +8,25 @@ public class BeatPoint : MonoBehaviour
     public Image img { get; set; }
     public RectTransform rect { get; set; }
 
-    private Slider slider;
-    private RectTransform rotator, sliderRect;
+    //private Slider slider;
+    private CustomSlider mainSlider, bgSlider;
+    private RectTransform rotator, sliderRect, bgSliderRect;
 
     private void Awake()
     {
         rect = GetComponent<RectTransform>();
-        img = transform.GetChild(1).GetComponent<Image>();
+        img = transform.GetChild(2).GetComponent<Image>();
         rotator = transform.GetChild(0).GetComponent<RectTransform>();
-        slider = GetComponentInChildren<Slider>();
-        sliderRect = slider.GetComponent<RectTransform>();
+        //slider = GetComponentInChildren<Slider>();
+
+        mainSlider = rotator.GetChild(0).GetComponent<CustomSlider>();
+        bgSlider = rotator.GetChild(1).GetComponent<CustomSlider>();
+
+        sliderRect = mainSlider.GetComponent<RectTransform>();
+        bgSliderRect = bgSlider.GetComponent<RectTransform>();
     }
 
-    public void Scale(Transform sliderParent, float scalePos, Direction dir, float scale, float timeReachEndPos)
+    public void Scale(int index, Transform sliderParent, float scalePos, Direction dir, float scale, float timeReachEndPos)
     {
         rotator.transform.SetParent(sliderParent);
         rotator.anchoredPosition = rect.anchoredPosition;
@@ -41,11 +47,18 @@ public class BeatPoint : MonoBehaviour
                 break;
         }
 
-        sliderRect.sizeDelta = new Vector2(scale, sliderRect.sizeDelta.y);
-        sliderRect.anchoredPosition = new Vector2(scalePos, 0);
+        sliderRect.sizeDelta = bgSliderRect.sizeDelta = new Vector2(scale, sliderRect.sizeDelta.y);
+        sliderRect.anchoredPosition = bgSliderRect.anchoredPosition = new Vector2(scalePos, 0);
         LeanTween.value(0, 1, timeReachEndPos).setOnUpdate((float value) =>
         { 
-            slider.value = value;
+            if (index == 1)
+            {
+                mainSlider.Value = value;
+            }
+            else if (index == 2)
+            {
+                bgSlider.Value = value;
+            }
         });
     }
 }

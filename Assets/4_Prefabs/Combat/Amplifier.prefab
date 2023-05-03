@@ -10133,15 +10133,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3947474b0735c984cb3ce74e58f71e83, type: 2}
   - {fileID: 11400000, guid: 07ca088c6d54c924e887b7193527148b, type: 2}
   - {fileID: 11400000, guid: 4698ad9962950b84fa0fc71cbf708581, type: 2}
-  beatPrefab: {fileID: 6097634576198623637, guid: acbc5fac192fb404f91e2e61695c8de8,
+  beatPrefab: {fileID: 6097634576198623637, guid: 4e60496915e41054c9196dbbec25c64d,
     type: 3}
-  canvas: {fileID: 0}
-  sliderVisualParent: {fileID: 0}
-  beatVisualParent: {fileID: 0}
-  amplifierCoreImg: {fileID: 0}
-  speakerHealthBar: {fileID: 0}
-  amplifierHealthBar: {fileID: 0}
-  speaker: {fileID: 0}
   enemiesInControl: []
   particle: {fileID: 6231391339937820782}
   knockBackRange: 10
@@ -10160,6 +10153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactKey: {fileID: -3586359921819425980, guid: 1870834d611a202418d6e474a9fb0619,
     type: 3}
+  eventType: 1
   prompt: {fileID: 651288147}
   OnInteract:
     m_PersistentCalls:
@@ -10176,6 +10170,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnInteractDelay:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExit:
+    m_PersistentCalls:
+      m_Calls: []
+  triggerOnce: 0
+  triggerDelay: 0
 --- !u!1 &3080455108013204554
 GameObject:
   m_ObjectHideFlags: 0
