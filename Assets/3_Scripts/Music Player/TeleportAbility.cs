@@ -35,6 +35,7 @@ public class TeleportAbility : MonoBehaviour
     {
         teleportAction.action.performed += Teleport;
         chargingAction.action.performed += Charge;
+        chargeSlider.gameObject.SetActive(true);
         LeanTween.reset();
     }
 
@@ -42,6 +43,7 @@ public class TeleportAbility : MonoBehaviour
     {
         teleportAction.action.performed -= Teleport;
         chargingAction.action.performed -= Charge;
+        chargeSlider.gameObject.SetActive(false);
     }
 
     private void Charge(InputAction.CallbackContext context)
@@ -118,7 +120,8 @@ public class TeleportAbility : MonoBehaviour
         foreach (Transform teleportPoint in motherNode.teleportPoints)
         {
             rb.isKinematic = true;
-            if (teleportPoint != null && teleportPoint.gameObject.activeInHierarchy)
+            
+            if (teleportPoint != null )
             {
                 
                 TeleportToNextNode(teleportPoint);
@@ -126,7 +129,10 @@ public class TeleportAbility : MonoBehaviour
                 rb.isKinematic = false;
                 currentChargeLevel = 0;
                 isMaxCharge = false;
+                
             }
+
+            
         }
     }
 
