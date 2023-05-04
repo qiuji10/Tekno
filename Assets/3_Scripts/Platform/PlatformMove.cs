@@ -67,6 +67,7 @@ public class PlatformMove : MonoBehaviour, IPlatform
     private void Awake()
     {
         // Set the track field to the current track
+        StanceManager_OnStanceChange(StanceManager.curTrack);
         track = currentTrack;
     }
 

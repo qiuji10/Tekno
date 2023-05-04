@@ -72,7 +72,7 @@ public class TempoManager : MonoBehaviour
     {
         _beatsSinceSync++;
         OnBeat?.Invoke();
-        _lastBeatTime = Time.time;
+        _lastBeatTime = Time.unscaledTime;
     }
 
     [Button]
@@ -82,7 +82,7 @@ public class TempoManager : MonoBehaviour
     public void SyncBPM()
     {
         staticBPM = BPM = bpmChnager;
-        _lastSyncTime = Time.time;
+        _lastSyncTime = Time.unscaledTime;
         _beatsSinceSync = 0;
         Beat(); //NB: beat is now synced immedately instead of after a 1 beat delay
     }

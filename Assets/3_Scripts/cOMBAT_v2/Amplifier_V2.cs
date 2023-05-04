@@ -97,6 +97,8 @@ public class Amplifier_V2 : MonoBehaviour
 
     public void StartPlay()
     {
+        if (StanceManager.curTrack.genre != Genre.Techno) return;
+
         LeanTween.reset();
 
         StanceManager.AllowPlayerSwitchStance = false;

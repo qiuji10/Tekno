@@ -96,7 +96,7 @@ public class MaterialModifier : MonoBehaviour
         Texture tex = null;
         Color texColor = Color.white;
 
-        switch (StanceManager.curStance)
+        switch (StanceManager.curTrack.genre)
         {
             case Genre.House:
                 baseString = "#988C00";

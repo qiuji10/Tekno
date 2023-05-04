@@ -11,6 +11,7 @@ public class EventInvoker : MonoBehaviour
 {
     [SerializeField, ShowIf("IS_STAY")] private InputActionReference interactKey;
     [SerializeField] private EventInvokeType eventType = EventInvokeType.Stay;
+    [SerializeField] private Genre genre = Genre.All;
 
     [SerializeField, ShowIf("IS_STAY")] private GameObject prompt;
     [SerializeField] private UnityEvent OnInteract;
@@ -40,6 +41,8 @@ public class EventInvoker : MonoBehaviour
 
     private void Interact(InputAction.CallbackContext context)
     {
+        if (StanceManager.curTrack.genre != genre && genre != Genre.All) return;
+
         if (!triggerDisable && eventType == EventInvokeType.Stay && inRange)
         {
             if (triggerOnce)
@@ -56,6 +59,8 @@ public class EventInvoker : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (StanceManager.curTrack.genre != genre && genre != Genre.All) return;
+
         if (!triggerDisable && other.CompareTag("Player"))
         {
             if (prompt != null) prompt.SetActive(true);
@@ -78,6 +83,14 @@ public class EventInvoker : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        if (StanceManager.curTrack.genre != genre && genre != Genre.All)
+        {
+            if (prompt != null) prompt.SetActive(false);
+            OnExit?.Invoke();
+            inRange = false;
+            return;
+        }
+
         if (other.CompareTag("Player"))
         {
             if (!triggerDisable && inRange && prompt != null)
