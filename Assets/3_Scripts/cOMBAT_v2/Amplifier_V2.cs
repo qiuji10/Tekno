@@ -193,7 +193,7 @@ public class Amplifier_V2 : MonoBehaviour
 
             foreach (EnemyBase e in enemiesInControl)
             {
-                if (e != null)
+                if (e != null && e.gameObject.activeInHierarchy)
                 {
                     e.FreeEnemy();
                 }
