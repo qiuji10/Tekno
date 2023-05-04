@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PlayerStatus : MonoBehaviour 
@@ -11,6 +12,8 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] private Sprite blueHead;
     [SerializeField] private Sprite yellowHead;
     [SerializeField] private Sprite greenHead;
+
+    [SerializeField] private GameObject deathCanvas;
 
     private int totalHealth;
     private bool isGlitchy;
@@ -92,6 +95,9 @@ public class PlayerStatus : MonoBehaviour
 
             if (needRespawn)
             {
+                if (checkpointManager == null)
+                    checkpointManager = FindObjectOfType<CheckpointManager>();
+
                 checkpointManager.SetPlayerToSpawnPoint(transform);
             }
         }
@@ -104,7 +110,25 @@ public class PlayerStatus : MonoBehaviour
                 spectrum.images[i].color = Color.red;
             }
 
+            PlayerController.allowedInput = false;
+            Cursor.visible = true;
+            deathCanvas.SetActive(true);
+            Button lobbyButton = deathCanvas.GetComponentInChildren<Button>();
+            EventSystem.current.SetSelectedGameObject(lobbyButton.gameObject);
+            lobbyButton.onClick.AddListener(BackToLobby);
         }
+    }
+
+    public void BackToLobby()
+    {
+        NonDestructible[] nonDestructibles = FindObjectsOfType<NonDestructible>();
+
+        foreach (var item in nonDestructibles)
+        {
+            Destroy(item.gameObject);
+        }
+
+        FindObjectOfType<GameSceneManager>().LoadScene("1_Lobby");
     }
 
     IEnumerator GlitchyDamageEffect()

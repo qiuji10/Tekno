@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Events;
 
 public enum KeyInput { None, Circle, Cross, Square, Triangle }
 public enum Direction { Up, Down, Left, Right }
@@ -20,6 +21,7 @@ public class Amplifier_V2 : MonoBehaviour
     [Header("Hijack Succeeded")]
     [SerializeField] private List<EnemyBase> enemiesInControl;
     [SerializeField] private ParticleSystem particle;
+    public UnityEvent OnHijackSucceed;
 
     [Header("Hijack Failed")]
     [SerializeField] private float knockBackRange = 10;
@@ -199,6 +201,7 @@ public class Amplifier_V2 : MonoBehaviour
                 }
             }
 
+            OnHijackSucceed?.Invoke();
             StartCoroutine(HackedDecal());
             StanceManager.AllowPlayerSwitchStance = true;
             canvas.gameObject.SetActive(false);

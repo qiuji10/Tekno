@@ -43,6 +43,6 @@ public class BeatPlatform : MonoBehaviour
         if (points[beatCount].position == prevPos) return;
 
         prevPos = points[beatCount].position;
-        transform.LeanMoveLocal(points[beatCount].position, TempoManager.GetTimeToBeatCount(1));
+        transform.LeanMoveLocal(points[beatCount].localPosition, TempoManager.GetTimeToBeatCount(1));
     }
 }
