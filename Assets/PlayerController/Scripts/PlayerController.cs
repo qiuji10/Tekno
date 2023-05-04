@@ -32,7 +32,6 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     [SerializeField] private bool isGround;
 
     [Header("Animation Blend")]
-    [SerializeField] private float stanceChangeTime = 2.333f;
     [SerializeField] private float animMoveSpeed = 0.8f;
     [SerializeField] private float acceleration = 20f;
     [SerializeField] private float deceleration = 5f;
