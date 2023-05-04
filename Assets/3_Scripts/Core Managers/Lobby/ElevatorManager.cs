@@ -15,7 +15,7 @@ public class ElevatorManager : MonoBehaviour
 
     private void Awake()
     {
-        data = PlayerData.Instance;
+        data = FindObjectOfType<PlayerData>();
     }
 
     public void UnparentPlayer()

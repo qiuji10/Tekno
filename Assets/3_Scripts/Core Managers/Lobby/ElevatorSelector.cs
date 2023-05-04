@@ -5,8 +5,15 @@ using UnityEngine;
 
 public class ElevatorSelector : MonoBehaviour
 {
+    private PlayerData data;
+
+    private void Start()
+    {
+        data = FindObjectOfType<PlayerData>();
+    }
+
     public void SetDestination(string destination)
     {
-        PlayerData.Instance.destination = (ElevatorDestination)Enum.Parse(typeof(ElevatorDestination), destination);
+        data.destination = (ElevatorDestination)Enum.Parse(typeof(ElevatorDestination), destination);
     }
 }
