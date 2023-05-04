@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
-public enum Genre { House, Techno, Electronic }
+public enum Genre { House, Techno, Electronic, All }
 
 public class StanceManager : MonoBehaviour
 {

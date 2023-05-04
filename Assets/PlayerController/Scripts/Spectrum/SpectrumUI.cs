@@ -8,27 +8,16 @@ using UnityEngine.UI;
 public class SpectrumUI : MonoBehaviour
 {
     [Header("Value")]
-
-    [Range(0.0000001f, 0.1f)]
-    public float refValue = 0.0027f;
-
-    [Range(0.1f, 5f)]
-    public float scaleMultiplier = 0.75f;
-
-    [Range(0.01f, 1f)]
-    public float releaseTime = 0.2f;
-
+    [Range(0.0000001f, 0.1f)] public float refValue = 0.0027f;
+    [Range(0.1f, 5f)] public float scaleMultiplier = 0.75f;
+    [Range(0.01f, 1f)] public float releaseTime = 0.2f;
     public float innerRadus = 100f;
-
     public int elementCount = 92;
-
     public Vector2 offset;
 
     [Header("Reference")]
     public AudioSource audioSource;
     public SpectrumElement_UI spectrumElementPrefab;
-
-
     public List<Image> images = new List<Image>();
 
     private SpectrumElement_UI[] spectrumElements;
@@ -40,6 +29,21 @@ public class SpectrumUI : MonoBehaviour
         CreateElements();
     }
 
+    private void OnEnable()
+    {
+        TempoManager.OnBeat += OnBeat;
+    }
+
+    private void OnDisable()
+    {
+        TempoManager.OnBeat -= OnBeat;
+    }
+
+    private void OnBeat()
+    {
+        scaleMultiplier = 0.75f;
+    }
+
     private void Update()
     {
         audioSource.GetSpectrumData(spectrum, 0, FFTWindow.Rectangular);
@@ -48,6 +52,11 @@ public class SpectrumUI : MonoBehaviour
         {
             var value = 20f * Mathf.Log10(spectrum[i + 2] / refValue);
             spectrumElements[i].SetScale(value);
+        }
+
+        if (scaleMultiplier > 0.2f)
+        {
+            scaleMultiplier -= Time.deltaTime * 2;
         }
     }
 

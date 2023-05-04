@@ -83,7 +83,8 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     private void StanceManager_OnStanceChange(Track track)
     {
         _anim.SetTrigger(switchStance);
-
+        _rb.isKinematic = true;
+        StartCoroutine(EnableRB());
         switch (track.genre)
         {
             case Genre.House:
@@ -102,6 +103,12 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.green * 0.5f);
                 break;
         }
+    }
+
+    private IEnumerator EnableRB()
+    {
+        yield return new WaitForSeconds(1.5f);
+        _rb.isKinematic = false;
     }
 
     private void Update()
