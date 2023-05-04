@@ -36,7 +36,7 @@ public class SpectrumUI : MonoBehaviour
 
     private void Awake()
     {
-        audioSource = FindObjectOfType<StanceManager>().GetComponent<AudioSource>();
+        if (!audioSource) audioSource = FindObjectOfType<StanceManager>().GetComponent<AudioSource>();
         CreateElements();
     }
 
