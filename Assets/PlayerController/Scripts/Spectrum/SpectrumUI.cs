@@ -95,6 +95,6 @@ public class SpectrumUI : MonoBehaviour
             angleMultiplier++;
         }
 
-        images.Sort((a, b) => b.rectTransform.localRotation.eulerAngles.z.CompareTo(a.rectTransform.localRotation.eulerAngles.z));
+        images.Sort((a, b) => a.rectTransform.localRotation.eulerAngles.z.CompareTo(b.rectTransform.localRotation.eulerAngles.z));
     }
 }
