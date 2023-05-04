@@ -392,6 +392,7 @@ public class Amplifier_V2 : MonoBehaviour
         canvas.gameObject.SetActive(false);
     }
 
+    #region Utility
     private IEnumerator HackedDecal()
     {
         float timer = 0;
@@ -420,10 +421,9 @@ public class Amplifier_V2 : MonoBehaviour
             yield return null;
         }
 
-        
+
     }
 
-    #region Utility
     private float GetTimeToInput(int index)
     {
         float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
