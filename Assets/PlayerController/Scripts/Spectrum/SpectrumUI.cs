@@ -69,6 +69,7 @@ public class SpectrumUI : MonoBehaviour
             images.Add(spectrumElements[i].GetComponent<Image>());
         }
 
+        teknoImg.transform.SetAsLastSibling();
         AlignElementsCircularElements();
     }
 
