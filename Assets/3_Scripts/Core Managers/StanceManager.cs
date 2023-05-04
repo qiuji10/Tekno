@@ -11,7 +11,7 @@ public enum Genre { House, Techno, Electronic }
 
 public class StanceManager : MonoBehaviour
 {
-    public static Genre curStance;
+    public static Track curTrack;
     public static event Action<Track> OnStanceChangeStart;
     public static bool AllowPlayerSwitchStance;
     public static float changeStanceTime = 2.333f;
@@ -85,7 +85,7 @@ public class StanceManager : MonoBehaviour
 
         stanceAudio.volume = tracks[index].volume;
         musicPlayer.LoadSong(tracks[index].koreography);
-        curStance = tracks[index].genre;
+        curTrack = tracks[index];
         if (!firstTimeIgnored)
         {
             firstTimeIgnored = true;
@@ -107,7 +107,7 @@ public class StanceManager : MonoBehaviour
         //stanceAudio.Play();
 
         // here should ability switch
-        switch (curStance)
+        switch (curTrack.genre)
         {
             case Genre.House:
                 hookAbility.enabled = true;
