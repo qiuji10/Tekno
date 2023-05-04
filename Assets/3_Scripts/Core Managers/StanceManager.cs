@@ -25,6 +25,9 @@ public class StanceManager : MonoBehaviour
     [SerializeField] List<Track> tracks = new List<Track>();
     private int trackIndex;
 
+    [Header("UI Reference")]
+    [SerializeField] TMPro.TMP_Text songNameText;
+
     [Header("Ability References")]
     [SerializeField] private HookAbility hookAbility;
     [SerializeField] private TeleportAbility teleportAbility;
@@ -110,14 +113,20 @@ public class StanceManager : MonoBehaviour
         switch (curTrack.genre)
         {
             case Genre.House:
+                songNameText.color = Color.yellow;
+                songNameText.text = "House - Aggression";
                 hookAbility.enabled = true;
                 teleportAbility.enabled = false;
                 break;
             case Genre.Techno:
+                songNameText.color = Color.cyan;
+                songNameText.text = "Techno - NaN";
                 hookAbility.enabled = false;
                 teleportAbility.enabled = false;
                 break;
             case Genre.Electronic:
+                songNameText.color = Color.green;
+                songNameText.text = "Electro - Ready";
                 hookAbility.enabled = false;
                 teleportAbility.enabled = true;
                 break;
