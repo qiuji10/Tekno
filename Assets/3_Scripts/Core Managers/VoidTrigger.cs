@@ -9,7 +9,7 @@ public class VoidTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PlayerStatus status = other.GetComponent<PlayerStatus>();
-            status.Damage(status.Health * 2);
+            status.Damage(5, true);
         }
     }
 }

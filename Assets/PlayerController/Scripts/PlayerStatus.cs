@@ -7,11 +7,10 @@ public class PlayerStatus : MonoBehaviour
 {
     [SerializeField] private int health = 50;
     private int totalHealth;
-    public static int life = 5;
 
     public int Health { get { return health; } }
     private bool isGlitchy;
-    //private CheckpointManager checkpointManager;
+    private CheckpointManager checkpointManager;
     private MaterialModifier matModifier;
 
     private Animator _anim;
@@ -22,7 +21,7 @@ public class PlayerStatus : MonoBehaviour
     {
         totalHealth = health;
 
-        //checkpointManager = FindObjectOfType<CheckpointManager>();
+        checkpointManager = FindObjectOfType<CheckpointManager>();
         matModifier = GetComponentInChildren<MaterialModifier>();
         spectrum = FindObjectOfType<SpectrumUI>();
     }
@@ -65,7 +64,7 @@ public class PlayerStatus : MonoBehaviour
     }
 
 
-    public void Damage(int damage)
+    public void Damage(int damage, bool needRespawn)
     {
         if (health > damage)
         {
@@ -85,6 +84,11 @@ public class PlayerStatus : MonoBehaviour
             {
                 StartCoroutine(GlitchyDamageEffect());
             }
+
+            if (needRespawn)
+            {
+                checkpointManager.SetPlayerToSpawnPoint(transform);
+            }
         }
         else
         {
@@ -95,16 +99,6 @@ public class PlayerStatus : MonoBehaviour
                 spectrum.images[i].color = Color.red;
             }
 
-            if (life > 0)
-            {
-                life -= 1;
-                //checkpointManager.SetPlayerToSpawnPoint(transform);
-            }
-            else
-            {
-                // lose game
-                //checkpointManager.SetPlayerToSpawnPoint(transform);
-            }
         }
     }
 
@@ -115,10 +109,5 @@ public class PlayerStatus : MonoBehaviour
         yield return new WaitForSeconds(1f);
         matModifier.GlitchyEffectOff();
         isGlitchy = false;
-    }
-
-    private void OnApplicationQuit()
-    {
-        life = 5;
     }
 }
