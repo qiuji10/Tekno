@@ -410,7 +410,7 @@ public class Amplifier_V2 : MonoBehaviour
         }
 
         decalProjector.material.SetFloat(radius, 0);
-        decalProjector.material.SetColor("_Color", Color.cyan);
+        decalProjector.material.SetColor("_Color", Color.blue);
         timer = 0;
 
         decalProjector.material.SetTexture("_Base_Map", MinigameData.Instance.speakerDecal);
