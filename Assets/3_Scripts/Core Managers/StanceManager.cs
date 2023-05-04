@@ -120,7 +120,7 @@ public class StanceManager : MonoBehaviour
                 break;
             case Genre.Techno:
                 songNameText.color = Color.cyan;
-                songNameText.text = "Techno - NaN";
+                songNameText.text = "Techno - Treck No.1";
                 hookAbility.enabled = false;
                 teleportAbility.enabled = false;
                 break;

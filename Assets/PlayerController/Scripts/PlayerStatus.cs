@@ -1,8 +1,10 @@
 using NaughtyAttributes;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerStatus : MonoBehaviour 
 {
@@ -12,8 +14,6 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] private Sprite blueHead;
     [SerializeField] private Sprite yellowHead;
     [SerializeField] private Sprite greenHead;
-
-    [SerializeField] private GameObject deathCanvas;
 
     private int totalHealth;
     private bool isGlitchy;
@@ -110,12 +110,11 @@ public class PlayerStatus : MonoBehaviour
                 spectrum.images[i].color = Color.red;
             }
 
-            PlayerController.allowedInput = false;
-            Cursor.visible = true;
-            deathCanvas.SetActive(true);
-            Button lobbyButton = deathCanvas.GetComponentInChildren<Button>();
-            EventSystem.current.SetSelectedGameObject(lobbyButton.gameObject);
-            lobbyButton.onClick.AddListener(BackToLobby);
+
+            MaterialModifier modifier = GetComponentInChildren<MaterialModifier>();
+            modifier.ResetMaterial();
+            BackToLobby();
+
         }
     }
 
@@ -123,7 +122,7 @@ public class PlayerStatus : MonoBehaviour
     {
         NonDestructible[] nonDestructibles = FindObjectsOfType<NonDestructible>();
 
-        foreach (var item in nonDestructibles)
+        foreach (NonDestructible item in nonDestructibles)
         {
             Destroy(item.gameObject);
         }

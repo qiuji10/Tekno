@@ -33,8 +33,12 @@ public class EnemyBase : MonoBehaviour, IKnockable
     private float velocity;
     private bool isKnockng, isFree;
 
+    private float danceTimer;
+
     private void Awake()
     {
+        danceTimer = 5f;
+
         _agent = GetComponent<NavMeshAgent>();
         _rb = GetComponent<Rigidbody>();
         _owner = GetComponent<GraphOwner>();
@@ -76,7 +80,22 @@ public class EnemyBase : MonoBehaviour, IKnockable
             _anim.SetLayerWeight(1, Mathf.SmoothDamp(currentWeight, 0, ref velocity, 0.1f));
         }
 
-        warningPrompt.rotation = Quaternion.LookRotation(warningPrompt.position - _camTR.position);
+        if (_camTR)
+            warningPrompt.rotation = Quaternion.LookRotation(warningPrompt.position - _camTR.position);
+    }
+
+    private void LateUpdate()
+    {
+        if (danceTimer > 0)
+        {
+            danceTimer -= Time.deltaTime;
+        }
+
+        if (danceTimer < 0)
+        {
+            _anim.SetFloat("DanceBlendTree", Random.Range(0f, 1f));
+            danceTimer = Random.Range(1f, 10f);
+        }
     }
 
     private void FixedUpdate()

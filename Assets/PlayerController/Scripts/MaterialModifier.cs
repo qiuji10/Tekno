@@ -90,6 +90,14 @@ public class MaterialModifier : MonoBehaviour
         StartCoroutine(VolumeFader(glitchVolume, glitchFadeOut, 0f, false));
     }
 
+    public void ResetMaterial()
+    {
+        string property = "_GlitchPower";
+        m_Materials[0].SetFloat(property, 0);
+        m_Materials[1].SetFloat(property, 0);
+        m_Materials[2].SetFloat(property, 0);
+    }
+
     public void StanceChange()
     {
         string baseString = null, emissionString = null;
