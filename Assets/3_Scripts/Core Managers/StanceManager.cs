@@ -124,6 +124,16 @@ public class StanceManager : MonoBehaviour
         }
     }
 
+    public void EnableSwitchStance()
+    {
+        AllowPlayerSwitchStance = true;
+    }
+
+    public void DisableSwitchStance()
+    {
+        AllowPlayerSwitchStance = false;
+    }
+
     private IEnumerator EnableInput(float time)
     {
         PlayerController.allowedInput = false;

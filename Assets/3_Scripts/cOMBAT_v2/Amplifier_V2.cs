@@ -236,7 +236,7 @@ public class Amplifier_V2 : MonoBehaviour
                 if (collideData[i].TryGetComponent(out IKnockable knockable))
                 {
                     Vector3 direction = (collideData[i].transform.position - transform.position).normalized;
-                    knockable.Knock(new Vector3(direction.x, 0.1f, direction.z), knockBackPower);
+                    knockable.Knock(new Vector3(direction.x, 0.5f, direction.z), knockBackPower);
                 }
             }
 
@@ -391,7 +391,7 @@ public class Amplifier_V2 : MonoBehaviour
         speaker.startTrace = false;
         speaker.failed = false;
 
-        canvas.gameObject.SetActive(false);
+        //canvas.gameObject.SetActive(false);
     }
 
     #region Utility

@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.InputSystem.DualShock;
 using UnityEngine.UI;
 
 public class SpectrumUI : MonoBehaviour
@@ -18,6 +16,7 @@ public class SpectrumUI : MonoBehaviour
     [Header("Reference")]
     public AudioSource audioSource;
     public SpectrumElement_UI spectrumElementPrefab;
+    public Image teknoImg;
     public List<Image> images = new List<Image>();
 
     private SpectrumElement_UI[] spectrumElements;
@@ -95,6 +94,6 @@ public class SpectrumUI : MonoBehaviour
             angleMultiplier++;
         }
 
-        images.Sort((a, b) => b.rectTransform.localRotation.eulerAngles.z.CompareTo(a.rectTransform.localRotation.eulerAngles.z));
+        images.Sort((a, b) => a.rectTransform.localRotation.eulerAngles.z.CompareTo(b.rectTransform.localRotation.eulerAngles.z));
     }
 }

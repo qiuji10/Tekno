@@ -259,7 +259,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     public void Damage(int damage)
     {
-        playerStatus.Damage(damage);
+        playerStatus.Damage(damage, false);
 
         if (moveSpeed < cacheSpeed) return;
 
