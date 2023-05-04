@@ -6,27 +6,16 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Rendering.Universal;
 
 public enum KeyInput { None, Circle, Cross, Square, Triangle }
+public enum Direction { Up, Down, Left, Right }
 
 public class Amplifier_V2 : MonoBehaviour
 {
     [Header("Beat Settings")]
     [SerializeField] List<BeatSequence> beatSequence = new List<BeatSequence>();
     [SerializeField] BeatPoint beatPrefab;
-
-    [Header("UI Reference")]
-    private Canvas canvas;
-    private Transform sliderVisualParent;
-    private Transform beatVisualParent;
-    private TMP_Text countdownText;
-    private Image amplifierCoreImg;
-    private RectTransform speakerHealthBar;
-    private RectTransform amplifierHealthBar;
-    
-    [Header("Speaker")]
-    private Minigame_Speaker speaker;
-    private Image speakerImg;
 
     [Header("Hijack Succeeded")]
     [SerializeField] private List<EnemyBase> enemiesInControl;
@@ -36,18 +25,33 @@ public class Amplifier_V2 : MonoBehaviour
     [SerializeField] private float knockBackRange = 10;
     [SerializeField] private float knockBackPower = 75;
 
+    #region Private Properties
+    // UI Reference
+    private Canvas canvas;
+    private Transform sliderVisualParent;
+    private Transform beatVisualParent;
+    private TMP_Text countdownText;
+    private Image amplifierCoreImg;
+    private RectTransform speakerHealthBar;
+    private RectTransform amplifierHealthBar;
+    private Image speakerImg;
+
+    private Minigame_Speaker speaker;
+    private DecalProjector decalProjector;
     private PlayerController playerController;
     private EventInvoker eventInvoker;
     private List<BeatData> beatData = new List<BeatData>();
     private List<BeatPoint> beatObjects = new List<BeatPoint>();
     private List<CustomSlider> speakerSliders = new List<CustomSlider>();
     private List<CustomSlider> amplifierSliders = new List<CustomSlider>();
-    private int index, totalRound, speakerHealth, amplifierHealth, countdown = 4;
+    private int index, speakerHealth, amplifierHealth, countdown = 4;
     private bool startGame, isSpawning;
 
     private UI_Shake speakerHealthShake, amplifierHealthShake;
+    #endregion
 
-    private void Awake()
+    #region Default Function
+    private void Start()
     {
         MinigameData data = MinigameData.Instance;
         canvas = data.canvas;
@@ -75,7 +79,9 @@ public class Amplifier_V2 : MonoBehaviour
 
         speakerHealth = 3;
         amplifierHealth = 3;
-        totalRound = speakerHealth + amplifierHealth;
+        decalProjector = GetComponentInChildren<DecalProjector>();
+        decalProjector.material = new Material(decalProjector.material);
+        decalProjector.material.SetColor("_Color", Color.red);
     }
 
     private void OnEnable()
@@ -83,18 +89,11 @@ public class Amplifier_V2 : MonoBehaviour
         TempoManager.OnBeat += TempoManager_OnBeat;
     }
 
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if (other.CompareTag("Player"))
-    //    {
-    //        Resetter();
-    //    }
-    //}
-
     private void OnDisable()
     {
         TempoManager.OnBeat -= TempoManager_OnBeat;
-    }
+    } 
+    #endregion
 
     public void StartPlay()
     {
@@ -198,6 +197,7 @@ public class Amplifier_V2 : MonoBehaviour
                 }
             }
 
+            StartCoroutine(HackedDecal());
             StanceManager.AllowPlayerSwitchStance = true;
             canvas.gameObject.SetActive(false);
             Resetter();
@@ -361,20 +361,6 @@ public class Amplifier_V2 : MonoBehaviour
         }
     }
 
-    private float GetTimeToInput(int index)
-    {
-        float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
-
-        if (beatData[index].key == KeyInput.None)
-        {
-            return timeToBeatCount + GetTimeToInput(index + 1);
-        }
-        else
-        {
-            return timeToBeatCount;
-        }
-    }
-
     [Button]
     public void Resetter()
     {
@@ -406,6 +392,52 @@ public class Amplifier_V2 : MonoBehaviour
         canvas.gameObject.SetActive(false);
     }
 
+    private IEnumerator HackedDecal()
+    {
+        float timer = 0;
+        float fadeTime = 1;
+        string radius = "_Radius";
+
+        while (decalProjector.material.GetFloat(radius) > 0)
+        {
+            timer -= Time.deltaTime;
+            float ratio = Mathf.Clamp(timer / fadeTime, 0f, 1f);
+            decalProjector.material.SetFloat(radius, ratio);
+            yield return null;
+        }
+
+        decalProjector.material.SetFloat(radius, 0);
+        decalProjector.material.SetColor("_Color", Color.cyan);
+        timer = 0;
+
+        decalProjector.material.SetTexture("_Base_Map", MinigameData.Instance.speakerDecal);
+
+        while (decalProjector.material.GetFloat(radius) < 1)
+        {
+            timer += Time.deltaTime;
+            float ratio = Mathf.Clamp(timer / fadeTime, 0f, 1f);
+            decalProjector.material.SetFloat(radius, ratio);
+            yield return null;
+        }
+
+        
+    }
+
+    #region Utility
+    private float GetTimeToInput(int index)
+    {
+        float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
+
+        if (beatData[index].key == KeyInput.None)
+        {
+            return timeToBeatCount + GetTimeToInput(index + 1);
+        }
+        else
+        {
+            return timeToBeatCount;
+        }
+    }
+
     private static Color HexColor(string code)
     {
         ColorUtility.TryParseHtmlString(code, out Color color);
@@ -417,9 +449,8 @@ public class Amplifier_V2 : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, knockBackRange);
     }
+    #endregion
 }
-
-public enum Direction { Up, Down, Left, Right }
 
 public static class PositionUtility
 {

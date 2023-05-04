@@ -29,9 +29,16 @@ public class MinigameData : MonoBehaviour
     public Sprite speakerOff;
     public Sprite speakerSuccess;
 
+    [Header("Decal")]
+    public Texture2D speakerDecal;
+
     private void Awake()
     {
         Instance = this;
+    }
+
+    private void Start()
+    {
         gameObject.SetActive(false);
     }
 }
