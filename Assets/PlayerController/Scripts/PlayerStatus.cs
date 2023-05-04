@@ -6,15 +6,17 @@ using UnityEngine.UI;
 public class PlayerStatus : MonoBehaviour 
 {
     [SerializeField] private int health = 50;
-    private int totalHealth;
-
     public int Health { get { return health; } }
+
+    [SerializeField] private Sprite blueHead;
+    [SerializeField] private Sprite yellowHead;
+    [SerializeField] private Sprite greenHead;
+
+    private int totalHealth;
     private bool isGlitchy;
     private CheckpointManager checkpointManager;
     private MaterialModifier matModifier;
-
     private Animator _anim;
-
     private SpectrumUI spectrum;
 
     private void Awake()
@@ -42,11 +44,14 @@ public class PlayerStatus : MonoBehaviour
         {
             case Genre.House:
                 SetHealthColor(Color.yellow);
+                spectrum.teknoImg.sprite = yellowHead;
                 break;
             case Genre.Techno:
                 SetHealthColor(Color.cyan);
+                spectrum.teknoImg.sprite = blueHead;
                 break;
             case Genre.Electronic:
+                spectrum.teknoImg.sprite = greenHead;
                 SetHealthColor(Color.green);
                 break;
         }

@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.InputSystem.DualShock;
 using UnityEngine.UI;
 
 public class SpectrumUI : MonoBehaviour
@@ -18,6 +16,7 @@ public class SpectrumUI : MonoBehaviour
     [Header("Reference")]
     public AudioSource audioSource;
     public SpectrumElement_UI spectrumElementPrefab;
+    public Image teknoImg;
     public List<Image> images = new List<Image>();
 
     private SpectrumElement_UI[] spectrumElements;
