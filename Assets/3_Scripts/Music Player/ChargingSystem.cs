@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class ChargingSystem : MonoBehaviour
 {
+    [Header("Adjust Charge Values")] 
     public float maxChargeLevel = 100f;
     public float initialChargeRate = 10f;
     public float maxChargeRate = 50f;
