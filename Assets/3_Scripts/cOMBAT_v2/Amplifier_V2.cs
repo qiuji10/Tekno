@@ -355,7 +355,8 @@ public class Amplifier_V2 : MonoBehaviour
                     beatObjects[indexCount].Scale(2, sliderVisualParent, xPos, dir, scale, timeToBeatCount);
                 }
                 
-                speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutCirc();
+                //speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutCirc();
+                speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, 0.1f);
 
             }
             else if (index == beatData.Count - 1)
