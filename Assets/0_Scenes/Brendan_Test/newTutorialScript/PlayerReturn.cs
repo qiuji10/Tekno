@@ -2,13 +2,12 @@ using UnityEngine;
 
 public class PlayerReturn: MonoBehaviour
 {
-    private CheckpointManager checkpointManager;
+    [SerializeField]
+    private Transform teleportDestination;
     private Transform playerTransform;
 
     private void Start()
     {
-        // Get references to the CheckpointManager and player Transform
-        checkpointManager = FindObjectOfType<CheckpointManager>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
@@ -16,11 +15,7 @@ public class PlayerReturn: MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Get the latest passed checkpoint from the CheckpointManager
-            Checkpoint latestCheckpoint = checkpointManager.GetLatestCheckpoint();
-
-            // Set the player's position to the latest passed checkpoint's spawn point
-            playerTransform.position = latestCheckpoint.spawnPoint.position;
+            playerTransform.position = teleportDestination.position;
         }
     }
 
