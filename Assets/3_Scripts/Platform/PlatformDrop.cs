@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlatformDrop: MonoBehaviour,IPlatform
+public class PlatformDrop : MonoBehaviour, IPlatform
 {
     [Header("Shake and Drop Settings")]
-    //public bool playerOnPlatform = false;
     public float shakeDuration = 5f;
-    public float shakeTimer = 0;
-    public float dropDistance = 10;
+    private float shakeTimer = 0f;
     private float originalY;
     private bool isDropping;
 
@@ -17,7 +15,7 @@ public class PlatformDrop: MonoBehaviour,IPlatform
     private Rigidbody rb;
     private Collider platformCollider;
     public Transform player { get; set; }
-    public bool PlayerOnPlatform {get; set;}
+    public bool PlayerOnPlatform { get; set; }
 
     private void Awake()
     {
@@ -27,11 +25,10 @@ public class PlatformDrop: MonoBehaviour,IPlatform
         originalY = transform.position.y;
     }
 
-    void Update()
+    private void Update()
     {
         DropPlatform();
     }
-
 
     public void DropPlatform()
     {
@@ -39,7 +36,7 @@ public class PlatformDrop: MonoBehaviour,IPlatform
         {
             shakeTimer += Time.deltaTime;
 
-            // modify the y shake to 0 to prevent player cant jump
+            // Modify the y shake to 0 to prevent player from jumping
             Vector3 randomOffset = Random.insideUnitSphere * 0.2f;
             randomOffset.y = 0;
             transform.position = transform.position + new Vector3(randomOffset.x, 0, randomOffset.z);
@@ -57,15 +54,22 @@ public class PlatformDrop: MonoBehaviour,IPlatform
                 }
             }
         }
+        else if (!isDropping)
+        {
+            if (transform.position.y == originalY)
+            {
+                shakeTimer = 0;
+                isDropping = true;
+            }
+            else
+            {
+                transform.position += new Vector3(0, 0.2f, 0);
+            }
+        }
 
         if (isDropping && transform.position.y < originalY - 20)
         {
-            if (shakeTimer != 0) shakeTimer = 0;
             isDropping = false;
-        }
-        else if (!isDropping && transform.position.y == originalY)
-        {
-            isDropping = true;
         }
 
         if (transform.position.y >= originalY)
@@ -74,9 +78,6 @@ public class PlatformDrop: MonoBehaviour,IPlatform
             isDropping = false;
             platformCollider.enabled = true;
             transform.position = new Vector3(transform.position.x, originalY, transform.position.z);
-            shakeTimer = 0;
         }
     }
 }
-
-
