@@ -331,11 +331,24 @@ public class Amplifier_V2 : MonoBehaviour
             if (index < beatData.Count - 1)
             {
                 speaker.startTrace = true;
+                //StartCoroutine(delayStartTrace());
                 speaker.currentBeat++;
                 index++;
-                float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
+                speaker.pressed = false;
+                float timeToBeatCount = (60f / 140f);
+                //speaker.touchPoint = beatObjects[index].img.rectTransform.position;
+                //speaker.key = beatData[index].key;
+                //speaker.beatPoint = beatObjects[index];
+
+                speaker.beatPoint = beatObjects[index];
+
+                if (index > 0)
+                {
+                    speaker.prevTouchPoint = beatObjects[index - 1].img.rectTransform.position;
+                }
+
                 speaker.touchPoint = beatObjects[index].img.rectTransform.position;
-                speaker.key = beatData[index].key;
+                StartCoroutine(delayBeatSwitch());
 
                 int indexCount = index;
 
@@ -356,7 +369,7 @@ public class Amplifier_V2 : MonoBehaviour
                 }
                 
                 //speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutCirc();
-                speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, 0.1f);
+                speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount);
 
             }
             else if (index == beatData.Count - 1)
@@ -365,6 +378,22 @@ public class Amplifier_V2 : MonoBehaviour
                 index++;
             }
         }
+    }
+
+    private IEnumerator delayStartTrace()
+    {
+        yield return new WaitForSeconds(0.1f);
+        
+        speaker.startTrace = true;
+    }
+
+    private IEnumerator delayBeatSwitch()
+    {
+        yield return new WaitForSeconds(0.2f);
+        speaker.startTrace = true;
+
+        speaker.key = beatData[index].key;
+        
     }
 
     [Button]
