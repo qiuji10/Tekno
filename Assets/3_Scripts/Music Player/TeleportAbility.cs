@@ -35,7 +35,7 @@ public class TeleportAbility : MonoBehaviour
     {
         teleportAction.action.performed += Teleport;
         chargingAction.action.performed += Charge;
-        chargeSlider.gameObject.SetActive(true);
+        //chargeSlider.gameObject.SetActive(true);
         LeanTween.reset();
     }
 
@@ -43,7 +43,7 @@ public class TeleportAbility : MonoBehaviour
     {
         teleportAction.action.performed -= Teleport;
         chargingAction.action.performed -= Charge;
-        chargeSlider.gameObject.SetActive(false);
+        //chargeSlider.gameObject.SetActive(false);
     }
 
     private void Charge(InputAction.CallbackContext context)
@@ -54,7 +54,11 @@ public class TeleportAbility : MonoBehaviour
             return;
         }
 
-        keyIsDown = true;
+        if (!isMaxCharge)
+        {
+            keyIsDown = true;
+        }
+        
     }
 
     private void Update()
@@ -69,7 +73,7 @@ public class TeleportAbility : MonoBehaviour
             isMaxCharge = (currentChargeLevel == maxChargeLevel);
         }
 
-        if (keyIsDown && !isMaxCharge)
+        else if (keyIsDown && !isMaxCharge)
         {
             keyIsDown = false;
             timeSinceLastPress += Time.deltaTime;

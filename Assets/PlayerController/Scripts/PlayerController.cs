@@ -23,7 +23,9 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     [SerializeField] private float jumpForce = 23f;
     [SerializeField] private float fallMultiplier = 10f;
     [SerializeField] private float lowJumpMultiplier = 4f;
+    [SerializeField] private LayerMask disableJump;
     private bool isJumping;
+    public bool disableAction = false;
 
     [Header("Ground")]
     [SerializeField] private LayerMask groundLayer;
@@ -82,6 +84,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void StanceManager_OnStanceChange(Track track)
     {
+        
         _anim.SetTrigger(switchStance);
         _rb.isKinematic = true;
         StartCoroutine(EnableRB());
@@ -103,6 +106,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.green * 0.5f);
                 break;
         }
+
     }
 
     private IEnumerator EnableRB()
@@ -115,6 +119,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     {
         Rotation();
         IsGround();
+        isActionDisable();
     }
 
     private void FixedUpdate()
@@ -131,12 +136,25 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         Movement();
     }
 
+    private void isActionDisable()
+    {
+        disableAction = Physics.CheckSphere(transform.position, 0.5f, disableJump);
+
+        if (disableAction)
+        {
+            StanceManager.AllowPlayerSwitchStance = false;
+        }
+
+        _anim.SetBool("JumpGrounded", disableAction);
+
+    }
     private void IsGround()
     {
         //isGround = Physics.Raycast(transform.position, Vector3.down, transform.localScale.y * 0.5f + 0.2f, groundLayer);
 
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - groundedOffset, transform.position.z);
         isGround = Physics.CheckSphere(spherePosition, groundedRadius, groundLayer, QueryTriggerInteraction.Ignore);
+
 
         if (isGround)
         {
@@ -176,7 +194,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         }
         else
         {
-            if (isGround)
+            if (isGround || disableAction)
             {
                 _rb.AddForce(_moveDir.normalized * moveSpeed * 10f, ForceMode.Force);
 
@@ -241,7 +259,8 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     {
         if (!allowedAction || !allowedInput) return;
 
-        if (isGround && !isJumping)
+
+        if (isGround && !isJumping && !disableAction)
         {
             StartCoroutine(SetJump());
             _anim.ResetTrigger(jumpGrounded);
