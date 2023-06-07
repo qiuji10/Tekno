@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class BeatPoint : MonoBehaviour
 {
     public Image img { get; set; }
     public RectTransform rect { get; set; }
-    public RectTransform RingRect { get { return ringRect; } set { ringRect = value; } }
 
     //private Slider slider;
     private CustomSlider mainSlider, bgSlider;
-    private RectTransform rotator, sliderRect, bgSliderRect, ringRect;
+    private RectTransform rotator, sliderRect, bgSliderRect;
 
     private void Awake()
     {
@@ -23,7 +21,6 @@ public class BeatPoint : MonoBehaviour
 
         mainSlider = rotator.GetChild(0).GetComponent<CustomSlider>();
         bgSlider = rotator.GetChild(1).GetComponent<CustomSlider>();
-        ringRect = transform.GetChild(3).GetComponent<RectTransform>();
 
         sliderRect = mainSlider.GetComponent<RectTransform>();
         bgSliderRect = bgSlider.GetComponent<RectTransform>();
@@ -52,20 +49,16 @@ public class BeatPoint : MonoBehaviour
 
         sliderRect.sizeDelta = bgSliderRect.sizeDelta = new Vector2(scale, sliderRect.sizeDelta.y);
         sliderRect.anchoredPosition = bgSliderRect.anchoredPosition = new Vector2(scalePos, 0);
-
-        if (index == 1)
-        {
-            LeanTween.value(0, 1, timeReachEndPos).setOnUpdate((float value) =>
+        LeanTween.value(0, 1, timeReachEndPos).setOnUpdate((float value) =>
+        { 
+            if (index == 1)
             {
                 mainSlider.Value = value;
-            }).setEaseOutExpo();
-        }
-        else if (index == 2)
-        {
-            LeanTween.value(0, 1, timeReachEndPos).setOnUpdate((float value) =>
+            }
+            else if (index == 2)
             {
                 bgSlider.Value = value;
-            });
-        }
+            }
+        });
     }
 }

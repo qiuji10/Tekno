@@ -16,8 +16,8 @@ public class StanceManager : MonoBehaviour
     public static bool AllowPlayerSwitchStance;
     public static float changeStanceTime = 2.333f;
 
-    [SerializeField] PlayableDirector director;
-    private CinemachineDollyCart cart;
+    //[SerializeField] PlayableDirector director;
+    //private CinemachineDollyCart cart;
 
     [Header("Audio References")]
     [SerializeField] private SimpleMusicPlayer musicPlayer;
@@ -53,7 +53,7 @@ public class StanceManager : MonoBehaviour
     private void Awake()
     {
         AllowPlayerSwitchStance = true;
-        cart = director.GetComponent<CinemachineDollyCart>();
+        //cart = director.GetComponent<CinemachineDollyCart>();
         musicPlayer = GetComponent<SimpleMusicPlayer>();
     }
 
@@ -95,13 +95,13 @@ public class StanceManager : MonoBehaviour
         }
         else
         {
-            if (director)
-            {
-                cart.m_Position = 0;
-                director.time = 0;
-                director.enabled = true;
-                director.Play();
-            }
+            //if (director)
+            //{
+            //    cart.m_Position = 0;
+            //    director.time = 0;
+            //    director.enabled = true;
+            //    director.Play();
+            //}
 
             AllowPlayerSwitchStance = false;
             StartCoroutine(EnableInput(changeStanceTime));
@@ -149,7 +149,7 @@ public class StanceManager : MonoBehaviour
         yield return new WaitForSeconds(time);
         PlayerController.allowedInput = true;
         AllowPlayerSwitchStance = true;
-        if (director) director.enabled = false;
+        //if (director) director.enabled = false;
     }
 
 }

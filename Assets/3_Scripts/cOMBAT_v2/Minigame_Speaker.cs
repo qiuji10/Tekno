@@ -12,22 +12,19 @@ public class Minigame_Speaker : MonoBehaviour
     [SerializeField] private InputActionReference crossAction;
     [SerializeField] private InputActionReference squareAction;
     [SerializeField] private InputActionReference triangleAction;
-    [SerializeField] private Canvas canvas;
 
     public KeyInput key = KeyInput.None;
-    public Vector2 touchPoint, prevTouchPoint;
-    public bool startTrace, failed, pressed;
-    public float offsetTime = 0.1f, lastHitTime, timeToInput, beatToInput;
+    public Vector2 touchPoint;
+    public bool startTrace, failed;
+    public float offsetTime = 0.1f, lastHitTime, timeToInput;
     public int totalInputNeeded, successInput;
     public int totalBeat, currentBeat;
-
-    public BeatPoint beatPoint;
 
     [Header("Visuals")]
     [SerializeField] private UIParticleSystem successParticle;
     [SerializeField] private UIParticleSystem failParticle;
 
-    public bool detectedEnterRegion;
+    private bool detectedEnterRegion;
 
     public event Action OnHitFailure, OnComboSuccess;
 
@@ -65,10 +62,6 @@ public class Minigame_Speaker : MonoBehaviour
     {
         if (startTrace && !failed)
         {
-            // TO FIX : ENTER REGINO MAKE A TIME DELAY
-
-            Vector4 offset = new Vector4(100, 100, 100, 100);
-
             // TODO: Offset in future for calibration
             if (RectTransformUtility.RectangleContainsScreenPoint(rect, touchPoint) && key != KeyInput.None)
             {
@@ -76,11 +69,11 @@ public class Minigame_Speaker : MonoBehaviour
             }
             else
             {
-                if (detectedEnterRegion && !RectTransformUtility.RectangleContainsScreenPoint(rect, prevTouchPoint))
+                if (detectedEnterRegion)
                 {
                     //Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
                     OnHitFailure?.Invoke();
-                    data.promptText.text = "<color=green>out of time</color>";
+                    data.promptText.text = "<color=red>out of time</color>";
                     failParticle.StartParticleEmission();
                     detectedEnterRegion = false;
                     startTrace = false;
@@ -91,7 +84,7 @@ public class Minigame_Speaker : MonoBehaviour
 
             if (currentBeat == totalBeat)
             {
-                if (Time.time > TempoManager._lastBeatTime + (60f / 140f) + timeToInput + offsetTime)
+                if (Time.time > TempoManager._lastBeatTime + timeToInput + offsetTime)
                 {
                     //Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
                     OnHitFailure?.Invoke();
@@ -107,31 +100,17 @@ public class Minigame_Speaker : MonoBehaviour
 
     private void OnPressed(InputAction.CallbackContext context)
     {
-       if (!startTrace) return;
-
-        pressed = true;
-
-        float expectedBeatTime = Mathf.Floor((Time.time / (60f / 140f)) + 0.5f) * (60f / 140f);
-        float currentInputTime = Time.time;
-        float currentDelay = currentInputTime - expectedBeatTime;
-        float inputDelay = currentDelay * 1000f; // Convert to milliseconds
-        Debug.Log("Input Delay: " + inputDelay.ToString("F2") + "ms");
+        if (!startTrace) return;
 
         string actionName = context.action.name;
         KeyInput inputKey = (KeyInput)Enum.Parse(typeof(KeyInput), actionName, ignoreCase: true);
 
-        //Debug.Log($"{TempoManager._lastBeatTime + (60f / 140f) - offsetTime - offsetTime} ** {Time.time} ** {TempoManager._lastBeatTime + (60f / 140f) + timeToInput + offsetTime}");
-
-        if (Time.time > TempoManager._lastBeatTime + (60f / 140f) - offsetTime - offsetTime && Time.time < TempoManager._lastBeatTime + (60f / 140f) + timeToInput + offsetTime)
+        if (Time.time > TempoManager._lastBeatTime - offsetTime && Time.time < TempoManager._lastBeatTime + timeToInput + offsetTime)
         {
             if (inputKey == key)
             {
-                Rect rect1 = RectTransformUtility.PixelAdjustRect(transform as RectTransform, canvas);
-                Rect rect2 = RectTransformUtility.PixelAdjustRect(beatPoint.transform as RectTransform, canvas);
-
                 // TODO: Offset in future for calibration
-                if (RectTransformContains(rect, beatPoint.transform as RectTransform))
-                //if (RectTransformUtility.RectangleContainsScreenPoint(rect, touchPoint))
+                if (RectTransformUtility.RectangleContainsScreenPoint(rect, touchPoint))
                 {
                     //Debug.Log("<color=green>success</color>");
                     lastHitTime = Time.time;
@@ -174,7 +153,7 @@ public class Minigame_Speaker : MonoBehaviour
         else
         {
             //Debug.Log("<color=cyan>out of time range</color>");
-            data.promptText.text = "<color=yellow>out of time</color>";
+            data.promptText.text = "<color=red>out of time</color>";
             OnHitFailure?.Invoke();
             failParticle.StartParticleEmission();
             startTrace = false;
@@ -182,25 +161,5 @@ public class Minigame_Speaker : MonoBehaviour
             failed = true;
             LeanTween.cancel(gameObject);
         }
-
-        //Debug.Log($"{actionName}, {successInput}");
-    }
-
-    public bool RectTransformContains(RectTransform container, RectTransform target)
-    {
-        Rect containerRect = container.rect;
-        Rect targetRect = target.rect;
-
-        Vector2 containerMin = containerRect.min;
-        Vector2 containerMax = containerRect.max;
-        Vector2 targetMin = targetRect.min;
-        Vector2 targetMax = targetRect.max;
-
-        bool contains = targetMin.x >= containerMin.x &&
-                        targetMin.y >= containerMin.y &&
-                        targetMax.x <= containerMax.x &&
-                        targetMax.y <= containerMax.y;
-
-        return contains;
     }
 }

@@ -39,7 +39,7 @@ public class GameSceneManager : MonoBehaviour
 
         Scene newScene = SceneManager.GetSceneByName(sceneName);
         
-        if (newScene.name == "Q1 Map Test")
+        if (newScene.name == "Q1 Map Test v2_old")
         {
             SceneManager.SetActiveScene(newScene);
         }

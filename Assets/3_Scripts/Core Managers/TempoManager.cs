@@ -47,7 +47,6 @@ public class TempoManager : MonoBehaviour
         {
             if (Time.time > _lastSyncTime + (BeatsPerMinuteToDelay(BPM) * _beatsSinceSync))
             {
-                //Debug.Log(Time.time - _lastBeatTime);
                 Beat();
             }
         }
@@ -67,13 +66,6 @@ public class TempoManager : MonoBehaviour
     public static float GetTimeToBeatCount(float beatFraction)
     {
         return (BeatsPerMinuteToDelay(staticBPM) * beatFraction) - (BeatsPerMinuteToDelay(staticBPM) / 2.0f);
-    }
-
-    public float GetNextBeatTime()
-    {
-        float timeSinceLastBeat = TimeSinceLastBeat();
-        float timeToNextBeat = BeatsPerMinuteToDelay(staticBPM) - timeSinceLastBeat;
-        return Time.time + timeToNextBeat;
     }
 
     private void Beat()
