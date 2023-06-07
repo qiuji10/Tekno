@@ -24,6 +24,7 @@ public class Amplifier_V2 : MonoBehaviour
     public UnityEvent OnHijackSucceed;
 
     [Header("Hijack Failed")]
+    [SerializeField] private ParticleSystem controlledVFX;
     [SerializeField] private float knockBackRange = 10;
     [SerializeField] private float knockBackPower = 75;
 
@@ -257,6 +258,8 @@ public class Amplifier_V2 : MonoBehaviour
 
     private void TempoManager_OnBeat()
     {
+        controlledVFX.Play();
+
         if (!startGame) return;
 
         if (isSpawning)

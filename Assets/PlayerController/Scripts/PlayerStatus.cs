@@ -118,13 +118,14 @@ public class PlayerStatus : MonoBehaviour
         }
     }
 
-    public void BackToLobby()
+    public IEnumerator BackToLobby()
     {
         NonDestructible[] nonDestructibles = FindObjectsOfType<NonDestructible>();
 
         foreach (NonDestructible item in nonDestructibles)
         {
             Destroy(item.gameObject);
+            yield return null;
         }
 
         FindObjectOfType<GameSceneManager>().LoadScene("1_Lobby");
