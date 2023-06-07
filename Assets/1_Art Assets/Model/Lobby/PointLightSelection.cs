@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,3 +45,5 @@ public class PointLightSelection : MonoBehaviour
         UnityEditor.Selection.objects = selectedObjects.ToArray();
     }
 }
+
+#endif

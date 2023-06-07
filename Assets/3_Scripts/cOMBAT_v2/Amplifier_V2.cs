@@ -211,7 +211,10 @@ public class Amplifier_V2 : MonoBehaviour
             speakerHealth = 3;
 
             yield return new WaitForSeconds(0.75f);
-            eventInvoker.enabled = true;
+
+            enabled = false;
+            
+            //eventInvoker.enabled = true;
         }
         else if (speakerHealth <= 0)
         {
@@ -336,9 +339,24 @@ public class Amplifier_V2 : MonoBehaviour
                 speaker.startTrace = true;
                 speaker.currentBeat++;
                 index++;
-                float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
+                //float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
+
+                float timeToBeatCount = (60f / 140f);
+                //speaker.touchPoint = beatObjects[index].img.rectTransform.position;
+                //speaker.key = beatData[index].key;
+                //speaker.beatPoint = beatObjects[index];
+
+                speaker.beatPoint = beatObjects[index];
+
+                if (index > 0)
+                {
+                    speaker.prevTouchPoint = beatObjects[index - 1].img.rectTransform.position;
+                }
+
                 speaker.touchPoint = beatObjects[index].img.rectTransform.position;
                 speaker.key = beatData[index].key;
+
+                StartCoroutine(delayBeatSwitch());
 
                 int indexCount = index;
 
@@ -358,7 +376,10 @@ public class Amplifier_V2 : MonoBehaviour
                     beatObjects[indexCount].Scale(2, sliderVisualParent, xPos, dir, scale, timeToBeatCount);
                 }
                 
-                speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutCirc();
+                //speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutCirc();
+                speaker.speakerMovement = speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutExpo();
+
+                //StartCoroutine(delayMoveSpeaker());
 
             }
             else if (index == beatData.Count - 1)
@@ -398,6 +419,25 @@ public class Amplifier_V2 : MonoBehaviour
         speaker.failed = false;
 
         //canvas.gameObject.SetActive(false);
+    }
+
+    private IEnumerator delayMoveSpeaker()
+    {
+        float timeToBeatCount = (60f / 140f) * 0.5f;
+
+        yield return new WaitForSeconds(timeToBeatCount);
+
+        speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount);
+
+        speaker.startTrace = true;
+    }
+
+    private IEnumerator delayBeatSwitch()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        speaker.key = beatData[index].key;
+
     }
 
     #region Utility

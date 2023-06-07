@@ -14,11 +14,13 @@ public class Minigame_Speaker : MonoBehaviour
     [SerializeField] private InputActionReference triangleAction;
 
     public KeyInput key = KeyInput.None;
-    public Vector2 touchPoint;
+    public Vector2 touchPoint, prevTouchPoint;
     public bool startTrace, failed;
-    public float offsetTime = 0.1f, lastHitTime, timeToInput;
+    public float offsetTime = 0.1f, lastHitTime, timeToInput, beatToInput;
     public int totalInputNeeded, successInput;
     public int totalBeat, currentBeat;
+
+    public BeatPoint beatPoint;
 
     [Header("Visuals")]
     [SerializeField] private UIParticleSystem successParticle;
@@ -69,11 +71,11 @@ public class Minigame_Speaker : MonoBehaviour
             }
             else
             {
-                if (detectedEnterRegion)
+                if (detectedEnterRegion && !RectTransformUtility.RectangleContainsScreenPoint(rect, prevTouchPoint))
                 {
                     //Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
                     OnHitFailure?.Invoke();
-                    data.promptText.text = "<color=red>out of time</color>";
+                    data.promptText.text = "<color=green>out of time</color>";
                     failParticle.StartParticleEmission();
                     detectedEnterRegion = false;
                     startTrace = false;
@@ -84,7 +86,7 @@ public class Minigame_Speaker : MonoBehaviour
 
             if (currentBeat == totalBeat)
             {
-                if (Time.time > TempoManager._lastBeatTime + timeToInput + offsetTime)
+                if (Time.time > TempoManager._lastBeatTime + (60f / 140f) + timeToInput + offsetTime)
                 {
                     //Debug.Log($"{lastHitTime} / {TempoManager._lastBeatTime}, {offsetTime} <color=red>out of time</color>");
                     OnHitFailure?.Invoke();
@@ -102,15 +104,23 @@ public class Minigame_Speaker : MonoBehaviour
     {
         if (!startTrace) return;
 
+        float expectedBeatTime = Mathf.Floor((Time.time / (60f / 140f)) + 0.5f) * (60f / 140f);
+        float currentInputTime = Time.time;
+        float currentDelay = currentInputTime - expectedBeatTime;
+        float inputDelay = currentDelay * 1000f; // Convert to milliseconds
+        Debug.Log("Input Delay: " + inputDelay.ToString("F2") + "ms");
+
         string actionName = context.action.name;
         KeyInput inputKey = (KeyInput)Enum.Parse(typeof(KeyInput), actionName, ignoreCase: true);
 
-        if (Time.time > TempoManager._lastBeatTime - offsetTime && Time.time < TempoManager._lastBeatTime + timeToInput + offsetTime)
+        if (Time.time > TempoManager._lastBeatTime + (60f / 140f) - offsetTime - offsetTime && Time.time < TempoManager._lastBeatTime + (60f / 140f) + timeToInput + offsetTime)
+        //if (Time.time > TempoManager._lastBeatTime - offsetTime && Time.time < TempoManager._lastBeatTime + timeToInput + offsetTime)
         {
             if (inputKey == key)
             {
                 // TODO: Offset in future for calibration
-                if (RectTransformUtility.RectangleContainsScreenPoint(rect, touchPoint))
+                //if (RectTransformUtility.RectangleContainsScreenPoint(rect, touchPoint))
+                if (speakerMovement.ratioPassed >= 0.1f)
                 {
                     //Debug.Log("<color=green>success</color>");
                     lastHitTime = Time.time;
@@ -153,7 +163,7 @@ public class Minigame_Speaker : MonoBehaviour
         else
         {
             //Debug.Log("<color=cyan>out of time range</color>");
-            data.promptText.text = "<color=red>out of time</color>";
+            data.promptText.text = "<color=yellow>out of time</color>";
             OnHitFailure?.Invoke();
             failParticle.StartParticleEmission();
             startTrace = false;

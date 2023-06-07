@@ -140,12 +140,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     {
         disableAction = Physics.CheckSphere(transform.position, 0.5f, disableJump);
 
-        if (disableAction)
-        {
-            StanceManager.AllowPlayerSwitchStance = false;
-        }
-
-        _anim.SetBool("JumpGrounded", disableAction);
+        StanceManager.AllowPlayerSwitchStance = disableAction ? false : true;
 
     }
     private void IsGround()
