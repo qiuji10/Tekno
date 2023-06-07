@@ -258,7 +258,7 @@ public class Amplifier_V2 : MonoBehaviour
 
     private void TempoManager_OnBeat()
     {
-        controlledVFX.Play();
+        //controlledVFX.Play();
 
         if (!startGame) return;
 
