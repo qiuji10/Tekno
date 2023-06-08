@@ -142,6 +142,12 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
         StanceManager.AllowPlayerSwitchStance = disableAction ? false : true;
 
+        if (disableAction)
+        {
+            _rb.drag = moveDrag;
+        }
+        
+
     }
     private void IsGround()
     {

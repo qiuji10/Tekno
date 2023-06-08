@@ -17,7 +17,7 @@ public class TeleportAbility : MonoBehaviour
 
     [Header("Charging values")]
     [SerializeField] private InputActionReference chargingAction;
-    public float maxChargeLevel = 100f;
+    public float maxChargeLevel = 90f;
     public float initialChargeRate = 10f;
     public float maxChargeRate = 50f;
     public float chargeIncreaseAmount = 5f;
@@ -33,32 +33,49 @@ public class TeleportAbility : MonoBehaviour
 
     private void OnEnable()
     {
-        teleportAction.action.performed += Teleport;
+        //teleportAction.action.performed += Teleport;
         chargingAction.action.performed += Charge;
-        //chargeSlider.gameObject.SetActive(true);
+        currentChargeLevel = 0f;
         LeanTween.reset();
     }
 
     private void OnDisable()
     {
-        teleportAction.action.performed -= Teleport;
+        //teleportAction.action.performed -= Teleport;
         chargingAction.action.performed -= Charge;
-        //chargeSlider.gameObject.SetActive(false);
+        chargeSlider.gameObject.SetActive(false);
     }
 
     private void Charge(InputAction.CallbackContext context)
     {
+        motherNode = tpSensor.GetNearestObject<MotherNode>();
 
-        if(StanceManager.curTrack.genre != Genre.Electronic)
+        if (StanceManager.curTrack.genre != Genre.Electronic)
         {
             return;
         }
 
-        if (!isMaxCharge)
+        if (!isMaxCharge && motherNode != null)
         {
             keyIsDown = true;
+            chargeSlider.gameObject.SetActive(true);
         }
+        else
+        {
+            keyIsDown = false;
+            chargeSlider.gameObject.SetActive(false);
+            currentChargeLevel = 0f;
+        }
+
         
+
+        if(currentChargeLevel >= 93)
+        {
+            isMaxCharge = true;
+            Teleport();
+            chargeSlider.gameObject.SetActive(false);
+        }
+
     }
 
     private void Update()
@@ -70,13 +87,14 @@ public class TeleportAbility : MonoBehaviour
             currentChargeLevel += chargeIncreaseAmount;
             currentChargeLevel = Mathf.Clamp(currentChargeLevel, 0f, maxChargeLevel);
             chargeSlider.value = currentChargeLevel;
-            isMaxCharge = (currentChargeLevel == maxChargeLevel);
+            rb.isKinematic = true;
         }
 
         else if (keyIsDown && !isMaxCharge)
         {
             keyIsDown = false;
             timeSinceLastPress += Time.deltaTime;
+            rb.isKinematic = true;
 
             if (timeSinceLastPress >= rapidPressThreshold)
             {
@@ -85,23 +103,39 @@ public class TeleportAbility : MonoBehaviour
                 currentChargeLevel += chargeRate * Time.deltaTime;
                 currentChargeLevel = Mathf.Clamp(currentChargeLevel, 0f, maxChargeLevel);
                 chargeSlider.value = currentChargeLevel;
-                isMaxCharge = (currentChargeLevel == maxChargeLevel);
             }
+
+            if (timeSinceLastPress < rapidPressThreshold)
+            {
+                rb.isKinematic = false;
+            }
+
+
         }
         else
         {
+           
+
             if (!isMaxCharge)
             {
                 currentChargeLevel -= decayRate * Time.deltaTime;
                 currentChargeLevel = Mathf.Clamp(currentChargeLevel, 0f, maxChargeLevel);
                 chargeSlider.value = currentChargeLevel;
             }
+
+            if (currentChargeLevel < 1)
+            {
+                rb.isKinematic = false;
+                chargeSlider.gameObject.SetActive(false);
+            }
         }
 
     }
-    private void Teleport(InputAction.CallbackContext context)
+    private void Teleport()
     {
         motherNode = tpSensor.GetNearestObject<MotherNode>();
+
+        rb.isKinematic = false;
 
         if (isMaxCharge && motherNode != null)
         {
