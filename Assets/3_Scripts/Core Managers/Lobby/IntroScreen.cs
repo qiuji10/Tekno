@@ -13,16 +13,12 @@ public class IntroScreen : MonoBehaviour
 
     private void Awake()
     {
-        if (PlayerPrefs.HasKey("Intro") && PlayerPrefs.GetInt("Intro") == 1)
+        if(PlayerPrefs.GetInt("Intro") == 1)
         {
             OnAnyKeyDown?.Invoke();
             canvas.enabled = false;
             vcam.Priority = 0;
             gameObject.SetActive(false);
-        }
-        else
-        {
-            PlayerPrefs.SetInt("Intro", 1);
         }
     }
 
@@ -30,6 +26,7 @@ public class IntroScreen : MonoBehaviour
     {
         if (Input.anyKeyDown)
         {
+            PlayerPrefs.SetInt("Intro", 1);
             OnAnyKeyDown?.Invoke();
             canvas.enabled = false;
             vcam.Priority = 0;

@@ -26,7 +26,7 @@ public class PauseMenu : MonoBehaviour
         optionAction.action.performed += Action_performed;
 
         //volumeProfile.TryGetSubclassOf(typeof(DepthOfField), out dofComponent);
-        vol.profile.TryGet(out dofComponent);
+        if (vol) vol.profile.TryGet(out dofComponent);
     }
 
     private void OnDisable()
