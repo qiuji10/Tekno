@@ -86,7 +86,7 @@ public class EnemyBase : MonoBehaviour, IKnockable
 
     private void LateUpdate()
     {
-        if (danceTimer > 0)
+        if (danceTimer >= 0)
         {
             danceTimer -= Time.deltaTime;
         }
