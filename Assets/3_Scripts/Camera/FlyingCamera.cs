@@ -11,27 +11,24 @@ public class FlyingCamera : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     [SerializeField] private bool isFlyCam = false;
     [SerializeField] private bool isPlayerCam = true;
-    [SerializeField] private List<GameObject> UI = new List<GameObject>();
 
     [SerializeField] private float speed = 5f;
     [SerializeField] private float verticalSpeed = 5f;
     [SerializeField] private Transform cameraTransform;
 
-    public float movementSpeed = 10f;
-    public float rotationSpeed = 2f;
-
-    private float rotationX = 0f;
-    private float rotationY = 0f;
+    public float mouseSensitivity = 100f;
+    float xRotation = 0f;
 
     private void Start()
     {
         cameraTransform = flyCam.transform;
         Cursor.lockState = CursorLockMode.Locked;
+
     }
 
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.LeftShift) && isPlayerCam)
+        if (Input.GetKey(KeyCode.LeftShift) && isPlayerCam)
         {
             flyCam.gameObject.SetActive(true);
             isFlyCam = true;
@@ -39,44 +36,51 @@ public class FlyingCamera : MonoBehaviour
             isPlayerCam = false;
             playerCam.enabled = false;
             playerController.enabled = false;
-            DisableUI(false);
 
         }
-        else if (Input.GetKeyUp(KeyCode.LeftShift) && isFlyCam)
-        {
-            flyCam.gameObject.SetActive(false);
-            isFlyCam = false;
-            flyCam.enabled = false;
-            isPlayerCam = true;
-            playerCam.enabled = true;
-            playerController.enabled = true;
-            DisableUI(true);
-        }
 
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        Vector3 movement = transform.right * moveHorizontal + transform.forward * moveVertical;
-        movement.Normalize();
-        transform.position += movement * movementSpeed * Time.deltaTime;
+        //xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        // Rotation
-        float mouseX = Input.GetAxis("Mouse X");
-        float mouseY = Input.GetAxis("Mouse Y");
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        cameraTransform.Rotate(Vector3.up * mouseX);
 
-        rotationX += mouseY * rotationSpeed;
-        rotationY += mouseX * rotationSpeed;
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
 
-        rotationX = Mathf.Clamp(rotationX, -90f, 90f);
-
-        transform.rotation = Quaternion.Euler(-rotationX, rotationY, 0f);
+        Vector3 moveDirection = transform.right * moveX + transform.forward * moveZ;
+        cameraTransform.GetComponent<CharacterController>().Move(moveDirection * Time.deltaTime);
     }
 
-    void DisableUI(bool option)
+    private void FixedUpdate()
     {
-        foreach (GameObject ui in UI)
+        if (cameraTransform == null)
         {
-            ui.SetActive(option);
+            return;
+        }
+
+        // Get the input axes
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+
+        // Calculate the movement direction based on camera's forward and right vectors
+        Vector3 movementDirection = (cameraTransform.forward * verticalInput + cameraTransform.right * horizontalInput).normalized;
+
+        // Apply the horizontal movement
+        transform.Translate(movementDirection * speed * Time.deltaTime, Space.World);
+
+        // Check for vertical input (upward movement)
+        if (Input.GetKey(KeyCode.Space))
+        {
+            transform.Translate(Vector3.up * verticalSpeed * Time.deltaTime, Space.World);
+        }
+        // Check for vertical input (downward movement)
+        else if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+        {
+            transform.Translate(-Vector3.up * verticalSpeed * Time.deltaTime, Space.World);
         }
     }
 
