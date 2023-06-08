@@ -1,11 +1,6 @@
-using NaughtyAttributes;
 using NodeCanvas.BehaviourTrees;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerStatus : MonoBehaviour 
 {
@@ -16,11 +11,13 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] private Sprite yellowHead;
     [SerializeField] private Sprite greenHead;
 
+    [Header("Death")]
+    [SerializeField] private GameObject deathCanvas;
+
     private int totalHealth;
     private bool isGlitchy;
     private CheckpointManager checkpointManager;
     private MaterialModifier matModifier;
-    private Animator _anim;
     private SpectrumUI spectrum;
 
     private void Awake()
@@ -111,8 +108,15 @@ public class PlayerStatus : MonoBehaviour
                 spectrum.images[i].color = Color.red;
             }
 
-            StartCoroutine(BackToLobby());
+            FindObjectOfType<PauseMenu>().gameObject.SetActive(false);
+
+            deathCanvas.SetActive(true);
         }
+    }
+
+    public void BackLobby()
+    {
+        StartCoroutine(BackToLobby());
     }
 
     private IEnumerator BackToLobby()

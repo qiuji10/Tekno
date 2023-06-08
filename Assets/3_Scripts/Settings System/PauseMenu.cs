@@ -55,7 +55,7 @@ public class PauseMenu : MonoBehaviour
         if (!canPause) return;
 
         canvas.enabled = true;
-        dofComponent.focalLength.value = 50f;
+        if (dofComponent) dofComponent.focalLength.value = 50f;
         isPause = true;
         EventSystem.current.SetSelectedGameObject(objToBeSelected);
         Time.timeScale = 0;
@@ -65,7 +65,7 @@ public class PauseMenu : MonoBehaviour
     public void ResumeGame()
     {
         canvas.enabled = false;
-        dofComponent.focalLength.value = 1.0f;
+        if (dofComponent) dofComponent.focalLength.value = 1.0f;
         isPause = false;
         EventSystem.current.SetSelectedGameObject(null);
         Time.timeScale = 1;
