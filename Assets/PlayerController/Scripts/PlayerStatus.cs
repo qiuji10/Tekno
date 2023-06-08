@@ -1,4 +1,5 @@
 using NaughtyAttributes;
+using NodeCanvas.BehaviourTrees;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -110,16 +111,23 @@ public class PlayerStatus : MonoBehaviour
                 spectrum.images[i].color = Color.red;
             }
 
-
-            MaterialModifier modifier = GetComponentInChildren<MaterialModifier>();
-            modifier.ResetMaterial();
-            BackToLobby();
-
+            StartCoroutine(BackToLobby());
         }
     }
 
-    public IEnumerator BackToLobby()
+    private IEnumerator BackToLobby()
     {
+        BehaviourTreeOwner[] enemies = FindObjectsOfType<BehaviourTreeOwner>();
+
+        foreach (BehaviourTreeOwner item in enemies)
+        {
+            item.gameObject.SetActive(false);
+            yield return null;
+        }
+
+        MaterialModifier modifier = GetComponentInChildren<MaterialModifier>();
+        modifier.ResetMaterial();
+
         NonDestructible[] nonDestructibles = FindObjectsOfType<NonDestructible>();
 
         foreach (NonDestructible item in nonDestructibles)

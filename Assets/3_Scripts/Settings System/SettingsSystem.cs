@@ -18,24 +18,22 @@ public class SettingsSystem : MonoBehaviour
     [SerializeField] private AudioMixerGroup sfxMixer;
 
     [Header("Audio Test")]
-    [SerializeField] private AudioSource audioTester;
-    [SerializeField] private AudioClip bgmClipTest;
-    [SerializeField] private AudioClip sfxClipTest;
+    [SerializeField] private AudioSource masterAudioTest;
+    [SerializeField] private AudioSource bgmAudioTest;
+    [SerializeField] private AudioSource sfxAudioTest;
 
     [Header("Audio Visuals")]
     [SerializeField] private Sprite lowVolSprite;
     [SerializeField] private Sprite medVolSprite;
     [SerializeField] private Sprite highVolSprite;
 
-    [Header("Audio Visuals")]
+    [Header("Brightness Visuals")]
     [SerializeField] private Sprite lowBriSprite;
     [SerializeField] private Sprite medBriSprite;
     [SerializeField] private Sprite highBriSprite;
 
     [Header("BrightnessSlider")]
     [SerializeField] private Slider brightnessSlider;
-
-    private float maxBrightness = 1f; // The maximum brightness value, adjust as needed
 
     private const string masterVolumeKey = "MasterVolume";
     private const string bgmVolumeKey = "BgmVolume";
@@ -76,24 +74,28 @@ public class SettingsSystem : MonoBehaviour
     public void OnMasterVolumeUpdate(float volume)
     {
         SetMasterVolume(volume);
+        masterSlider.image.sprite = GetSprite(volume, lowVolSprite, medVolSprite, highVolSprite);
         PlayerPrefs.SetFloat(masterVolumeKey, volume);
     }
 
     public void OnBgmVolumeUpdate(float volume)
     {
         SetBgmVolume(volume);
+        bgmSlider.image.sprite = GetSprite(volume, lowVolSprite, medVolSprite, highVolSprite);
         PlayerPrefs.SetFloat(bgmVolumeKey, volume);
     }
 
     public void OnSfxVolumeUpdate(float volume)
     {
         SetSfxVolume(volume);
+        sfxSlider.image.sprite = GetSprite(volume, lowVolSprite, medVolSprite, highVolSprite);
         PlayerPrefs.SetFloat(sfxVolumeKey, volume);
     }
 
     public void OnBrightVolumeUpdate(float brightness)
     {
         SetBrightness(brightness);
+        brightnessSlider.image.sprite = GetSprite(brightness, lowBriSprite, medBriSprite, highBriSprite);
         PlayerPrefs.SetFloat(brightnessKey, brightness);
     }
 
@@ -144,5 +146,28 @@ public class SettingsSystem : MonoBehaviour
     private float GetBrightness()
     {
         return Screen.brightness;
+    }
+
+    private Sprite GetSprite(float value, Sprite lowSp, Sprite medSp, Sprite higSp)
+    {
+        float third = 1f / 3f;
+
+        if (value >= 0f && value < third)
+        {
+            return lowSp;
+        }
+        else if (value >= third && value < 2f * third)
+        {
+            return medSp;
+        }
+        else if (value >= 2f * third && value <= 1f)
+        {
+            return higSp;
+        }
+        else
+        {
+            // should be nothing here
+            return medSp;
+        }
     }
 }
