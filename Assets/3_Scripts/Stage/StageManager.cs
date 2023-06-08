@@ -48,26 +48,34 @@ public class StageManager : MonoBehaviour
         LineTileDropTrigger.OnTileMoveEnd += IterateMovingTile;
         ShuffleFloor();
         //shuffle = true;
+
+        TempoManager.OnBeat += TempoManager_OnBeat;
+    }
+
+    private void TempoManager_OnBeat()
+    {
+        ShuffleFloor();
     }
 
     private void OnDestroy()
     {
         LineTileDropTrigger.OnTileMoveEnd -= IterateMovingTile;
+        TempoManager.OnBeat -= TempoManager_OnBeat;
     }
 
-    private void Update()
-    {
-        _timer += Time.deltaTime;
+    //private void Update()
+    //{
+    //    _timer += Time.deltaTime;
 
-        if (shuffle)
-        {
-            if (_timer > _nextShuffleTime)
-            {
-                ShuffleFloor();
-                _nextShuffleTime = Time.time + shufflePerSec;
-            }
-        }
-    }
+    //    if (shuffle)
+    //    {
+    //        if (_timer > _nextShuffleTime)
+    //        {
+    //            ShuffleFloor();
+    //            _nextShuffleTime = Time.time + shufflePerSec;
+    //        }
+    //    }
+    //}
 
     private void OnTriggerEnter(Collider other)
     {

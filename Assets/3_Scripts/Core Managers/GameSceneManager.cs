@@ -38,7 +38,23 @@ public class GameSceneManager : MonoBehaviour
         }
 
         Scene newScene = SceneManager.GetSceneByName(sceneName);
-        
+
+        if (newScene.name != "1_Lobby")
+        {
+            GameObject[] playerObjs = PlayerReferenceManager.Instance.playerReferenceObjects;
+
+            for (int i = 0; i < playerObjs.Length; i++)
+            {
+                if (playerObjs[i].transform.parent != null)
+                {
+                    playerObjs[i].transform.SetParent(null);
+                }
+
+                SceneManager.MoveGameObjectToScene(playerObjs[i], newScene);
+                yield return null;
+            }
+        }
+
         if (newScene.name == "Q1 Map Test v2_old")
         {
             SceneManager.SetActiveScene(newScene);
@@ -67,6 +83,31 @@ public class GameSceneManager : MonoBehaviour
 
     public void UnloadScene(string sceneName)
     {
+
+        StartCoroutine(StartUnloadScene(sceneName));
+        
+    }
+
+    private IEnumerator StartUnloadScene(string sceneName)
+    {
+        Scene newScene = SceneManager.GetActiveScene();
+
+        if (newScene.name != "1_Lobby")
+        {
+            GameObject[] playerObjs = PlayerReferenceManager.Instance.playerReferenceObjects;
+
+            for (int i = 0; i < playerObjs.Length; i++)
+            {
+                if (playerObjs[i].transform.parent != null)
+                {
+                    playerObjs[i].transform.SetParent(null);
+                }
+
+                SceneManager.MoveGameObjectToScene(playerObjs[i], newScene);
+                yield return null;
+            }
+        }
+
         SceneManager.UnloadSceneAsync(sceneName);
     }
 }

@@ -210,10 +210,11 @@ public class Amplifier_V2 : MonoBehaviour
             amplifierHealth = 3;
             speakerHealth = 3;
 
+            PauseMenu.canPause = true;
             yield return new WaitForSeconds(0.75f);
 
             enabled = false;
-            
+
             //eventInvoker.enabled = true;
         }
         else if (speakerHealth <= 0)
@@ -247,6 +248,7 @@ public class Amplifier_V2 : MonoBehaviour
                 }
             }
 
+            PauseMenu.canPause = true;
             yield return new WaitForSeconds(0.75f);
             eventInvoker.enabled = true;
         }
@@ -254,6 +256,7 @@ public class Amplifier_V2 : MonoBehaviour
         {
             yield return new WaitForSeconds(0.75f);
             Resetter();
+            PauseMenu.canPause = false;
             yield return null;
             StartPlay();
         }

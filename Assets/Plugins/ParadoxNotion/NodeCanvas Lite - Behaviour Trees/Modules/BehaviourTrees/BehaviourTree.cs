@@ -83,7 +83,7 @@ namespace NodeCanvas.BehaviourTrees
 
             if ( intervalCounter >= updateInterval ) {
                 intervalCounter = 0;
-                if ( Tick(agent, blackboard) != Status.Running && !repeat ) {
+                if (blackboard != null && Tick(agent, blackboard) != Status.Running && !repeat ) {
                     Stop(rootStatus == Status.Success);
                 }
             }
