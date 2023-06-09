@@ -30,6 +30,9 @@ public class GameSceneManager : MonoBehaviour
 
     private IEnumerator StartLoadingScene(string sceneName, LoadSceneMode mode)
     {
+
+        if (IsSceneLoadedAdditively(sceneName)) yield break;
+
         AsyncOperation loadingScene = SceneManager.LoadSceneAsync(sceneName, mode);
 
         while (!loadingScene.isDone)
@@ -47,7 +50,7 @@ public class GameSceneManager : MonoBehaviour
             {
                 if (playerObjs[i].transform.parent != null)
                 {
-                    playerObjs[i].transform.SetParent(null);
+                    continue;
                 }
 
                 SceneManager.MoveGameObjectToScene(playerObjs[i], newScene);
@@ -109,5 +112,22 @@ public class GameSceneManager : MonoBehaviour
         }
 
         SceneManager.UnloadSceneAsync(sceneName);
+    }
+
+    public static bool IsSceneLoadedAdditively(string sceneName)
+    {
+        int sceneCount = SceneManager.sceneCount;
+
+        for (int i = 0; i < sceneCount; i++)
+        {
+            Scene scene = SceneManager.GetSceneAt(i);
+
+            if (scene.name == sceneName && scene.isLoaded && scene.buildIndex != SceneManager.GetActiveScene().buildIndex)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

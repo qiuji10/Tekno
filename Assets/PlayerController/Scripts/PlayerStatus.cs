@@ -15,7 +15,7 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] private GameObject deathCanvas;
 
     private int totalHealth;
-    private bool isGlitchy;
+    private bool isGlitchy, isDead;
     private CheckpointManager checkpointManager;
     private MaterialModifier matModifier;
     private SpectrumUI spectrum;
@@ -108,9 +108,23 @@ public class PlayerStatus : MonoBehaviour
                 spectrum.images[i].color = Color.red;
             }
 
-            FindObjectOfType<PauseMenu>().gameObject.SetActive(false);
 
-            deathCanvas.SetActive(true);
+            if (!isDead)
+            {
+                isDead = true;
+
+                FindObjectOfType<StanceManager>().gameObject.SetActive(false);
+                FindObjectOfType<PauseMenu>().gameObject.SetActive(false);
+
+                GetComponent<PlayerController>().enabled = false;
+                GetComponent<HookAbility>().enabled = false;
+                GetComponent<TeleportAbility>().enabled = false;
+                GetComponent<Attack>().enabled = false;
+
+                deathCanvas.SetActive(true);
+            }
+
+            
         }
     }
 
@@ -132,14 +146,6 @@ public class PlayerStatus : MonoBehaviour
         MaterialModifier modifier = GetComponentInChildren<MaterialModifier>();
         modifier.ResetMaterial();
 
-        NonDestructible[] nonDestructibles = FindObjectsOfType<NonDestructible>();
-
-        foreach (NonDestructible item in nonDestructibles)
-        {
-            Destroy(item.gameObject);
-            yield return null;
-        }
-
         FindObjectOfType<GameSceneManager>().LoadScene("1_Lobby");
     }
 
@@ -147,8 +153,10 @@ public class PlayerStatus : MonoBehaviour
     {
         isGlitchy = true;
         matModifier.GlitchyEffectOn();
+        yield return null;
         yield return new WaitForSeconds(1f);
         matModifier.GlitchyEffectOff();
+        yield return null;
         isGlitchy = false;
     }
 }

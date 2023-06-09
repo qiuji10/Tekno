@@ -6,27 +6,18 @@ using UnityEngine.InputSystem;
 
 public class AnyKeyEvent : MonoBehaviour
 {
-    [SerializeField] private InputActionReference anyKey;
-
     [SerializeField] private UnityEvent OnAnyKeyActivated;
 
     private bool pressed;
 
-    private void OnEnable()
+    private void Update()
     {
-        anyKey.action.performed += Action_performed;
-    }
+        if (Input.anyKeyDown)
+        {
+            if (pressed) return;
 
-    private void OnDisable()
-    {
-        anyKey.action.performed -= Action_performed;
-    }
-
-    private void Action_performed(InputAction.CallbackContext obj)
-    {
-        if (pressed) return;
-
-        pressed = true;
-        OnAnyKeyActivated?.Invoke();
+            pressed = true;
+            OnAnyKeyActivated?.Invoke();
+        }
     }
 }
