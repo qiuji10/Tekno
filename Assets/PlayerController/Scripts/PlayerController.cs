@@ -27,6 +27,42 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     private bool isJumping;
     public bool disableAction = false;
 
+    public float defaultJumpForce
+    {
+        get => jumpForce;
+        set => jumpForce = value;
+    }
+
+    public float defaultAirSpeed
+    {
+        get => airSpeed;
+        set => airSpeed = value;
+    }
+
+    public float defaultMoveSpeed
+    {
+        get => moveSpeed;
+        set => moveSpeed = value;
+    }
+
+    public float defaultMoveDrag
+    {
+        get => moveDrag;
+        set => moveDrag = value;
+    }
+
+    public float defaultFallMultiplier
+    {
+        get => fallMultiplier;
+        set => fallMultiplier = value;
+    }
+
+    public float defaultLowJumpMultiplier
+    {
+        get => lowJumpMultiplier;
+        set => lowJumpMultiplier = value;
+    }
+
     [Header("Ground")]
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundedRadius = 0.13f;

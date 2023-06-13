@@ -65,7 +65,7 @@ public class EnemyBase : MonoBehaviour, IKnockable
         float currentAngularVelocity = Vector3.Angle(currentFacing, lastFacing) / Time.deltaTime; //degrees per second
         lastFacing = currentFacing;
 
-        if (_agent.velocity.magnitude < 0.3f)
+        if (_agent.velocity != Vector3.zero)
         {
             float currentWeight = _anim.GetLayerWeight(1);
             _anim.SetLayerWeight(1, Mathf.SmoothDamp(currentWeight, walkingSpeed, ref velocity, 0.1f));
