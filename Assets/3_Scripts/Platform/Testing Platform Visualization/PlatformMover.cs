@@ -28,6 +28,10 @@ public class PlatformMover : MonoBehaviour
             StartCoroutine(MoveLogic());
             curBeatCount++;
         }
+        else
+        {
+            curBeatCount = 1;
+        }
     }
 
     private IEnumerator MoveLogic()
@@ -53,7 +57,7 @@ public class PlatformMover : MonoBehaviour
 
         transform.position = newPos;
 
-        curBeatCount = 1;
+        
     }
 
 }

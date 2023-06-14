@@ -100,4 +100,12 @@ public class PlayerControllerAdjustor : MonoBehaviour
         lowJumpMultiplierText.text = "Low Jump Multiplier: " + value.ToString();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            playerController.transform.position = resetTransform.position;
+        }
+    }
+
 }
