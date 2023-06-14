@@ -126,26 +126,30 @@ public class DialogueManager : MonoBehaviour
             characters[i].SetImageSprite("normal");
         }
 
+        characterNameText.text = "";
+        dialogueText.text = "";
+
         StartCoroutine(StartSequence());
     }
 
     public void DisplayNextSentence()
     {
-        if (dialogues.Count == 0)
-        {
-            EndDialogue();
-            return;
-        }
+        characters[curCharacterIndex].StopAnimate();
 
-        if (typingCoroutine != null && curCharacterIndex != 0)
+        if (typingCoroutine != null)
         {
             StopCoroutine(typingCoroutine);
+            characters[curCharacterIndex].SetImageSprite("normal");
             dialogueText.text = curDialogue.RemoveRegexFromString();
             typingCoroutine = null;
             return;
         }
 
-        characters[curCharacterIndex].StopAnimate();
+        if (dialogues.Count == 0)
+        {
+            EndDialogue();
+            return;
+        }
 
         curDialogue = dialogues.Dequeue();
 
