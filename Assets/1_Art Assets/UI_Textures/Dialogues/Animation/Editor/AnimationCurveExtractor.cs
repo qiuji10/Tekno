@@ -35,15 +35,15 @@ public class AnimationCurveExtractor : EditorWindow
 
         if (animationClip != null)
         {
-            // Get the curves for the selected animation clip
-            AnimationClipCurveData[] curveDatas = AnimationUtility.GetAllCurves(animationClip, true);
+            // Get the curve bindings for the selected animation clip
+            EditorCurveBinding[] curveBindings = AnimationUtility.GetCurveBindings(animationClip);
 
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
-            foreach (AnimationClipCurveData curveData in curveDatas)
+            foreach (EditorCurveBinding curveBinding in curveBindings)
             {
-                AnimationCurve curve = curveData.curve;
-                string propertyName = curveData.propertyName;
+                AnimationCurve curve = AnimationUtility.GetEditorCurve(animationClip, curveBinding);
+                string propertyName = curveBinding.propertyName;
 
                 if (GUILayout.Button(propertyName))
                 {
@@ -54,8 +54,8 @@ public class AnimationCurveExtractor : EditorWindow
 
             EditorGUILayout.EndScrollView();
         }
-    }
 
+    }
 
     private void ExtractCurve()
     {
@@ -64,14 +64,14 @@ public class AnimationCurveExtractor : EditorWindow
 
         if (animationClip != null)
         {
-            // Get the curves for the selected animation clip
-            AnimationClipCurveData[] curveDatas = AnimationUtility.GetAllCurves(animationClip, true);
+            // Get the curve bindings for the selected animation clip
+            EditorCurveBinding[] curveBindings = AnimationUtility.GetCurveBindings(animationClip);
 
-            // Iterate through the curves and copy them
-            foreach (AnimationClipCurveData curveData in curveDatas)
+            // Iterate through the curve bindings and copy the curves
+            foreach (EditorCurveBinding curveBinding in curveBindings)
             {
-                AnimationCurve curve = curveData.curve;
-                string propertyName = curveData.propertyName;
+                AnimationCurve curve = AnimationUtility.GetEditorCurve(animationClip, curveBinding);
+                string propertyName = curveBinding.propertyName;
 
                 // Do whatever you want with the curve data here
                 Debug.Log("Property Name: " + propertyName);
@@ -81,5 +81,6 @@ public class AnimationCurveExtractor : EditorWindow
                     extractedCurve = curve;
             }
         }
+
     }
 }
