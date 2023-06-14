@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 [System.Serializable]
@@ -7,6 +8,21 @@ public class Dialogue
 {
     public string characterName;
     [TextArea(10, 20)] public string conversation;
+
+    public string RemoveRegexFromString()
+    {
+        Regex waitRegex = new Regex(@"\$wait/([\d.]+)");
+        Regex playRegex = new Regex(@"\$play/(\w+)/([\d.]+)");
+        Regex emotionRegex = new Regex(@"\$emotion/(\w+)");
+
+        string result = conversation;
+
+        result = waitRegex.Replace(result, string.Empty);
+        result = playRegex.Replace(result, string.Empty);
+        result = emotionRegex.Replace(result, string.Empty);
+
+        return result;
+    }
 }
 
 [CreateAssetMenu(menuName = "Dialogue/DialogueData")]
@@ -31,5 +47,4 @@ public class DialogueData : ScriptableObject
 
         return characters;
     }
-
 }

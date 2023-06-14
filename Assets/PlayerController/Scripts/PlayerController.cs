@@ -145,6 +145,27 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     }
 
+    public void DisableAction()
+    {
+        allowedInput = false;
+        Anim.enabled = false;
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+
+        StanceManager.AllowPlayerSwitchStance = false;
+    }
+
+    public void EnableAction()
+    {
+        allowedInput = true;
+        Anim.enabled = true;
+
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+
+        StanceManager.AllowPlayerSwitchStance = true;
+    }
+
     private IEnumerator EnableRB()
     {
         yield return new WaitForSeconds(1.5f);

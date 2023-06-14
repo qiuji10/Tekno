@@ -5,6 +5,8 @@ using TMPro;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using NaughtyAttributes;
+using System;
+using UnityEngine.InputSystem;
 
 [System.Serializable]
 public class AnimationPattern
@@ -55,6 +57,7 @@ public class DialogueManager : MonoBehaviour
     [Header("Dialogue Settings")]
     [SerializeField] private float textSpeed = 0.05f;
     [SerializeField] private AnimationCurve dialogueAnimCruve;
+    [SerializeField] private InputActionReference interactAction;
 
     [Header("Data References")]
     [SerializeField] private List<DialogueCharacterSprite> characterSpDatas = new List<DialogueCharacterSprite>();
@@ -66,10 +69,31 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private RectTransform dialogueBoxRect;
     [SerializeField] private TMP_Text characterNameText;
     [SerializeField] private TMP_Text dialogueText;
-    
+
+    private bool isRunning;
     private int curCharacterIndex;
 
+    private Dialogue curDialogue;
+    private Coroutine typingCoroutine, endCoroutine;
     private Queue<Dialogue> dialogues = new Queue<Dialogue>();
+
+    public static event Action OnDialogueEnd;
+
+    private void OnEnable()
+    {
+        interactAction.action.performed += Action_performed;
+    }
+
+    private void OnDisable()
+    {
+        interactAction.action.performed -= Action_performed;
+    }
+
+    private void Action_performed(InputAction.CallbackContext context)
+    {
+        if (isRunning)
+            DisplayNextSentence();
+    }
 
     [Button]
     public void test()
@@ -113,21 +137,41 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        Dialogue dialogue = dialogues.Dequeue();
+        if (typingCoroutine != null && curCharacterIndex != 0)
+        {
+            StopCoroutine(typingCoroutine);
+            dialogueText.text = curDialogue.RemoveRegexFromString();
+            typingCoroutine = null;
+            return;
+        }
 
-        StopAllCoroutines();
+        characters[curCharacterIndex].StopAnimate();
 
-        curCharacterIndex = SetCharacterActive(dialogue.characterName);
+        curDialogue = dialogues.Dequeue();
+
+        curCharacterIndex = SetCharacterActive(curDialogue.characterName);
         
-        characterNameText.text = dialogue.characterName;
+        characterNameText.text = curDialogue.characterName;
         dialogueText.text = "";
 
-        StartCoroutine(TypeSentence_Regex(dialogue));
+        typingCoroutine = StartCoroutine(TypeSentence_Regex(curDialogue));
     }
 
     private void EndDialogue()
     {
-        StartCoroutine(IntroOutroAnimation(false));
+        if (endCoroutine != null)
+        {
+            return;
+        }
+
+        curCharacterIndex = 0;
+        isRunning = false;
+
+        StopAllCoroutines();
+        OnDialogueEnd?.Invoke();
+        characterNameText.text = "";
+        dialogueText.text = "";
+        endCoroutine = StartCoroutine(IntroOutroAnimation(false));
     }
 
     private IEnumerator TypeSentence_Regex(Dialogue dialogue)
@@ -209,6 +253,7 @@ public class DialogueManager : MonoBehaviour
         }
 
         curCharacter.StopAnimate();
+        typingCoroutine = null;
     }
 
     private int SetCharacterActive(string talkingCharacter)
@@ -246,7 +291,7 @@ public class DialogueManager : MonoBehaviour
     private IEnumerator StartSequence()
     {
         yield return IntroOutroAnimation(true);
-
+        isRunning = true;
         DisplayNextSentence();
     }
 
@@ -268,7 +313,7 @@ public class DialogueManager : MonoBehaviour
         Vector2 leftOut = new Vector2(-600, 0);
         Vector2 rightOut = new Vector2(600, 0);
 
-        while (elapsedTime < 0.8f)
+        while (elapsedTime < 0.6f)
         {
             float t = 0;
 
@@ -295,6 +340,8 @@ public class DialogueManager : MonoBehaviour
             characters[0].gameObject.SetActive(false);
             characters[1].gameObject.SetActive(false);
             dialogueBoxRect.gameObject.SetActive(false);
+
+            endCoroutine = null;
         }
     }
 }

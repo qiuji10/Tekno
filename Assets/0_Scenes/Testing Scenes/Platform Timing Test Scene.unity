@@ -3377,7 +3377,7 @@ PrefabInstance:
     - target: {fileID: 1543509886624612458, guid: 39a84149d5959ae42a3865cd0b095013,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1e-45
+      value: -1e-45
       objectReference: {fileID: 0}
     - target: {fileID: 1543509886624612458, guid: 39a84149d5959ae42a3865cd0b095013,
         type: 3}
@@ -3417,12 +3417,12 @@ PrefabInstance:
     - target: {fileID: 3124511486877672760, guid: 39a84149d5959ae42a3865cd0b095013,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0000000042164703
+      value: -0.000000023677588
       objectReference: {fileID: 0}
     - target: {fileID: 3124511486877672760, guid: 39a84149d5959ae42a3865cd0b095013,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -6.128901e-10
+      value: -0.000000003441682
       objectReference: {fileID: 0}
     - target: {fileID: 3240397115097440661, guid: 39a84149d5959ae42a3865cd0b095013,
         type: 3}
@@ -3452,7 +3452,7 @@ PrefabInstance:
     - target: {fileID: 3240397115097440661, guid: 39a84149d5959ae42a3865cd0b095013,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1e-45
+      value: -1e-45
       objectReference: {fileID: 0}
     - target: {fileID: 3240397115097440661, guid: 39a84149d5959ae42a3865cd0b095013,
         type: 3}
@@ -3931,8 +3931,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: In this updated code, the regular expression pattern is used to match the
-    special keyword "$wait/" followed by In this updated
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a21d1e78e6e319e488eef77cd0c74e9c, type: 2}
   m_sharedMaterial: {fileID: -6491960110809913461, guid: a21d1e78e6e319e488eef77cd0c74e9c,
@@ -7115,6 +7114,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  interactAction: {fileID: -5402125171716273264, guid: 1870834d611a202418d6e474a9fb0619,
+    type: 3}
   characterSpDatas:
   - {fileID: 11400000, guid: c65b63d85565e7847ac804c841638cfc, type: 2}
   - {fileID: 11400000, guid: 64e199cbb91c4f444a98572388ba3b34, type: 2}
@@ -11033,6 +11034,88 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+--- !u!1 &1986794327
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1986794329}
+  - component: {fileID: 1986794328}
+  - component: {fileID: 1986794330}
+  m_Layer: 0
+  m_Name: Cube (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &1986794328
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986794327}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1986794329
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986794327}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.22, y: 1.0486724, z: 11.88}
+  m_LocalScale: {x: 5, y: 23.02, z: 5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 34
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1986794330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986794327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af5119e4a631dea488e64d37e22505eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerOnce: 0
+  disablePlayerControl: 1
+  prompt: {fileID: 0}
+  interactKey: {fileID: 0}
+  eventType: 0
+  genre: 3
+  OnInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1149420166}
+        m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+        m_MethodName: test
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnInteractEnd:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1999837151
 GameObject:
   m_ObjectHideFlags: 0
@@ -11091,7 +11174,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SP3-KER
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 06106a68112dd9e45901ea23029851e1, type: 2}
   m_sharedMaterial: {fileID: -6055190964153828865, guid: 06106a68112dd9e45901ea23029851e1,
