@@ -89,8 +89,8 @@ public class HookAbility : MonoBehaviour
 
                 //_cam.enabled = false;
                 _playerController.Anim.SetTrigger("StartSwing");
-                _playerController.enabled = false;
-
+                //_playerController.enabled = false;
+                PlayerController.allowedInput = false;
                 hookSlider.value = timer = 0;
                 hookSlider.maxValue = hookTime;
 
@@ -132,9 +132,10 @@ public class HookAbility : MonoBehaviour
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
 
         _playerController.transform.SetParent(null);
-        
+
         //_cam.enabled = true;
-        _playerController.enabled = true;
+        PlayerController.allowedInput = true;
+        //_playerController.enabled = true;
         _playerController.transform.eulerAngles = Vector3.zero;
         _playerController.Anim.SetTrigger("EndSwing");
 

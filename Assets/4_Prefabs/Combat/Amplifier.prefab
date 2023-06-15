@@ -1,5 +1,60 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &160970032
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 160970033}
+  - component: {fileID: 160970034}
+  m_Layer: 0
+  m_Name: Decal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &160970033
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160970032}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: -0.934, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1676857278679770201}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &160970034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160970032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0777d029ed3dffa4692f417d4aba19ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: 321e504f533f76b46a7c070dc683f584, type: 2}
+  m_DrawDistance: 1000
+  m_FadeScale: 0.9
+  m_StartAngleFade: 180
+  m_EndAngleFade: 180
+  m_UVScale: {x: 1, y: 1}
+  m_UVBias: {x: 0, y: 0}
+  m_ScaleMode: 0
+  m_Offset: {x: 0, y: 0, z: 0}
+  m_Size: {x: 10, y: 10, z: 2}
+  m_FadeFactor: 1
 --- !u!1 &524712659
 GameObject:
   m_ObjectHideFlags: 0
@@ -10051,6 +10106,7 @@ Transform:
   - {fileID: 8864280025620565431}
   - {fileID: 2783979051463398928}
   - {fileID: 651288148}
+  - {fileID: 160970033}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10133,17 +10189,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3947474b0735c984cb3ce74e58f71e83, type: 2}
   - {fileID: 11400000, guid: 07ca088c6d54c924e887b7193527148b, type: 2}
   - {fileID: 11400000, guid: 4698ad9962950b84fa0fc71cbf708581, type: 2}
-  beatPrefab: {fileID: 6097634576198623637, guid: acbc5fac192fb404f91e2e61695c8de8,
+  beatPrefab: {fileID: 6097634576198623637, guid: 4e60496915e41054c9196dbbec25c64d,
     type: 3}
-  canvas: {fileID: 0}
-  sliderVisualParent: {fileID: 0}
-  beatVisualParent: {fileID: 0}
-  amplifierCoreImg: {fileID: 0}
-  speakerHealthBar: {fileID: 0}
-  amplifierHealthBar: {fileID: 0}
-  speaker: {fileID: 0}
   enemiesInControl: []
   particle: {fileID: 6231391339937820782}
+  OnHijackSucceed:
+    m_PersistentCalls:
+      m_Calls: []
+  controlledVFX: {fileID: 0}
   knockBackRange: 10
   knockBackPower: 100
 --- !u!114 &5716981858556256531
@@ -10160,6 +10213,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactKey: {fileID: -3586359921819425980, guid: 1870834d611a202418d6e474a9fb0619,
     type: 3}
+  eventType: 1
+  genre: 1
   prompt: {fileID: 651288147}
   OnInteract:
     m_PersistentCalls:
@@ -10176,6 +10231,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnInteractDelay:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExit:
+    m_PersistentCalls:
+      m_Calls: []
+  triggerOnce: 0
+  triggerDelay: 0
 --- !u!1 &3080455108013204554
 GameObject:
   m_ObjectHideFlags: 0

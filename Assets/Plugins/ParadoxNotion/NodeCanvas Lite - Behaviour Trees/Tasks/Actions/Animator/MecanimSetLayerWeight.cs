@@ -16,8 +16,10 @@ namespace NodeCanvas.Tasks.Actions
         [SliderField(0, 1)]
         public BBParameter<float> layerWeight;
 
+        public bool randomTransitTime;
         [SliderField(0, 1)]
         public float transitTime;
+
 
         private float currentValue;
 
@@ -27,6 +29,7 @@ namespace NodeCanvas.Tasks.Actions
 
         protected override void OnExecute() {
 
+            if (randomTransitTime) transitTime = Random.Range(0.5f, 1.0f);
             currentValue = agent.GetLayerWeight(layerIndex.value);
         }
 

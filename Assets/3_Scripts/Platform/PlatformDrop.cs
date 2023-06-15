@@ -40,7 +40,7 @@ public class PlatformDrop: MonoBehaviour,IPlatform
             shakeTimer += Time.deltaTime;
 
             // modify the y shake to 0 to prevent player cant jump
-            Vector3 randomOffset = Random.insideUnitSphere * 0.2f;
+            Vector3 randomOffset = Random.insideUnitSphere * 0.1f;
             randomOffset.y = 0;
             transform.position = transform.position + new Vector3(randomOffset.x, 0, randomOffset.z);
 

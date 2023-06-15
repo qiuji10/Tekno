@@ -14,6 +14,9 @@
         },
         {
             "m_Id": "0e4bfef02a824823ac61fca777df41f1"
+        },
+        {
+            "m_Id": "e87ef3693bea497bbb90d6a32dfde24c"
         }
     ],
     "m_Keywords": [],
@@ -95,6 +98,9 @@
         },
         {
             "m_Id": "d01633ae4fd642c3803246fac2177a93"
+        },
+        {
+            "m_Id": "8c164e5b25ca499d8e276db423099059"
         }
     ],
     "m_GroupDatas": [],
@@ -182,6 +188,20 @@
                     "m_Id": "212541a2a2944e29b5e66513d70f40cd"
                 },
                 "m_SlotId": 1
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "8c164e5b25ca499d8e276db423099059"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "3f38fba7a95244fa9ce13c5ddc9ba06e"
+                },
+                "m_SlotId": 0
             }
         },
         {
@@ -861,6 +881,31 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector4MaterialSlot",
+    "m_ObjectId": "468a8f956f174c1494eeb97442a86edc",
+    "m_Id": 0,
+    "m_DisplayName": "BaseColor",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicValueMaterialSlot",
     "m_ObjectId": "48ff369e2bf9497f902b7d8b15b595c2",
     "m_Id": 0,
@@ -1299,6 +1344,41 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "8c164e5b25ca499d8e276db423099059",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -208.0,
+            "y": 183.0,
+            "width": 130.99998474121095,
+            "height": 34.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "468a8f956f174c1494eeb97442a86edc"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "e87ef3693bea497bbb90d6a32dfde24c"
+    }
 }
 
 {
@@ -1936,9 +2016,9 @@
     "m_ShaderOutputName": "BaseColor",
     "m_StageCapability": 2,
     "m_Value": {
-        "x": 0.12735849618911744,
-        "y": 0.6064538955688477,
-        "z": 1.0
+        "x": 0.9905660152435303,
+        "y": 0.9905660152435303,
+        "z": 0.9905660152435303
     },
     "m_DefaultValue": {
         "x": 0.0,
@@ -2187,6 +2267,9 @@
         },
         {
             "m_Id": "0e4bfef02a824823ac61fca777df41f1"
+        },
+        {
+            "m_Id": "e87ef3693bea497bbb90d6a32dfde24c"
         }
     ]
 }
@@ -2222,6 +2305,35 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "VertexDescription.Tangent"
+}
+
+{
+    "m_SGVersion": 3,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.ColorShaderProperty",
+    "m_ObjectId": "e87ef3693bea497bbb90d6a32dfde24c",
+    "m_Guid": {
+        "m_GuidSerialized": "0e23fb0b-97ec-459c-8b47-36e9789baecb"
+    },
+    "m_Name": "BaseColor",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "BaseColor",
+    "m_DefaultReferenceName": "_BaseColor",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 0.0
+    },
+    "isMainColor": false,
+    "m_ColorMode": 1
 }
 
 {

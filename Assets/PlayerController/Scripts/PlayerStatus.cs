@@ -1,51 +1,146 @@
+using NodeCanvas.BehaviourTrees;
 using System.Collections;
 using UnityEngine;
 
-public class PlayerStatus : MonoBehaviour, IDamagable 
+public class PlayerStatus : MonoBehaviour 
 {
-    private int health = 1000;
-    public static int life = 5;
-
+    [SerializeField] private int health = 50;
     public int Health { get { return health; } }
-    public bool IsAlive => health > 0;
-    private bool isGlitchy;
-    //private CheckpointManager checkpointManager;
-    private MaterialModifier matModifier;
 
-    private Animator _anim;
+    [SerializeField] private Sprite blueHead;
+    [SerializeField] private Sprite yellowHead;
+    [SerializeField] private Sprite greenHead;
+
+    [Header("Death")]
+    [SerializeField] private GameObject deathCanvas;
+
+    private int totalHealth;
+    private bool isGlitchy;
+    private CheckpointManager checkpointManager;
+    private MaterialModifier matModifier;
+    private SpectrumUI spectrum;
 
     private void Awake()
     {
-        //checkpointManager = FindObjectOfType<CheckpointManager>();
+        totalHealth = health;
+
+        checkpointManager = FindObjectOfType<CheckpointManager>();
         matModifier = GetComponentInChildren<MaterialModifier>();
+        spectrum = FindObjectOfType<SpectrumUI>();
     }
 
-    public void Damage(int damage)
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChangeStart;
+    }
+
+    private void OnDisable()
+    {
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChangeStart;
+    }
+
+    private void StanceManager_OnStanceChangeStart(Track track)
+    {
+        switch (track.genre)
+        {
+            case Genre.House:
+                SetHealthColor(Color.yellow);
+                spectrum.teknoImg.sprite = yellowHead;
+                break;
+            case Genre.Techno:
+                SetHealthColor(Color.cyan);
+                spectrum.teknoImg.sprite = blueHead;
+                break;
+            case Genre.Electronic:
+                spectrum.teknoImg.sprite = greenHead;
+                SetHealthColor(Color.green);
+                break;
+        }
+
+        void SetHealthColor(Color color)
+        {
+            for (int i = 0; i < spectrum.images.Count; i++)
+            {
+                if (spectrum.images[i].color != Color.red)
+                {
+                    spectrum.images[i].color = color;
+                }
+            }
+        }
+    }
+
+
+    public void Damage(int damage, bool needRespawn)
     {
         if (health > damage)
         {
             health -= damage;
-            
+
+            float ratio = ((float)health / totalHealth) * (float)spectrum.images.Count;
+
+            for (int i = 0; i < spectrum.images.Count; i++)
+            {
+                if (i > ratio)
+                {
+                    spectrum.images[i].color = Color.red;
+                }
+            }
+
             if (!isGlitchy)
             {
                 StartCoroutine(GlitchyDamageEffect());
+            }
+
+            if (needRespawn)
+            {
+                if (checkpointManager == null)
+                    checkpointManager = FindObjectOfType<CheckpointManager>();
+
+                checkpointManager.SetPlayerToSpawnPoint(transform);
             }
         }
         else
         {
             health = 0;
-            
-            if (life > 0)
+
+            for (int i = 0; i < spectrum.images.Count; i++)
             {
-                life -= 1;
-                //checkpointManager.SetPlayerToSpawnPoint(transform);
+                spectrum.images[i].color = Color.red;
             }
-            else
-            {
-                // lose game
-                //checkpointManager.SetPlayerToSpawnPoint(transform);
-            }
+
+            FindObjectOfType<PauseMenu>().gameObject.SetActive(false);
+
+            deathCanvas.SetActive(true);
         }
+    }
+
+    public void BackLobby()
+    {
+        StartCoroutine(BackToLobby());
+    }
+
+    private IEnumerator BackToLobby()
+    {
+        BehaviourTreeOwner[] enemies = FindObjectsOfType<BehaviourTreeOwner>();
+
+        foreach (BehaviourTreeOwner item in enemies)
+        {
+            item.gameObject.SetActive(false);
+            yield return null;
+        }
+
+        MaterialModifier modifier = GetComponentInChildren<MaterialModifier>();
+        modifier.ResetMaterial();
+
+        NonDestructible[] nonDestructibles = FindObjectsOfType<NonDestructible>();
+
+        foreach (NonDestructible item in nonDestructibles)
+        {
+            Destroy(item.gameObject);
+            yield return null;
+        }
+
+        FindObjectOfType<GameSceneManager>().LoadScene("1_Lobby");
     }
 
     IEnumerator GlitchyDamageEffect()
@@ -55,10 +150,5 @@ public class PlayerStatus : MonoBehaviour, IDamagable
         yield return new WaitForSeconds(1f);
         matModifier.GlitchyEffectOff();
         isGlitchy = false;
-    }
-
-    private void OnApplicationQuit()
-    {
-        life = 5;
     }
 }

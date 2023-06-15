@@ -1,10 +1,11 @@
 using NaughtyAttributes;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 
-public class PlayerController : MonoBehaviour, IKnockable
+public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
@@ -12,27 +13,29 @@ public class PlayerController : MonoBehaviour, IKnockable
     public static bool allowedAction { get; set; } = true;
 
     [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 7;
-    [SerializeField] private float airSpeed = 0.4f;
+    [SerializeField] private float moveSpeed = 11;
+    [SerializeField] private float airSpeed = 1.2f;
     [SerializeField] private float moveDrag = 4;
+    private float cacheSpeed;
     public float MoveSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
 
     [Header("Jump Settings")]
-    [SerializeField] private float jumpForce = 13f;
-    [SerializeField] private float fallMultiplier = 6.2f;
-    [SerializeField] private float lowJumpMultiplier = 1.7f;
+    [SerializeField] private float jumpForce = 23f;
+    [SerializeField] private float fallMultiplier = 10f;
+    [SerializeField] private float lowJumpMultiplier = 4f;
+    [SerializeField] private LayerMask disableJump;
     private bool isJumping;
+    public bool disableAction = false;
 
     [Header("Ground")]
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private float groundedRadius = 0.28f;
-    [SerializeField] private float groundedOffset = -0.14f;
+    [SerializeField] private float groundedRadius = 0.13f;
+    [SerializeField] private float groundedOffset = -0.11f;
     [SerializeField] private bool isGround;
 
     [Header("Animation Blend")]
-    [SerializeField] private float stanceChangeTime = 2.333f;
     [SerializeField] private float animMoveSpeed = 0.8f;
-    [SerializeField] private float acceleration = 5f;
+    [SerializeField] private float acceleration = 20f;
     [SerializeField] private float deceleration = 5f;
     private float velocity;
 
@@ -40,6 +43,7 @@ public class PlayerController : MonoBehaviour, IKnockable
     [SerializeField] private InputActionReference movementAction;
     [SerializeField] private InputActionReference jumpAction;
 
+    private PlayerStatus playerStatus;
     private Transform playerObj;
     private Transform camPos;
     private Rigidbody _rb;
@@ -55,6 +59,7 @@ public class PlayerController : MonoBehaviour, IKnockable
         if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.cyan * 0.5f);
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponentInChildren<Animator>();
+        playerStatus = GetComponent<PlayerStatus>();
         camPos = Camera.main.transform;
         playerObj = transform.GetChild(0);
 
@@ -66,6 +71,7 @@ public class PlayerController : MonoBehaviour, IKnockable
 
     private void OnEnable()
     {
+        cacheSpeed = moveSpeed;
         jumpAction.action.performed += Jump;
         StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }
@@ -78,32 +84,42 @@ public class PlayerController : MonoBehaviour, IKnockable
 
     private void StanceManager_OnStanceChange(Track track)
     {
+        
         _anim.SetTrigger(switchStance);
-
+        _rb.isKinematic = true;
+        StartCoroutine(EnableRB());
         switch (track.genre)
         {
             case Genre.House:
-                moveSpeed = 10.8f;
+                moveSpeed = cacheSpeed = 10.8f;
                 animMoveSpeed = 0.7f;
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.yellow * 0.5f);
                 break;
             case Genre.Techno:
-                moveSpeed = 10.9f;
+                moveSpeed = cacheSpeed = 10.9f;
                 animMoveSpeed = 0.7875f;
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.cyan * 0.5f);
                 break;
             case Genre.Electronic:
-                moveSpeed = 11;
+                moveSpeed = cacheSpeed = 11;
                 animMoveSpeed = 0.9f;
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.green * 0.5f);
                 break;
         }
+
+    }
+
+    private IEnumerator EnableRB()
+    {
+        yield return new WaitForSeconds(1.5f);
+        _rb.isKinematic = false;
     }
 
     private void Update()
     {
         Rotation();
         IsGround();
+        isActionDisable();
     }
 
     private void FixedUpdate()
@@ -120,12 +136,26 @@ public class PlayerController : MonoBehaviour, IKnockable
         Movement();
     }
 
+    private void isActionDisable()
+    {
+        disableAction = Physics.CheckSphere(transform.position, 0.5f, disableJump);
+
+        StanceManager.AllowPlayerSwitchStance = disableAction ? false : true;
+
+        if (disableAction)
+        {
+            _rb.drag = moveDrag;
+        }
+        
+
+    }
     private void IsGround()
     {
         //isGround = Physics.Raycast(transform.position, Vector3.down, transform.localScale.y * 0.5f + 0.2f, groundLayer);
 
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - groundedOffset, transform.position.z);
         isGround = Physics.CheckSphere(spherePosition, groundedRadius, groundLayer, QueryTriggerInteraction.Ignore);
+
 
         if (isGround)
         {
@@ -230,7 +260,8 @@ public class PlayerController : MonoBehaviour, IKnockable
     {
         if (!allowedAction || !allowedInput) return;
 
-        if (isGround && !isJumping)
+
+        if (isGround && !isJumping && !disableAction)
         {
             StartCoroutine(SetJump());
             _anim.ResetTrigger(jumpGrounded);
@@ -246,6 +277,17 @@ public class PlayerController : MonoBehaviour, IKnockable
         isJumping = true;
     }
 
+    public void Damage(int damage)
+    {
+        playerStatus.Damage(damage, false);
+
+        if (moveSpeed < cacheSpeed) return;
+
+        moveSpeed -= moveSpeed / 2;
+
+        StartCoroutine(RecoverSpeed());
+    }
+
     public void Knock(Vector3 direction, float power)
     {
         StartCoroutine(KnockBack(direction, power));
@@ -257,6 +299,12 @@ public class PlayerController : MonoBehaviour, IKnockable
         _rb.AddForce(direction * power, ForceMode.Impulse);
         yield return new WaitForSeconds(1.1f);
         allowedInput = true;
+    }
+
+    private IEnumerator RecoverSpeed()
+    {
+        yield return new WaitForSeconds(1f);
+        moveSpeed = cacheSpeed;
     }
 
     private void OnDrawGizmosSelected()

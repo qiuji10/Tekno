@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class UI_Gyro : MonoBehaviour
 {
@@ -11,16 +10,16 @@ public class UI_Gyro : MonoBehaviour
 
     private Vector2 minPos;
     private Vector2 maxPos;
-    private Gamepad controller = null;
     private RectTransform imageRect;
+    private Gyroscope gyro;
 
     void Start()
     {
-        if (Gamepad.current != null)
-            controller = DS4.getConroller();
-        
+        Input.gyro.updateInterval = 0.01f;
+        gyro = Input.gyro;
+        gyro.enabled = true;
 
-        imageRect = GetComponent<RectTransform>();
+        imageRect = transform as RectTransform;
 
         minPos.x = imageRect.anchoredPosition.x - space;
         minPos.y = imageRect.anchoredPosition.y - space;
@@ -31,17 +30,12 @@ public class UI_Gyro : MonoBehaviour
 
     void Update()
     {
-        
-
-        if (controller != null)
-        {
-            Vector2 newPos = imageRect.anchoredPosition;
-            Quaternion rotation = DS4.getRotation();
-            newPos.y -= rotation.x * sensitivity;
-            //newPos.x -= rotation.z * sensitivity;
-            //newPos.x = Mathf.Clamp(newPos.x, minPos.x, maxPos.x);
-            newPos.y = Mathf.Clamp(newPos.y, minPos.y, maxPos.y);
-            imageRect.anchoredPosition = newPos;
-        }
+        Vector2 newPos = imageRect.anchoredPosition;
+        Quaternion rotation = gyro.attitude;
+        newPos.y -= rotation.x * sensitivity;
+        newPos.x -= rotation.z * sensitivity;
+        newPos.x = Mathf.Clamp(newPos.x, minPos.x, maxPos.x);
+        newPos.y = Mathf.Clamp(newPos.y, minPos.y, maxPos.y);
+        imageRect.anchoredPosition = newPos;
     }
 }

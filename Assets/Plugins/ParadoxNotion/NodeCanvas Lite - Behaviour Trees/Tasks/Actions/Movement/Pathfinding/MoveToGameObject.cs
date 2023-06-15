@@ -53,7 +53,7 @@ namespace NodeCanvas.Tasks.Actions
 
         protected override void OnPause() { OnStop(); }
         protected override void OnStop() {
-            if ( agent.gameObject.activeSelf ) {
+            if ( agent.gameObject.activeSelf && agent.isOnNavMesh) {
                 agent.ResetPath();
             }
             lastRequest = null;

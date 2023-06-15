@@ -6,8 +6,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Events;
 
 public enum KeyInput { None, Circle, Cross, Square, Triangle }
+public enum Direction { Up, Down, Left, Right }
 
 public class Amplifier_V2 : MonoBehaviour
 {
@@ -15,40 +18,54 @@ public class Amplifier_V2 : MonoBehaviour
     [SerializeField] List<BeatSequence> beatSequence = new List<BeatSequence>();
     [SerializeField] BeatPoint beatPrefab;
 
-    [Header("UI Reference")]
-    [SerializeField] Canvas canvas;
-    [SerializeField] Transform sliderVisualParent;
-    [SerializeField] Transform beatVisualParent;
-    [SerializeField] TMP_Text countdownText;
-    [SerializeField] Image amplifierCoreImg;
-    [SerializeField] RectTransform speakerHealthBar;
-    [SerializeField] RectTransform amplifierHealthBar;
-    
-    [Header("Speaker")]
-    [SerializeField] private Minigame_Speaker speaker;
-    private Image speakerImg;
-
-    [Header("Hijack Successed")]
+    [Header("Hijack Succeeded")]
     [SerializeField] private List<EnemyBase> enemiesInControl;
     [SerializeField] private ParticleSystem particle;
+    public UnityEvent OnHijackSucceed;
 
     [Header("Hijack Failed")]
+    [SerializeField] private ParticleSystem controlledVFX;
     [SerializeField] private float knockBackRange = 10;
     [SerializeField] private float knockBackPower = 75;
 
+    #region Private Properties
+    // UI Reference
+    private Canvas canvas;
+    private Transform sliderVisualParent;
+    private Transform beatVisualParent;
+    private TMP_Text countdownText;
+    private Image amplifierCoreImg;
+    private RectTransform speakerHealthBar;
+    private RectTransform amplifierHealthBar;
+    private Image speakerImg;
+
+    private Minigame_Speaker speaker;
+    private DecalProjector decalProjector;
     private PlayerController playerController;
     private EventInvoker eventInvoker;
     private List<BeatData> beatData = new List<BeatData>();
     private List<BeatPoint> beatObjects = new List<BeatPoint>();
-    private List<Slider> speakerSliders = new List<Slider>();
-    private List<Slider> amplifierSliders = new List<Slider>();
-    private int index, totalRound, speakerHealth, amplifierHealth, countdown = 4;
+    private List<CustomSlider> speakerSliders = new List<CustomSlider>();
+    private List<CustomSlider> amplifierSliders = new List<CustomSlider>();
+    private int index, speakerHealth, amplifierHealth, countdown = 4;
     private bool startGame, isSpawning;
 
     private UI_Shake speakerHealthShake, amplifierHealthShake;
+    #endregion
 
-    private void Awake()
+    #region Default Function
+    private void Start()
     {
+        MinigameData data = MinigameData.Instance;
+        canvas = data.canvas;
+        sliderVisualParent = data.sliderVisualParent;
+        beatVisualParent = data.beatVisualParent;
+        countdownText = data.countdownText;
+        amplifierCoreImg = data.ampCoreImg;
+        speakerHealthBar = data.speakerHealthBar;
+        amplifierHealthBar = data.ampHealthBar;
+        speaker = data.speaker;
+
         playerController = FindObjectOfType<PlayerController>();
         eventInvoker = GetComponent<EventInvoker>();
         speakerImg = speaker.GetComponent<Image>();
@@ -56,8 +73,8 @@ public class Amplifier_V2 : MonoBehaviour
         speakerHealthShake = speakerHealthBar.GetComponent<UI_Shake>();
         amplifierHealthShake = amplifierHealthBar.GetComponent<UI_Shake>();
 
-        speakerSliders = speakerHealthBar.GetComponentsInChildren<Slider>().ToList();
-        amplifierSliders = amplifierHealthBar.GetComponentsInChildren<Slider>().ToList();
+        speakerSliders = speakerHealthBar.GetComponentsInChildren<CustomSlider>().ToList();
+        amplifierSliders = amplifierHealthBar.GetComponentsInChildren<CustomSlider>().ToList();
 
         countdownText.gameObject.SetActive(false);
 
@@ -65,7 +82,9 @@ public class Amplifier_V2 : MonoBehaviour
 
         speakerHealth = 3;
         amplifierHealth = 3;
-        totalRound = speakerHealth + amplifierHealth;
+        decalProjector = GetComponentInChildren<DecalProjector>();
+        decalProjector.material = new Material(decalProjector.material);
+        decalProjector.material.SetColor("_Color", Color.red);
     }
 
     private void OnEnable()
@@ -73,22 +92,18 @@ public class Amplifier_V2 : MonoBehaviour
         TempoManager.OnBeat += TempoManager_OnBeat;
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            Resetter();
-        }
-    }
-
     private void OnDisable()
     {
         TempoManager.OnBeat -= TempoManager_OnBeat;
-    }
+    } 
+    #endregion
 
     public void StartPlay()
     {
+        if (StanceManager.curTrack.genre != Genre.Techno) return;
+
         LeanTween.reset();
+
         StanceManager.AllowPlayerSwitchStance = false;
 
         eventInvoker.enabled = false;
@@ -114,7 +129,7 @@ public class Amplifier_V2 : MonoBehaviour
         speaker.touchPoint = beatData[index].position;
 
         float timeToBeatCount = TempoManager.GetTimeToBeatCount(1);
-        speakerImg.rectTransform.LeanMoveLocal(new Vector2(-900, 0), timeToBeatCount);
+        speakerImg.rectTransform.LeanMoveLocal(new Vector2(-850, 0), timeToBeatCount);
         amplifierCoreImg.rectTransform.LeanMoveLocal(beatData[beatData.Count - 1].position, timeToBeatCount);
 
         PlayerController.allowedInput = false;
@@ -130,10 +145,11 @@ public class Amplifier_V2 : MonoBehaviour
 
         if (Gamepad.current != null) Gamepad.current.SetMotorSpeeds(2f, 3f);
 
-        Slider slider = speakerHealthBar.transform.GetChild(speakerHealth).GetComponent<Slider>();
+        speakerImg.sprite = MinigameData.Instance.speakerOff;
+        CustomSlider slider = speakerSliders[speakerHealth];
         float timeToBeatCount = TempoManager.GetTimeToBeatCount(1);
         LeanTween.value(slider.gameObject, 1, 0, timeToBeatCount).setOnUpdate((float blend) => {
-            slider.value = blend;
+            slider.Value = blend;
         }).setOnComplete(() =>
         {
             InputSystem.PauseHaptics();
@@ -150,10 +166,11 @@ public class Amplifier_V2 : MonoBehaviour
 
         if (Gamepad.current != null) Gamepad.current.SetMotorSpeeds(2f, 3f);
 
-        Slider slider = amplifierHealthBar.transform.GetChild(amplifierHealth).GetComponent<Slider>();
+        speakerImg.sprite = MinigameData.Instance.speakerSuccess;
+        CustomSlider slider = amplifierSliders[amplifierHealth];
         float timeToBeatCount = TempoManager.GetTimeToBeatCount(1);
         LeanTween.value(slider.gameObject, 1, 0, timeToBeatCount).setOnUpdate((float blend) => {
-            slider.value = blend;
+            slider.Value = blend;
         }).setOnComplete(() =>
         {
             InputSystem.PauseHaptics();
@@ -165,43 +182,51 @@ public class Amplifier_V2 : MonoBehaviour
     {
         if (amplifierHealth <= 0)
         {
-            foreach (Slider speakerSlider in speakerSliders)
+            foreach (CustomSlider speakerSlider in speakerSliders)
             {
-                speakerSlider.value = 1f;
+                //speakerSlider.value = 1f;
+                speakerSlider.Value = 1f;
             }
 
-            foreach (Slider amplifierSlider in amplifierSliders)
+            foreach (CustomSlider amplifierSlider in amplifierSliders)
             {
-                amplifierSlider.value = 1f;
+                //amplifierSlider.value = 1f;
+                amplifierSlider.Value = 1f;
             }
 
             foreach (EnemyBase e in enemiesInControl)
             {
-                if (e != null)
+                if (e != null && e.gameObject.activeInHierarchy)
                 {
                     e.FreeEnemy();
                 }
             }
 
+            OnHijackSucceed?.Invoke();
+            StartCoroutine(HackedDecal());
             StanceManager.AllowPlayerSwitchStance = true;
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
             speakerHealth = 3;
 
+            PauseMenu.canPause = true;
             yield return new WaitForSeconds(0.75f);
-            eventInvoker.enabled = true;
+
+            enabled = false;
+
+            //eventInvoker.enabled = true;
         }
         else if (speakerHealth <= 0)
         {
-            foreach (Slider speakerSlider in speakerSliders)
+            foreach (CustomSlider speakerSlider in speakerSliders)
             {
-                speakerSlider.value = 1f;
+                speakerSlider.Value = 1f;
             }
 
-            foreach (Slider amplifierSlider in amplifierSliders)
+            foreach (CustomSlider amplifierSlider in amplifierSliders)
             {
-                amplifierSlider.value = 1f;
+                amplifierSlider.Value = 1f;
             }
 
             StanceManager.AllowPlayerSwitchStance = true;
@@ -219,10 +244,11 @@ public class Amplifier_V2 : MonoBehaviour
                 if (collideData[i].TryGetComponent(out IKnockable knockable))
                 {
                     Vector3 direction = (collideData[i].transform.position - transform.position).normalized;
-                    knockable.Knock(new Vector3(direction.x, 0.1f, direction.z), knockBackPower);
+                    knockable.Knock(new Vector3(direction.x, 0.5f, direction.z), knockBackPower);
                 }
             }
 
+            PauseMenu.canPause = true;
             yield return new WaitForSeconds(0.75f);
             eventInvoker.enabled = true;
         }
@@ -230,6 +256,7 @@ public class Amplifier_V2 : MonoBehaviour
         {
             yield return new WaitForSeconds(0.75f);
             Resetter();
+            PauseMenu.canPause = false;
             yield return null;
             StartPlay();
         }
@@ -237,6 +264,8 @@ public class Amplifier_V2 : MonoBehaviour
 
     private void TempoManager_OnBeat()
     {
+        //controlledVFX.Play();
+
         if (!startGame) return;
 
         if (isSpawning)
@@ -245,22 +274,26 @@ public class Amplifier_V2 : MonoBehaviour
             {
                 BeatPoint beatPoint = Instantiate(beatPrefab, beatVisualParent.transform);
                 beatPoint.rect.anchoredPosition = beatData[index].position;
+                
                 speakerImg.transform.SetAsLastSibling();
+                speakerImg.sprite = MinigameData.Instance.speakerReady;
+
+                MinigameData.Instance.promptText.text = "<color=blue>Hacking in progress...</color>";
 
                 if (index < beatData.Count - 1)
                 {
                     float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
                     PositionUtility.CalculateSliderInfo(beatData[index].position, beatData[index + 1].position, out float xPos, out Direction dir, out float scale);
-                    beatPoint.Scale(sliderVisualParent, xPos, dir, scale, timeToBeatCount);
+                    beatPoint.Scale(1, sliderVisualParent, xPos, dir, scale, timeToBeatCount);
                 }
 
                 switch (beatData[index].key)
                 {
-                    case KeyInput.Circle:   beatPoint.img.sprite = SpriteData.Instance.circle;  break;
-                    case KeyInput.Cross:    beatPoint.img.sprite = SpriteData.Instance.cross;   break;
-                    case KeyInput.Square:   beatPoint.img.sprite = SpriteData.Instance.square;  break;
-                    case KeyInput.Triangle: beatPoint.img.sprite = SpriteData.Instance.triangle;break;
-                    case KeyInput.None:     beatPoint.img.sprite = SpriteData.Instance.skip;    break;
+                    case KeyInput.Circle:   beatPoint.img.sprite = SpriteData.Instance.circle;      beatPoint.img.color = HexColor("#DE3839");    break;
+                    case KeyInput.Cross:    beatPoint.img.sprite = SpriteData.Instance.cross;       beatPoint.img.color = HexColor("#7EABE1");    break;
+                    case KeyInput.Square:   beatPoint.img.sprite = SpriteData.Instance.square;      beatPoint.img.color = HexColor("#CE8ED6");    break;
+                    case KeyInput.Triangle: beatPoint.img.sprite = SpriteData.Instance.triangle;    beatPoint.img.color = HexColor("#4ADB7B");    break;
+                    case KeyInput.None:     beatPoint.img.sprite = SpriteData.Instance.skip;        beatPoint.img.color = Color.grey;             break;
                 }
 
                 beatObjects.Add(beatPoint);
@@ -268,7 +301,7 @@ public class Amplifier_V2 : MonoBehaviour
 
                 if (index == beatData.Count)
                 {
-                    countdownText.text = "GO";
+                    countdownText.text = "GO!";
                 }
                 else if (index > beatData.Count - countdown)
                 {
@@ -309,10 +342,47 @@ public class Amplifier_V2 : MonoBehaviour
                 speaker.startTrace = true;
                 speaker.currentBeat++;
                 index++;
-                float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
+                //float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
+
+                float timeToBeatCount = (60f / 140f);
+                //speaker.touchPoint = beatObjects[index].img.rectTransform.position;
+                //speaker.key = beatData[index].key;
+                //speaker.beatPoint = beatObjects[index];
+
+                speaker.beatPoint = beatObjects[index];
+
+                if (index > 0)
+                {
+                    speaker.prevTouchPoint = beatObjects[index - 1].img.rectTransform.position;
+                }
+
                 speaker.touchPoint = beatObjects[index].img.rectTransform.position;
                 speaker.key = beatData[index].key;
-                speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutCirc();
+
+                StartCoroutine(delayBeatSwitch());
+
+                int indexCount = index;
+
+                speakerImg.sprite = MinigameData.Instance.speakerOn;
+
+                if (index > 0)
+                {
+                    if (index < beatData.Count - 1)
+                        indexCount = index - 1;
+
+                    if (index == beatData.Count - 1)
+                    {
+                        indexCount--;
+                    }
+
+                    PositionUtility.CalculateSliderInfo(beatData[indexCount].position, beatData[indexCount + 1].position, out float xPos, out Direction dir, out float scale);
+                    beatObjects[indexCount].Scale(2, sliderVisualParent, xPos, dir, scale, timeToBeatCount);
+                }
+                
+                //speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutCirc();
+                speaker.speakerMovement = speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutExpo();
+
+                //StartCoroutine(delayMoveSpeaker());
 
             }
             else if (index == beatData.Count - 1)
@@ -320,20 +390,6 @@ public class Amplifier_V2 : MonoBehaviour
                 speaker.currentBeat++;
                 index++;
             }
-        }
-    }
-
-    private float GetTimeToInput(int index)
-    {
-        float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
-
-        if (beatData[index].key == KeyInput.None)
-        {
-            return timeToBeatCount + GetTimeToInput(index + 1);
-        }
-        else
-        {
-            return timeToBeatCount;
         }
     }
 
@@ -365,7 +421,78 @@ public class Amplifier_V2 : MonoBehaviour
         speaker.startTrace = false;
         speaker.failed = false;
 
-        canvas.gameObject.SetActive(false);
+        //canvas.gameObject.SetActive(false);
+    }
+
+    private IEnumerator delayMoveSpeaker()
+    {
+        float timeToBeatCount = (60f / 140f) * 0.5f;
+
+        yield return new WaitForSeconds(timeToBeatCount);
+
+        speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount);
+
+        speaker.startTrace = true;
+    }
+
+    private IEnumerator delayBeatSwitch()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        speaker.key = beatData[index].key;
+
+    }
+
+    #region Utility
+    private IEnumerator HackedDecal()
+    {
+        float timer = 0;
+        float fadeTime = 1;
+        string radius = "_Radius";
+
+        while (decalProjector.material.GetFloat(radius) > 0)
+        {
+            timer -= Time.deltaTime;
+            float ratio = Mathf.Clamp(timer / fadeTime, 0f, 1f);
+            decalProjector.material.SetFloat(radius, ratio);
+            yield return null;
+        }
+
+        decalProjector.material.SetFloat(radius, 0);
+        decalProjector.material.SetColor("_Color", Color.blue);
+        timer = 0;
+
+        decalProjector.material.SetTexture("_Base_Map", MinigameData.Instance.speakerDecal);
+
+        while (decalProjector.material.GetFloat(radius) < 1)
+        {
+            timer += Time.deltaTime;
+            float ratio = Mathf.Clamp(timer / fadeTime, 0f, 1f);
+            decalProjector.material.SetFloat(radius, ratio);
+            yield return null;
+        }
+
+
+    }
+
+    private float GetTimeToInput(int index)
+    {
+        float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
+
+        if (beatData[index].key == KeyInput.None)
+        {
+            return timeToBeatCount + GetTimeToInput(index + 1);
+        }
+        else
+        {
+            return timeToBeatCount;
+        }
+    }
+
+    private static Color HexColor(string code)
+    {
+        ColorUtility.TryParseHtmlString(code, out Color color);
+        return color;
     }
 
     private void OnDrawGizmos()
@@ -373,9 +500,8 @@ public class Amplifier_V2 : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, knockBackRange);
     }
+    #endregion
 }
-
-public enum Direction { Up, Down, Left, Right }
 
 public static class PositionUtility
 {
@@ -412,4 +538,3 @@ public static class PositionUtility
         scaleX = directionVector.magnitude;
     }
 }
-

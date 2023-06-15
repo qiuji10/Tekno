@@ -65,25 +65,25 @@ namespace NodeCanvas.Tasks.Conditions
 
         public override void OnDrawGizmosSelected() {
             if ( agent != null ) {
-                //Gizmos.DrawLine(agent.position, agent.position + offset);
-                //Gizmos.DrawLine(agent.position + offset, agent.position + offset + ( agent.forward * maxDistance.value ));
-                //Gizmos.DrawWireSphere(agent.position + offset + ( agent.forward * maxDistance.value ), 0.1f);
-                //Gizmos.DrawWireSphere(agent.position, awarnessDistance.value);
-                //Gizmos.matrix = Matrix4x4.TRS(agent.position + offset, agent.rotation, Vector3.one);
-                //Gizmos.DrawFrustum(Vector3.zero, viewAngle.value, 5, 0, 1f);
-
-                Matrix4x4 previousMatrix = Gizmos.matrix;
+                Gizmos.DrawLine(agent.position, agent.position + offset);
                 Gizmos.DrawLine(agent.position + offset, agent.position + offset + (agent.forward * maxDistance.value));
+                Gizmos.DrawWireSphere(agent.position + offset + (agent.forward * maxDistance.value), 0.1f);
                 Gizmos.DrawWireSphere(agent.position, awarnessDistance.value);
                 Gizmos.matrix = Matrix4x4.TRS(agent.position + offset, agent.rotation, Vector3.one);
-
-                Gizmos.DrawLine(agent.position, agent.position + offset);
-                
-                Gizmos.DrawWireSphere(agent.position + offset + (agent.forward * maxDistance.value), 0.1f);
-                
                 Gizmos.DrawFrustum(Vector3.zero, viewAngle.value, 5, 0, 1f);
 
-                Gizmos.matrix = previousMatrix;
+                //Matrix4x4 previousMatrix = Gizmos.matrix;
+                //Gizmos.DrawLine(agent.position + offset, agent.position + offset + (agent.forward * maxDistance.value));
+                //Gizmos.DrawWireSphere(agent.position, awarnessDistance.value);
+                //Gizmos.matrix = Matrix4x4.TRS(agent.position + offset, agent.rotation, Vector3.one);
+
+                //Gizmos.DrawLine(agent.position, agent.position + offset);
+
+                //Gizmos.DrawWireSphere(agent.position + offset + (agent.forward * maxDistance.value), 0.1f);
+
+                //Gizmos.DrawFrustum(Vector3.zero, viewAngle.value, 5, 0, 1f);
+
+                //Gizmos.matrix = previousMatrix;
             }
         }
     }

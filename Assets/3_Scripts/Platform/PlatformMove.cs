@@ -67,14 +67,18 @@ public class PlatformMove : MonoBehaviour, IPlatform
     private void Awake()
     {
         // Set the track field to the current track
+        StanceManager_OnStanceChange(StanceManager.curTrack);
         track = currentTrack;
     }
 
     private void Update()
     {
-        if (isMoving)
+        if (isMoving && !PauseMenu.isPause)
         {
-            MoveToPoint(points[currentPoint].position);
+            Vector3 newPosition = points[currentPoint].position;
+
+            if (!Mathf.Approximately(newPosition.x, float.NaN) && !Mathf.Approximately(newPosition.y, float.NaN) && !Mathf.Approximately(newPosition.z, float.NaN))
+                MoveToPoint(points[currentPoint].position);
         }
     }
 
