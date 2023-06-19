@@ -127,18 +127,18 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         switch (track.genre)
         {
             case Genre.House:
-                moveSpeed = cacheSpeed = 10.8f;
-                animMoveSpeed = 0.7f;
+                //moveSpeed = cacheSpeed = 10.8f;
+                //animMoveSpeed = 0.7f;
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.yellow * 0.5f);
                 break;
             case Genre.Techno:
-                moveSpeed = cacheSpeed = 10.9f;
-                animMoveSpeed = 0.7875f;
+                //moveSpeed = cacheSpeed = 10.9f;
+               // animMoveSpeed = 0.7875f;
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.cyan * 0.5f);
                 break;
             case Genre.Electronic:
-                moveSpeed = cacheSpeed = 11;
-                animMoveSpeed = 0.9f;
+               // moveSpeed = cacheSpeed = 11;
+              //  animMoveSpeed = 0.9f;
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.green * 0.5f);
                 break;
         }

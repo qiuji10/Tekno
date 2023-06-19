@@ -36,7 +36,7 @@ public class Beat_UI : MonoBehaviour
 
         if (index == 4)
         {
-            beatText = "GO!";
+            //beatText = "GO!";
             index = 0;
         }
 
