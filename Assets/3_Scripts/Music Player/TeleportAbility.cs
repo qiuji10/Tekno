@@ -17,12 +17,14 @@ public class TeleportAbility : MonoBehaviour
 
     [Header("Charging values")]
     [SerializeField] private InputActionReference chargingAction;
-    public float maxChargeLevel = 90f;
+    public float maxChargeLevel = 50f;
     public float initialChargeRate = 10f;
     public float maxChargeRate = 50f;
     public float chargeIncreaseAmount = 5f;
     public float rapidPressThreshold = 0.1f;
     public float decayRate = 5f;
+    [SerializeField] private int numOfNodes = 0;
+    [SerializeField] private int successPress = -1;
     [SerializeField]private Slider chargeSlider;
 
     private float currentChargeLevel = 0f;
@@ -36,6 +38,7 @@ public class TeleportAbility : MonoBehaviour
         //teleportAction.action.performed += Teleport;
         chargingAction.action.performed += Charge;
         currentChargeLevel = 0f;
+        chargeSlider.maxValue = maxChargeLevel;
         LeanTween.reset();
     }
 
@@ -59,28 +62,26 @@ public class TeleportAbility : MonoBehaviour
         {
             keyIsDown = true;
             chargeSlider.gameObject.SetActive(true);
+            successPress++;
+            numOfNodes = motherNode.teleportPoints.Count;
         }
         else
         {
             keyIsDown = false;
             chargeSlider.gameObject.SetActive(false);
             currentChargeLevel = 0f;
+            successPress = -1;
         }
 
         
-
-        if(currentChargeLevel >= 93)
-        {
-            isMaxCharge = true;
-            Teleport();
-            chargeSlider.gameObject.SetActive(false);
-        }
+        Debug.Log(successPress);
 
     }
 
     private void Update()
     {
-        if (keyIsDown)
+        /* OLD CHARGE SYSTEM
+          if (keyIsDown)
         {
             keyIsDown = false;
             timeSinceLastPress = 0f;
@@ -114,7 +115,7 @@ public class TeleportAbility : MonoBehaviour
         }
         else
         {
-           
+
 
             if (!isMaxCharge)
             {
@@ -129,15 +130,63 @@ public class TeleportAbility : MonoBehaviour
                 chargeSlider.gameObject.SetActive(false);
             }
         }
+        */
 
+        //New charge system
+        if (currentChargeLevel == maxChargeLevel)
+        {
+            isMaxCharge = true;
+        }
+
+        if (!isMaxCharge && keyIsDown)
+        {
+            currentChargeLevel += decayRate * Time.deltaTime;
+            currentChargeLevel = Mathf.Clamp(currentChargeLevel, 0f, maxChargeLevel);
+            chargeSlider.value = currentChargeLevel;
+            
+        }
+        
+        
+
+        if(isMaxCharge)
+        {
+            if (successPress == numOfNodes)
+            {
+                Debug.Log("Here");
+                CanTeleport();
+            }
+            
+        }
+
+        if(successPress > numOfNodes)
+        {
+            isMaxCharge = false;
+            keyIsDown = false;
+            chargeSlider.gameObject.SetActive(false);
+            successPress = -1;
+            currentChargeLevel = 0;
+        }
+       
+
+
+    }
+
+    void CanTeleport()
+    {
+        isMaxCharge = true;
+        keyIsDown = false;
+        Teleport();
+        chargeSlider.gameObject.SetActive(false);
+        successPress = -1;
     }
     private void Teleport()
     {
+        
         motherNode = tpSensor.GetNearestObject<MotherNode>();
 
         rb.isKinematic = false;
 
-        if (isMaxCharge && motherNode != null)
+        if (isMaxCharge)
         {
             StartCoroutine(TeleportToNodes());
         }
