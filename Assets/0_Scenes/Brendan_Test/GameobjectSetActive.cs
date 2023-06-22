@@ -46,6 +46,11 @@ public class GameobjectSetActive : MonoBehaviour
             }
         }
     }
+
+    public void Dissolve()
+    {
+        StartCoroutine(DissolveInactiveList()); // dissolve the inactive game objects
+    }
 }
 
 

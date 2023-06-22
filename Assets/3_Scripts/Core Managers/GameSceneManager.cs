@@ -13,9 +13,12 @@ public class GameSceneManager : MonoBehaviour
 
     public List<GameObject> objectsToBeTransfer = new List<GameObject>();
 
+    private Animator crossFade;
+
     private void Awake()
     {
         OnSceneInitialization?.Invoke();
+       
     }
 
     public void LoadScene(string sceneName)
@@ -109,5 +112,19 @@ public class GameSceneManager : MonoBehaviour
         }
 
         SceneManager.UnloadSceneAsync(sceneName);
+    }
+
+    public void LoadSceneWithFade(string sceneName)
+    {
+        StartCoroutine(PlayCrossFade(sceneName, LoadSceneMode.Single));
+
+    }
+
+   private IEnumerator PlayCrossFade(string sceneName, LoadSceneMode mode)
+    {
+        crossFade.SetTrigger("Start");
+
+        yield return new WaitForSeconds(2);
+        yield return StartCoroutine(StartLoadingScene(sceneName, LoadSceneMode.Single));
     }
 }
