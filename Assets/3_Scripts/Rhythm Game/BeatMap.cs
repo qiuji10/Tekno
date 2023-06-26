@@ -41,12 +41,17 @@ public class BeatMap : ScriptableObject
     [OnOpenAsset(1)]
     public static bool OpenGameStateWindow(int instanceID, int line)
     {
+        // Check if the asset being opened is of type BeatMap
+        BeatMap beatmap = EditorUtility.InstanceIDToObject(instanceID) as BeatMap;
+        if (beatmap == null)
+            return false;
+
         bool windowIsOpen = EditorWindow.HasOpenInstances<BeatMapEditorWindow>();
 
         if (!windowIsOpen)
         {
             BeatMapEditorWindow window = EditorWindow.CreateWindow<BeatMapEditorWindow>();
-            window.beatmap = EditorUtility.InstanceIDToObject(instanceID) as BeatMap;
+            window.beatmap = beatmap;
         }
         else
         {
@@ -56,6 +61,7 @@ public class BeatMap : ScriptableObject
         // Window should now be open, proceed to next step to open file
         return false;
     }
+
 }
 
 [Serializable]
