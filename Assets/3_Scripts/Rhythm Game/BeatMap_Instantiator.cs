@@ -33,35 +33,6 @@ public class BeatMap_Instantiator : MonoBehaviour
         notesPool.Initialize(tapNotePrefab, 20);
     }
 
-    public void SpawnNote(NoteData data, float timeTaken, float distance)
-    {
-        NoteObject note = null;
-
-        switch (data.type)
-        {
-            case NoteType.Tap: note = notesPool.GetPooledObject(); break;
-            case NoteType.Hold: note = Instantiate(holdNotePrefab); break;
-        }
-
-        note.tapPosition = data.tapPosition;
-        note.type = data.type;
-        note.lane = data.lane;
-        //note.spawnTime = spawnTime;
-        //note.beatHitTime = beatHitTime;
-        //note.totalTime = beatHitTime - spawnTime;
-
-
-
-
-        switch (data.lane)
-        {
-            case Lane.Lane1: note.InitData(lane1.startPos.position, lane1.endPos.position, lane1.parentLane); break;
-            case Lane.Lane2: note.InitData(lane2.startPos.position, lane2.endPos.position, lane2.parentLane); break;
-            case Lane.Lane3: note.InitData(lane3.startPos.position, lane3.endPos.position, lane3.parentLane); break;
-            case Lane.Lane4: note.InitData(lane4.startPos.position, lane4.endPos.position, lane4.parentLane); break;
-        }
-    }
-
     public void SpawnNote(NoteData noteData, float position)
     {
         float distance = 60f;
@@ -93,7 +64,7 @@ public class BeatMap_Instantiator : MonoBehaviour
 
         Vector3 notePosition = lane.endPos.position + (lane.startPos.position - lane.endPos.position).normalized * noteDistance;
 
-        note.InitData(notePosition, lane.parentLane, lane.endPos);
+        note.InitData(notePosition, lane.endPos.position);
 
         OnNoteSpawn?.Invoke(note);
     }
