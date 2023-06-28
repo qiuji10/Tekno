@@ -1,7 +1,6 @@
 using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BeatMap_Sequencer : MonoBehaviour
@@ -23,67 +22,6 @@ public class BeatMap_Sequencer : MonoBehaviour
         generator.OnNoteSpawn -= Generator_OnNoteSpawn;
     }
 
-    [Button]
-    public void StartPlay()
-    {
-        AssignNotesToSequence(beatmap);
-        StartCoroutine(Generator());
-    }
-
-    /// <summary>
-    /// Sequencer Main Logic-Runner
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator Generator()
-    {
-        int bpm = beatmap.bpm;
-        int division = (int)beatmap.division;
-        Vector2Int timeSignature = beatmap.timeSignature;
-
-        float secondPerBeat = 60f / bpm;
-        float divPerBeat = division / timeSignature.x;
-        float divPerSec = secondPerBeat / divPerBeat;
-
-        int currentPosition = 0;
-        int audioStartPosition = GetFirstAvailableTapPosition();
-
-        float delay = divPerSec * audioStartPosition;
-
-        while (currentPosition <= sequence.Count)
-        {
-            if (sequence.ContainsKey(currentPosition))
-            {
-                NoteData[] notesArray = sequence[currentPosition];
-                for (int i = 0; i < notesArray.Length; i++)
-                {
-                    NoteData noteData = notesArray[i];
-
-                    if (noteData != null)
-                    {
-                        // Process the note, e.g., instantiate game object, trigger event, etc.
-                        // Here have 4 lane, so in maximum, it will loop 4 times
-                        // Debug.Log("Note generated at position " + currentPosition + ", Lane: " + noteData.lane + ", Type: " + noteData.type);
-
-                        float currentTime = Time.time;
-
-                        //float beatTime = (divPerSec * noteData.tapPosition);
-
-                        float posTime = currentTime + delay;
-
-                        //generator.SpawnNote(noteData, currentTime, posTime);
-
-                        Debug.Log($"currentTime {currentTime} - beatTime {posTime} - totalTime = {posTime - currentTime}");
-                    }
-                }
-            }
-
-            
-            yield return new WaitForSeconds(divPerSec);
-
-            currentPosition++;
-        }
-    }
-
     [SerializeField] private List<NoteObject> rhythmNotes = new List<NoteObject>();
 
     private void Generator_OnNoteSpawn(NoteObject note)
@@ -91,28 +29,21 @@ public class BeatMap_Sequencer : MonoBehaviour
         rhythmNotes.Add(note);
     }
 
-    [Button]
-    private void GeneratorV2()
+    /// <summary>
+    /// Sequencer Main Logic-Runner
+    /// </summary>
+    /// <returns></returns>
+    [Button("Start Play")]
+    public void Sequencer_PlaceNotes()
     {
         AssignNotesToSequence(beatmap);
-        int bpm = beatmap.bpm;
-        int division = (int)beatmap.division;
-        Vector2Int timeSignature = beatmap.timeSignature;
-
-        float secondPerBeat = 60f / bpm;
-        float divPerBeat = division / timeSignature.x;
-        float divPerSec = secondPerBeat / divPerBeat;
 
         int currentPosition = 0;
-        int audioStartPosition = GetFirstAvailableTapPosition();
-
-        float delay = divPerSec * audioStartPosition;
-
 
         while (currentPosition <= sequence.Count)
         {
             if (sequence.ContainsKey(currentPosition))
-            {
+            {   
                 NoteData[] notesArray = sequence[currentPosition];
                 for (int i = 0; i < notesArray.Length; i++)
                 {
@@ -120,7 +51,9 @@ public class BeatMap_Sequencer : MonoBehaviour
 
                     if (noteData != null)
                     {
-                        generator.SpawnNote(noteData, noteData.tapPosition);
+                        float timeTakenToDistance = ((60f / beatmap.bpm) / ((float)beatmap.division / beatmap.timeSignature.x)) * noteData.tapPosition;
+
+                        generator.SpawnNote(noteData, timeTakenToDistance);
                     }
                 }
             }
@@ -129,37 +62,25 @@ public class BeatMap_Sequencer : MonoBehaviour
         }
 
         _audio.Play();
-        startPlay = true;
     }
-
-    private bool startPlay;
 
     private void Update()
     {
         for (int i = 0; i < rhythmNotes.Count; i++)
         {
-            rhythmNotes[i].Process();
-        }
-    }
+            NoteObject note = rhythmNotes[i];
 
-    /// <summary>
-    /// This function is for getting the first available beat in beatmap, to determine which position on the map to play the audio
-    /// </summary>
-    /// <returns></returns>
-    private int GetFirstAvailableTapPosition()
-    {
-        foreach (NoteData[] notesArray in sequence.Values)
-        {
-            foreach (NoteData note in notesArray)
+            if (!note.SurpassEndPos && note.SurpassStartPos && !note.visualEnabled)
             {
-                if (note != null && note.tapPosition > 0)
-                {
-                    return note.tapPosition;
-                }
+                note.EnableVisual();
             }
+            else if (note.SurpassEndPos)
+            {
+                note.DisableVisual();
+            }
+            
+            note.Process();
         }
-
-        return 0; // Return 0 if no available tap position is found
     }
 
     public void AssignNotesToSequence(BeatMap beatmap)
@@ -200,7 +121,7 @@ public class BeatMap_Sequencer : MonoBehaviour
     }
 
     /// <summary>
-    /// This is a Note class converter, mainly used for json data R/W
+    /// This is a Note class converter
     /// </summary>
     /// <param name="beatmap"></param>
     /// <param name="tapPosition"></param>
@@ -239,7 +160,9 @@ public class BeatMap_Sequencer : MonoBehaviour
 
     private void AddNullNotesToSequence(int position)
     {
+#nullable enable
         NoteData?[] notesArray = new NoteData?[4];
+#nullable disable
         sequence.Add(position, notesArray);
     }
 
@@ -247,15 +170,20 @@ public class BeatMap_Sequencer : MonoBehaviour
     {
         if (!sequence.ContainsKey(position))
         {
+#nullable enable
             NoteData?[] notesArray = new NoteData?[4];
+#nullable disable
             notesArray[(int)note.lane] = note;
             sequence.Add(position, notesArray);
         }
         else
         {
+#nullable enable
             NoteData?[] notesArray = sequence[position];
+#nullable disable
             notesArray[(int)note.lane] = note;
             sequence[position] = notesArray;
         }
     }
 }
+

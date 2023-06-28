@@ -1,46 +1,61 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
-using UnityEngine.UIElements;
 
 public class NoteObject : MonoBehaviour
 {
     public Lane lane;
     public NoteType type;
 
-    public float beatHitTime;
-    public float spawnTime;
-
-    public float totalTime;
-    private float timer;
-
     public int tapPosition;
     public int holdToPosition;
 
-    private Vector3 startPosition;
-    private Vector3 endPosition;
+    public bool SurpassEndPos => Vector3.Dot(transform.position - endPos, transform.forward) < 0f;
+    public bool SurpassStartPos => Vector3.Dot(transform.position - startPos, transform.forward) < 0f;
+    public bool visualEnabled;
+
+    private float speed;
+    private Vector3 startPos;
+    private Vector3 endPos;
+
+    private MeshRenderer _mesh;
+
+    private void Awake()
+    {
+        _mesh = GetComponent<MeshRenderer>();
+    }
 
     public void Process()
     {
-        float dist = Vector3.Distance(startPosition, endPosition);
-
-        float time = ((60f / 140f) / 2f) * tapPosition;
-
-        float speed = (dist / time);
-
         transform.position += speed * -transform.forward * Time.deltaTime;
     }
 
-    public void InitData(Vector3 start, Vector3 end)
+    public void InitNoteData(Vector3 position, LaneData lane, float speed)
     {
-        transform.position = start;
+        transform.position = position;
+        transform.rotation = Quaternion.LookRotation((lane.startPos.position - lane.endPos.position).normalized);
 
-        startPosition = start;
-        endPosition = end;
+        startPos = lane.startPos.position;
+        endPos = lane.endPos.position;
 
-        Vector3 direction = (start - end).normalized;
+        this.speed = speed;
 
-        transform.rotation = Quaternion.LookRotation(direction);
+        DisableVisual(true);
+    }
+
+    public void EnableVisual()
+    {
+        if (visualEnabled) return;
+
+        visualEnabled = true;
+        _mesh.enabled = true;
+    }
+
+    public void DisableVisual(bool forceDisable = false)
+    {
+        if (!forceDisable && !visualEnabled) return;
+
+        _mesh.enabled = false;
+        _mesh.enabled = false;
     }
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 
 [System.Serializable]
 public struct LaneData
@@ -17,6 +16,9 @@ public class BeatMap_Instantiator : MonoBehaviour
     [Header("Note Prefabs")]
     [SerializeField] private NoteObject tapNotePrefab;
     [SerializeField] private NoteObject holdNotePrefab;
+
+    [Header("Notes Settings")]
+    [SerializeField, Range(0f, 20f)] private float noteSpeed = 0.8f;
 
     [Header("Lanes Settings")]
     [SerializeField] private LaneData lane1;
@@ -33,11 +35,8 @@ public class BeatMap_Instantiator : MonoBehaviour
         notesPool.Initialize(tapNotePrefab, 20);
     }
 
-    public void SpawnNote(NoteData noteData, float position)
+    public void SpawnNote(NoteData noteData, float timeTakenToDistance)
     {
-        float distance = 60f;
-        float distancePerDiv = distance / 17f;
-
         NoteObject note = null;
 
         switch (noteData.type)
@@ -60,11 +59,13 @@ public class BeatMap_Instantiator : MonoBehaviour
             case Lane.Lane4: lane = lane4; break;
         }
 
-        float noteDistance = distancePerDiv * position;
+        float noteDistance = noteSpeed * noteData.tapPosition;
 
         Vector3 notePosition = lane.endPos.position + (lane.startPos.position - lane.endPos.position).normalized * noteDistance;
 
-        note.InitData(notePosition, lane.endPos.position);
+        float speed = noteDistance / timeTakenToDistance;
+
+        note.InitNoteData(notePosition, lane, speed);
 
         OnNoteSpawn?.Invoke(note);
     }
