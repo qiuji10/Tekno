@@ -13,12 +13,9 @@ public class GameSceneManager : MonoBehaviour
 
     public List<GameObject> objectsToBeTransfer = new List<GameObject>();
 
-    private Animator crossFade;
-
     private void Awake()
     {
         OnSceneInitialization?.Invoke();
-       
     }
 
     public void LoadScene(string sceneName)
@@ -33,6 +30,9 @@ public class GameSceneManager : MonoBehaviour
 
     private IEnumerator StartLoadingScene(string sceneName, LoadSceneMode mode)
     {
+
+        if (IsSceneLoadedAdditively(sceneName)) yield break;
+
         AsyncOperation loadingScene = SceneManager.LoadSceneAsync(sceneName, mode);
 
         while (!loadingScene.isDone)
@@ -50,7 +50,7 @@ public class GameSceneManager : MonoBehaviour
             {
                 if (playerObjs[i].transform.parent != null)
                 {
-                    playerObjs[i].transform.SetParent(null);
+                    continue;
                 }
 
                 SceneManager.MoveGameObjectToScene(playerObjs[i], newScene);
@@ -114,17 +114,20 @@ public class GameSceneManager : MonoBehaviour
         SceneManager.UnloadSceneAsync(sceneName);
     }
 
-    public void LoadSceneWithFade(string sceneName)
+    public static bool IsSceneLoadedAdditively(string sceneName)
     {
-        StartCoroutine(PlayCrossFade(sceneName, LoadSceneMode.Single));
+        int sceneCount = SceneManager.sceneCount;
 
-    }
+        for (int i = 0; i < sceneCount; i++)
+        {
+            Scene scene = SceneManager.GetSceneAt(i);
 
-   private IEnumerator PlayCrossFade(string sceneName, LoadSceneMode mode)
-    {
-        crossFade.SetTrigger("Start");
+            if (scene.name == sceneName && scene.isLoaded && scene.buildIndex != SceneManager.GetActiveScene().buildIndex)
+            {
+                return true;
+            }
+        }
 
-        yield return new WaitForSeconds(2);
-        yield return StartCoroutine(StartLoadingScene(sceneName, LoadSceneMode.Single));
+        return false;
     }
 }

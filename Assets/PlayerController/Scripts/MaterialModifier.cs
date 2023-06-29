@@ -25,6 +25,8 @@ public class MaterialModifier : MonoBehaviour
     [SerializeField] private Texture2D yellowTexture;
     [SerializeField] private Texture2D greenTexture;
 
+    private bool isFading;
+
     private void OnEnable()
     {
         string baseString = "#0042FF";
@@ -172,35 +174,35 @@ public class MaterialModifier : MonoBehaviour
 
     IEnumerator VolumeFader(Volume volume, float fadeTime, float value, bool increment)
     {
+        if (isFading) yield break;
+
+        isFading = true;
+
         float timer = 0;
+        float initialValue = volume.weight;
 
         if (increment)
         {
             while (volume.weight < value)
             {
                 timer += Time.deltaTime;
-                volume.weight = Mathf.Clamp(timer / fadeTime, 0f, 1f);
+                volume.weight = Mathf.Clamp(initialValue + (timer / fadeTime) * (value - initialValue), 0f, 1f);
                 yield return null;
             }
-
-            volume.weight = value;
-            yield break;
         }
         else
         {
-            timer = volume.weight;
-
             while (volume.weight > value)
             {
-                timer -= Time.deltaTime;
-                volume.weight = Mathf.Clamp(timer / fadeTime, 0f, 1f);
+                timer += Time.deltaTime;
+                volume.weight = Mathf.Clamp(initialValue - (timer / fadeTime) * (initialValue - value), 0f, 1f);
                 yield return null;
             }
-
-            volume.weight = value;
-            yield break;
         }
 
-        
+        volume.weight = value;
+
+        isFading = false;
     }
+
 }
