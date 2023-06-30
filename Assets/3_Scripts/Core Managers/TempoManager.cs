@@ -14,6 +14,8 @@ public class TempoManager : MonoBehaviour
     private uint _beatsSinceSync = 0;
     private bool hasStarted;
 
+    public static int beatCount;
+
     public static event Action OnBeat;
 
     private void OnEnable()
@@ -24,6 +26,7 @@ public class TempoManager : MonoBehaviour
     private void OnDisable()
     {
         StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
+        beatCount = 0;
     }
 
     private void StanceManager_OnStanceChange(Track track)
@@ -70,6 +73,13 @@ public class TempoManager : MonoBehaviour
 
     private void Beat()
     {
+        if (beatCount == 4)
+        {
+            beatCount = 0;
+        }
+
+        beatCount++;
+
         _beatsSinceSync++;
         OnBeat?.Invoke();
         _lastBeatTime = Time.time;

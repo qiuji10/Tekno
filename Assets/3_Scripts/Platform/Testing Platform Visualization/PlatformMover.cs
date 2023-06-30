@@ -19,18 +19,23 @@ public class PlatformMover : MonoBehaviour
 
     private void TempoManager_OnBeat()
     {
-        if (curBeatCount < beatCountToTrigger)
-        {
-            curBeatCount++;
-        }
-        else if (curBeatCount == beatCountToTrigger)
+        //if (curBeatCount < beatCountToTrigger)
+        //{
+        //    curBeatCount++;
+        //}
+        //else if (curBeatCount == beatCountToTrigger)
+        //{
+        //    StartCoroutine(MoveLogic());
+        //    curBeatCount++;
+        //}
+        //else
+        //{
+        //    curBeatCount = 1;
+        //}
+
+        if (TempoManager.beatCount == 4)
         {
             StartCoroutine(MoveLogic());
-            curBeatCount++;
-        }
-        else
-        {
-            curBeatCount = 1;
         }
     }
 

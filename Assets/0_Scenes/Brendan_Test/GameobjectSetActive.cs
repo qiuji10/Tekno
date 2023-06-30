@@ -24,7 +24,7 @@ public class GameobjectSetActive : MonoBehaviour
             DissolveController dissolveController = obj.GetComponent<DissolveController>();
             if (dissolveController != null)
             {
-                dissolveController.SetDissolveAmount(1f, dissolveDuration); // dissolve from 0 to 1
+                dissolveController.SetDissolveAmount(1.5f, dissolveDuration); // dissolve from 0 to 1
             }
         }
 
@@ -45,6 +45,11 @@ public class GameobjectSetActive : MonoBehaviour
                 dissolveController.SetDissolveAmount(0f, dissolveDuration); // dissolve from 1 to 0
             }
         }
+    }
+
+    public void Dissolve()
+    {
+        StartCoroutine(DissolveInactiveList()); // dissolve the inactive game objects
     }
 }
 
