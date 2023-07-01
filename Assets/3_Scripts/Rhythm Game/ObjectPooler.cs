@@ -7,6 +7,7 @@ public class ObjectPooler<T> where T : MonoBehaviour
     private T prefab;
     private int poolSize;
     private List<T> pooledObjects;
+    private GameObject parentObject;
 
     public static ObjectPooler<T> Instance
     {
@@ -23,6 +24,7 @@ public class ObjectPooler<T> where T : MonoBehaviour
     public ObjectPooler()
     {
         pooledObjects = new List<T>();
+        parentObject = new GameObject("ObjectPool_" + typeof(T).Name);
     }
 
     public void Initialize(T prefab, int poolSize)
@@ -34,6 +36,7 @@ public class ObjectPooler<T> where T : MonoBehaviour
         {
             T obj = Object.Instantiate(prefab);
             obj.gameObject.SetActive(false);
+            obj.transform.SetParent(parentObject.transform);
             pooledObjects.Add(obj);
         }
     }
@@ -51,6 +54,7 @@ public class ObjectPooler<T> where T : MonoBehaviour
 
         T newObj = Object.Instantiate(prefab);
         newObj.gameObject.SetActive(true);
+        newObj.transform.SetParent(parentObject.transform);
         pooledObjects.Add(newObj);
 
         return newObj;
@@ -59,5 +63,14 @@ public class ObjectPooler<T> where T : MonoBehaviour
     public void Release(T obj)
     {
         obj.gameObject.SetActive(false);
+        obj.transform.SetParent(parentObject.transform);
+    }
+}
+
+public static class ObjectPoolerExtensions
+{
+    public static void Release<T>(this T obj) where T : MonoBehaviour
+    {
+        ObjectPooler<T>.Instance.Release(obj);
     }
 }

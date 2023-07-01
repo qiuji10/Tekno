@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine;
 
 public enum EditorSelectionType
@@ -37,7 +38,6 @@ public class BeatMapEditorWindow : EditorWindow
     [SerializeField] private Color divisionColor = Color.black;
     [SerializeField] private Color ghostBlockColor = Color.cyan;
 
-
     [MenuItem("Window/Beat Map Editor")]
     public static void OpenWindow()
     {
@@ -55,6 +55,30 @@ public class BeatMapEditorWindow : EditorWindow
         {
             EditorUtility.SetDirty(beatmap);
         }
+    }
+
+    [OnOpenAsset(1)]
+    public static bool OpenGameStateWindow(int instanceID, int line)
+    {
+        // Check if the asset being opened is of type BeatMap
+        BeatMap beatmap = EditorUtility.InstanceIDToObject(instanceID) as BeatMap;
+        if (beatmap == null)
+            return false;
+
+        bool windowIsOpen = EditorWindow.HasOpenInstances<BeatMapEditorWindow>();
+
+        if (!windowIsOpen)
+        {
+            BeatMapEditorWindow window = EditorWindow.CreateWindow<BeatMapEditorWindow>();
+            window.beatmap = beatmap;
+        }
+        else
+        {
+            EditorWindow.FocusWindowIfItsOpen<BeatMapEditorWindow>();
+        }
+
+        // Window should now be open, proceed to next step to open file
+        return false;
     }
 
     private void DrawLeftPanel()

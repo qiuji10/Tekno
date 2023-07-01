@@ -26,13 +26,14 @@ public class BeatMap_Instantiator : MonoBehaviour
     [SerializeField] private LaneData lane3;
     [SerializeField] private LaneData lane4;
 
-    private ObjectPooler<NoteObject> notesPool = new ObjectPooler<NoteObject>();
+    private ObjectPooler<NoteObject_Tap> tapNotesPool = new ObjectPooler<NoteObject_Tap>();
+    private ObjectPooler<NoteObject_Hold> holdNotesPool = new ObjectPooler<NoteObject_Hold>();
 
     public event Action<NoteObject> OnNoteSpawn;
 
     private void Awake()
     {
-        notesPool.Initialize(tapNotePrefab, 20);
+        tapNotesPool.Initialize(tapNotePrefab as NoteObject_Tap, 20);
     }
 
     public void SpawnNote(NoteData noteData, float timeTakenToDistance)
@@ -41,23 +42,21 @@ public class BeatMap_Instantiator : MonoBehaviour
 
         switch (noteData.type)
         {
-            case NoteType.Tap: note = notesPool.GetPooledObject(); break;
+            case NoteType.Tap: note = tapNotesPool.GetPooledObject(); break;
             case NoteType.Hold: note = Instantiate(holdNotePrefab); break;
         }
 
-        note.tapPosition = noteData.tapPosition;
         note.type = noteData.type;
         note.lane = noteData.lane;
 
-        LaneData lane = new LaneData();
+        note.tapPosition = noteData.tapPosition;
 
-        switch (noteData.lane)
+        if (note is NoteObject_Hold)
         {
-            case Lane.Lane1: lane = lane1; break;
-            case Lane.Lane2: lane = lane2; break;
-            case Lane.Lane3: lane = lane3; break;
-            case Lane.Lane4: lane = lane4; break;
+            (note as NoteObject_Hold).holdToPosition = (noteData as Note_Hold).holdToPosition;
         }
+
+        LaneData lane = GetLane(note.lane);
 
         float noteDistance = noteSpeed * noteData.tapPosition;
 
@@ -68,5 +67,20 @@ public class BeatMap_Instantiator : MonoBehaviour
         note.InitNoteData(notePosition, lane, speed);
 
         OnNoteSpawn?.Invoke(note);
+    }
+
+    private LaneData GetLane(Lane laneType)
+    {
+        LaneData lane = new LaneData();
+
+        switch (laneType)
+        {
+            case Lane.Lane1: lane = lane1; break;
+            case Lane.Lane2: lane = lane2; break;
+            case Lane.Lane3: lane = lane3; break;
+            case Lane.Lane4: lane = lane4; break;
+        }
+
+        return lane;
     }
 }

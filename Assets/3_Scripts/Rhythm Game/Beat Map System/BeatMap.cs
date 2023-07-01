@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 using UnityEditor.Callbacks;
 using UnityEditor;
-using Unity.VisualScripting;
 
 public enum Division { divisions_4 = 4, divisions_8 = 8, divisions_12 = 12 }
 public enum Lane { Lane1, Lane2, Lane3, Lane4 }
@@ -37,31 +36,6 @@ public class BeatMap : ScriptableObject
 
         return highestTapPosition;
     }
-
-    [OnOpenAsset(1)]
-    public static bool OpenGameStateWindow(int instanceID, int line)
-    {
-        // Check if the asset being opened is of type BeatMap
-        BeatMap beatmap = EditorUtility.InstanceIDToObject(instanceID) as BeatMap;
-        if (beatmap == null)
-            return false;
-
-        bool windowIsOpen = EditorWindow.HasOpenInstances<BeatMapEditorWindow>();
-
-        if (!windowIsOpen)
-        {
-            BeatMapEditorWindow window = EditorWindow.CreateWindow<BeatMapEditorWindow>();
-            window.beatmap = beatmap;
-        }
-        else
-        {
-            EditorWindow.FocusWindowIfItsOpen<BeatMapEditorWindow>();
-        }
-
-        // Window should now be open, proceed to next step to open file
-        return false;
-    }
-
 }
 
 [Serializable]

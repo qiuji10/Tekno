@@ -1,23 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
-public class NoteObject : MonoBehaviour
+public class NoteObject_Tap : NoteObject
 {
-    public Lane lane;
-    public NoteType type;
-
-    public int tapPosition;
-    public int holdToPosition;
-
-    public bool SurpassEndPos => Vector3.Dot(transform.position - endPos, transform.forward) < 0f;
-    public bool SurpassStartPos => Vector3.Dot(transform.position - startPos, transform.forward) < 0f;
-    public bool visualEnabled;
-
-    private float speed;
-    private Vector3 startPos;
-    private Vector3 endPos;
-
     private MeshRenderer _mesh;
 
     private void Awake()
@@ -25,12 +12,12 @@ public class NoteObject : MonoBehaviour
         _mesh = GetComponent<MeshRenderer>();
     }
 
-    public void Process()
+    public override void Process()
     {
         transform.position += speed * -transform.forward * Time.deltaTime;
     }
 
-    public void InitNoteData(Vector3 position, LaneData lane, float speed)
+    public override void InitNoteData(Vector3 position, LaneData lane, float speed)
     {
         transform.position = position;
         transform.rotation = Quaternion.LookRotation((lane.startPos.position - lane.endPos.position).normalized);
@@ -43,7 +30,7 @@ public class NoteObject : MonoBehaviour
         DisableVisual(true);
     }
 
-    public void EnableVisual()
+    public override void EnableVisual()
     {
         if (visualEnabled) return;
 
@@ -51,11 +38,11 @@ public class NoteObject : MonoBehaviour
         _mesh.enabled = true;
     }
 
-    public void DisableVisual(bool forceDisable = false)
+    public override void DisableVisual(bool forceDisable = false)
     {
         if (!forceDisable && !visualEnabled) return;
 
-        _mesh.enabled = false;
+        visualEnabled = false;
         _mesh.enabled = false;
     }
 }
