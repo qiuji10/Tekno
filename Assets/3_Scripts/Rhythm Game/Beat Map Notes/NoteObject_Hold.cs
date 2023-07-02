@@ -85,8 +85,6 @@ public class NoteObject_Hold : NoteObject
         {
             DisableVisual(true);
         }
-
-        
     }
 
     public override void EnableVisual()
