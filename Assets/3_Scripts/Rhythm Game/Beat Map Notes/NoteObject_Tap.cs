@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
 
 public class NoteObject_Tap : NoteObject
 {
@@ -12,22 +11,22 @@ public class NoteObject_Tap : NoteObject
         _mesh = GetComponent<MeshRenderer>();
     }
 
-    public override void Process()
-    {
-        transform.position += speed * -transform.forward * Time.deltaTime;
-    }
-
-    public override void InitNoteData(Vector3 position, LaneData lane, float speed)
+    public void InitNoteData(Vector3 position, LaneData lane, float speed)
     {
         transform.position = position;
         transform.rotation = Quaternion.LookRotation((lane.startPos.position - lane.endPos.position).normalized);
 
-        startPos = lane.startPos.position;
-        endPos = lane.endPos.position;
+        laneStartPos = lane.startPos.position;
+        laneEndPos = lane.endPos.position;
 
         this.speed = speed;
 
         DisableVisual(true);
+    }
+
+    public override void Process()
+    {
+        transform.position += speed * -transform.forward * Time.deltaTime;
     }
 
     public override void EnableVisual()

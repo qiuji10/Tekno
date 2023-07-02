@@ -14,8 +14,8 @@ public struct LaneData
 public class BeatMap_Instantiator : MonoBehaviour
 {
     [Header("Note Prefabs")]
-    [SerializeField] private NoteObject tapNotePrefab;
-    [SerializeField] private NoteObject holdNotePrefab;
+    [SerializeField] private NoteObject_Tap tapNotePrefab;
+    [SerializeField] private NoteObject_Hold holdNotePrefab;
 
     [Header("Notes Settings")]
     [SerializeField, Range(0f, 20f)] private float noteSpeed = 0.8f;
@@ -33,7 +33,8 @@ public class BeatMap_Instantiator : MonoBehaviour
 
     private void Awake()
     {
-        tapNotesPool.Initialize(tapNotePrefab as NoteObject_Tap, 20);
+        tapNotesPool.Initialize(tapNotePrefab, 20);
+        holdNotesPool.Initialize(holdNotePrefab, 20);
     }
 
     public void SpawnNote(NoteData noteData, float timeTakenToDistance)
@@ -43,7 +44,7 @@ public class BeatMap_Instantiator : MonoBehaviour
         switch (noteData.type)
         {
             case NoteType.Tap: note = tapNotesPool.GetPooledObject(); break;
-            case NoteType.Hold: note = Instantiate(holdNotePrefab); break;
+            case NoteType.Hold: note = holdNotesPool.GetPooledObject(); break;
         }
 
         note.type = noteData.type;
@@ -53,18 +54,26 @@ public class BeatMap_Instantiator : MonoBehaviour
 
         if (note is NoteObject_Hold)
         {
-            (note as NoteObject_Hold).holdToPosition = (noteData as Note_Hold).holdToPosition;
+            (note as NoteObject_Hold).holdToPosition = noteData.holdToPosition;
         }
 
         LaneData lane = GetLane(note.lane);
 
         float noteDistance = noteSpeed * noteData.tapPosition;
 
-        Vector3 notePosition = lane.endPos.position + (lane.startPos.position - lane.endPos.position).normalized * noteDistance;
+        Vector3 noteTapPosition = lane.endPos.position + (lane.startPos.position - lane.endPos.position).normalized * noteDistance;
 
         float speed = noteDistance / timeTakenToDistance;
 
-        note.InitNoteData(notePosition, lane, speed);
+        if (note.type == NoteType.Tap)
+        {
+            (note as NoteObject_Tap).InitNoteData(noteTapPosition, lane, speed);
+        }
+        else if (note.type == NoteType.Hold)
+        {
+            Vector3 noteHoldToPosition = lane.endPos.position + (lane.startPos.position - lane.endPos.position).normalized * (noteSpeed * noteData.holdToPosition);
+            (note as NoteObject_Hold).InitNoteData(noteTapPosition, noteHoldToPosition, lane, speed);
+        }
 
         OnNoteSpawn?.Invoke(note);
     }

@@ -12,19 +12,14 @@ public class NoteObject : MonoBehaviour
     [Header("Position Data")]
     public int tapPosition;
     
-    public virtual bool SurpassEndPos => Vector3.Dot(transform.position - endPos, transform.forward) < 0f;
-    public virtual bool SurpassStartPos => Vector3.Dot(transform.position - startPos, transform.forward) < 0f;
+    public virtual bool SurpassStartPos => Vector3.Dot(transform.position - laneStartPos, transform.forward) < 0f;
+    public virtual bool SurpassEndPos => Vector3.Dot(transform.position - laneEndPos, transform.forward) < 0f;
 
     protected float speed;
-    protected Vector3 startPos;
-    protected Vector3 endPos;
+    protected Vector3 laneStartPos;
+    protected Vector3 laneEndPos;
 
     public virtual void Process()
-    {
-
-    }
-
-    public virtual void InitNoteData(Vector3 position, LaneData lane, float speed)
     {
 
     }

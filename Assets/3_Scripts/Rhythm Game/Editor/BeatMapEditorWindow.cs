@@ -8,7 +8,15 @@ public enum EditorSelectionType
 {
     None,
     Selector,
-    AddTapNote
+    Add_Tap_Note,
+    Add_Hold_Note,
+}
+
+public enum EditorSelectionNotePart
+{
+    None,
+    TapPosition,
+    HoldToPosition
 }
 
 public class BeatMapEditorWindow : EditorWindow
@@ -23,20 +31,28 @@ public class BeatMapEditorWindow : EditorWindow
     private Rect beatMapCanvasRect;
 
     private EditorSelectionType selectionType;
+    private EditorSelectionNotePart selectionNotePart;
+
     private Vector2 selectorPosition;
     private Vector2 ghostNotePosition;
     private bool isHoveringCanvas;
 
+    public bool isPlacingSecondNote = false;
+
     private bool isSelectingNote;
     private NoteData selectedNote;
 
-    [SerializeField] private int positionSlots = 100;
+    [SerializeField] private int positionSlots = 1000;
 
     [SerializeField] private Color laneColor = Color.grey;
     [SerializeField] private Color laneOutlineColor = Color.black;
     [SerializeField] private Color beatsPerBarColor = Color.red;
     [SerializeField] private Color divisionColor = Color.black;
-    [SerializeField] private Color ghostBlockColor = Color.cyan;
+    [SerializeField] private Color ghostTapBlockColor = Color.cyan;
+    [SerializeField] private Color ghostHoldBlockColor = Color.yellow;
+    [SerializeField] private Color tapNoteColor = Color.cyan;
+    [SerializeField] private Color holdNoteColor = Color.yellow;
+    [SerializeField] private Color rangeColor = new Color(1, 0.92f, 0.016f, 0.5f);
 
     [MenuItem("Window/Beat Map Editor")]
     public static void OpenWindow()
@@ -44,17 +60,6 @@ public class BeatMapEditorWindow : EditorWindow
         var window = GetWindow<BeatMapEditorWindow>();
         window.titleContent = new GUIContent("Beat Map Editor");
         window.Show();
-    }
-
-    private void OnGUI()
-    {
-        DrawLeftPanel();
-        DrawRightPanel();
-
-        if (GUI.changed && beatmap != null)
-        {
-            EditorUtility.SetDirty(beatmap);
-        }
     }
 
     [OnOpenAsset(1)]
@@ -79,6 +84,17 @@ public class BeatMapEditorWindow : EditorWindow
 
         // Window should now be open, proceed to next step to open file
         return false;
+    }
+
+    private void OnGUI()
+    {
+        DrawLeftPanel();
+        DrawRightPanel();
+
+        if (GUI.changed && beatmap != null)
+        {
+            EditorUtility.SetDirty(beatmap);
+        }
     }
 
     private void DrawLeftPanel()
@@ -107,6 +123,7 @@ public class BeatMapEditorWindow : EditorWindow
 
         EditorGUILayout.LabelField("Slots Settings", EditorStyles.boldLabel);
         positionSlots = EditorGUILayout.IntField("Position Slots", positionSlots);
+        EditorGUILayout.LabelField(selectionType == EditorSelectionType.Add_Hold_Note ? (isPlacingSecondNote ? "Is Placing 2ND Note" : "Not Placing 2ND Note") : "-");
 
         EditorGUILayout.Space();
 
@@ -120,11 +137,13 @@ public class BeatMapEditorWindow : EditorWindow
         laneOutlineColor = EditorGUILayout.ColorField("Lane Outline", laneOutlineColor);
         beatsPerBarColor = EditorGUILayout.ColorField("Beats Per Bar Line", beatsPerBarColor);
         divisionColor = EditorGUILayout.ColorField("Division Line", divisionColor);
-        ghostBlockColor = EditorGUILayout.ColorField("Ghost Block", ghostBlockColor);
+        ghostTapBlockColor = EditorGUILayout.ColorField("Ghost Tap Block", ghostTapBlockColor);
+        ghostHoldBlockColor = EditorGUILayout.ColorField("Ghost Hold Block", ghostHoldBlockColor);
+        tapNoteColor = EditorGUILayout.ColorField("Tap Note", tapNoteColor);
+        holdNoteColor = EditorGUILayout.ColorField("Hold Note", holdNoteColor);
+        rangeColor = EditorGUILayout.ColorField("Hole Note - Range", rangeColor);
 
         GUILayout.EndArea();
-
-        
     }
 
     private void DrawRightPanel()
@@ -138,7 +157,6 @@ public class BeatMapEditorWindow : EditorWindow
         {
             EditorGUILayout.LabelField("Beat Map Canvas", EditorStyles.boldLabel);
             EditorGUILayout.Space();
-
 
             Rect scrollViewRect = GUILayoutUtility.GetRect(rightPanelRect.width, rightPanelRect.height);
 
@@ -170,7 +188,6 @@ public class BeatMapEditorWindow : EditorWindow
                 DrawLanes();
                 DrawLineIndicators();
                 DrawBeatMapNotes();
-                //DrawPositionNumbers();
                 DrawBeatsNumbers();
                 DrawGhostNote();
                 Repaint();
@@ -193,7 +210,15 @@ public class BeatMapEditorWindow : EditorWindow
             if (beatmap != null && selectionType != EditorSelectionType.None)
             {
                 Vector2 clickPosition = e.mousePosition;
-                NoteData noteToDelete = GetNoteAtPosition(clickPosition);
+                NoteData noteToDelete = GetNoteTapPosition(clickPosition);
+
+                if (noteToDelete == null)
+                {
+                    if (selectionType == EditorSelectionType.Add_Hold_Note)
+                    {
+                        noteToDelete = GetHoldNoteFromPosition(clickPosition);
+                    }
+                }
 
                 if (noteToDelete != null)
                 {
@@ -204,22 +229,48 @@ public class BeatMapEditorWindow : EditorWindow
         }
         else // Other mouse buttons
         {
+            Vector2 clickPosition = e.mousePosition;
+
             if (selectionType == EditorSelectionType.Selector)
             {
-                Vector2 clickPosition = e.mousePosition;
-                selectedNote = GetNoteAtPosition(clickPosition);
+                selectedNote = GetNoteTapPosition(clickPosition);
+
+                if (selectedNote != null)
+                {
+                    selectionNotePart = EditorSelectionNotePart.TapPosition;
+                }
+                else if (selectedNote == null)
+                {
+                    selectedNote = GetHoldNoteFromPosition(clickPosition);
+                    selectionNotePart = EditorSelectionNotePart.HoldToPosition;
+                }
+
                 isSelectingNote = (selectedNote != null);
             }
-            else if (selectionType == EditorSelectionType.AddTapNote && isHoveringCanvas)
+            else if (selectionType == EditorSelectionType.Add_Tap_Note && isHoveringCanvas)
             {
-                Vector2 clickPosition = e.mousePosition;
-                int tapPosition = GetTapPosition(clickPosition);
+                int tapPosition = GetNotePosition(clickPosition);
                 int lane = GetNearestLane(clickPosition);
                 AddTapNoteToBeatMap(tapPosition, (Lane)lane);
             }
+            else if (selectionType == EditorSelectionType.Add_Hold_Note && isHoveringCanvas)
+            {
+                if (!isPlacingSecondNote)
+                {
+                    int tapPosition = GetNotePosition(clickPosition);
+                    int lane = GetNearestLane(clickPosition);
+                    AddHoldNoteStart(tapPosition, (Lane)lane);
+                    isPlacingSecondNote = true;
+                }
+                else
+                {
+                    int holdToPosition = GetNotePosition(clickPosition);
+                    AddHoldNoteEnd(holdToPosition);
+                    isPlacingSecondNote = false;
+                }
+            }
         }
     }
-
 
     private void HandleMouseUp(Event e)
     {
@@ -228,26 +279,57 @@ public class BeatMapEditorWindow : EditorWindow
             if (selectedNote != null)
             {
                 Vector2 releasePosition = e.mousePosition;
-                int tapPosition = GetTapPosition(releasePosition);
+                int positionIndex = GetNotePosition(releasePosition);
                 int lane = GetNearestLane(releasePosition);
-                UpdateNotePosition(selectedNote, tapPosition, (Lane)lane);
+                
+                if (selectedNote.type == NoteType.Tap)
+                {
+                    UpdateNoteTapPosition(selectedNote, positionIndex, (Lane)lane);
+                }
+                else if (selectedNote.type == NoteType.Hold)
+                {
+                    if (selectionNotePart == EditorSelectionNotePart.TapPosition)
+                    {
+                        UpdateNoteTapPosition(selectedNote, positionIndex, (Lane)lane);
+                    }
+                    else if (selectionNotePart == EditorSelectionNotePart.HoldToPosition)
+                    {
+                        UpdateNoteHoldToPosition(selectedNote, positionIndex, (Lane)lane);
+                    }
+                }
             }
-        }
 
-        isSelectingNote = false;
-        selectedNote = null;
+            isSelectingNote = false;
+            selectedNote = null;
+            selectionNotePart = EditorSelectionNotePart.None;
+        }
     }
 
     private void HandleMouseDrag(Event e)
     {
         if (selectionType == EditorSelectionType.Selector && isSelectingNote)
         {
+            Vector2 dragPosition = e.mousePosition;
+            int positionIndex = GetNotePosition(dragPosition);
+            int lane = GetNearestLane(dragPosition);
+
             if (selectedNote != null)
             {
-                Vector2 dragPosition = e.mousePosition;
-                int tapPosition = GetTapPosition(dragPosition);
-                int lane = GetNearestLane(dragPosition);
-                UpdateNotePosition(selectedNote, tapPosition, (Lane)lane);
+                if (selectedNote.type == NoteType.Tap)
+                {
+                    UpdateNoteTapPosition(selectedNote, positionIndex, (Lane)lane);
+                }
+                else if (selectedNote.type == NoteType.Hold)
+                {
+                    if (selectionNotePart == EditorSelectionNotePart.TapPosition)
+                    {
+                        UpdateNoteTapPosition(selectedNote, positionIndex, (Lane)lane);
+                    }
+                    else if (selectionNotePart == EditorSelectionNotePart.HoldToPosition)
+                    {
+                        UpdateNoteHoldToPosition(selectedNote, positionIndex, (Lane)lane);
+                    }
+                }
             }
         }
     }
@@ -256,12 +338,18 @@ public class BeatMapEditorWindow : EditorWindow
     {
         isHoveringCanvas = beatMapCanvasRect.Contains(e.mousePosition);
 
-        if (selectionType == EditorSelectionType.AddTapNote)
+        if (selectionType == EditorSelectionType.Add_Tap_Note || selectionType == EditorSelectionType.Add_Hold_Note)
         {
             Vector2 dragPosition = e.mousePosition;
-            int tapPosition = GetTapPosition(dragPosition);
+            int tapPosition = GetNotePosition(dragPosition);
             int lane = GetNearestLane(dragPosition);
             ghostNotePosition = GetNotePosition(lane, tapPosition);
+
+            if (selectionType == EditorSelectionType.Add_Hold_Note)
+            {
+                if (selectedNote != null)
+                    selectedNote.holdToPosition = GetNotePosition(e.mousePosition);
+            }
         }
     }
 
@@ -310,7 +398,6 @@ public class BeatMapEditorWindow : EditorWindow
         }
     }
 
-
     private void DrawLineIndicators()
     {
         float noteHeight = beatMapCanvasRect.height / positionSlots;
@@ -336,27 +423,57 @@ public class BeatMapEditorWindow : EditorWindow
     {
         foreach (NoteData note in beatmap.notes)
         {
-            Vector2 position = GetNotePosition((int)note.lane, note.tapPosition);
-            GUI.Box(new Rect(position.x, position.y, noteSize.x, noteSize.y), GUIContent.none, EditorStyles.textField);
+            if (note.type == NoteType.Tap)
+            {
+                Vector2 position = GetNotePosition((int)note.lane, note.tapPosition);
+                GUI.Box(new Rect(position.x, position.y, noteSize.x, noteSize.y), GUIContent.none, EditorStyles.textField);
+            }
+            else if (note.type == NoteType.Hold)
+            {
+                Vector2 tapPosition = GetNotePosition((int)note.lane, note.tapPosition);
+                Vector2 holdToPosition = GetNotePosition((int)note.lane, note.holdToPosition);
+                float rangeSize = holdToPosition.y - tapPosition.y;
+
+                GUIStyle style = new GUIStyle(EditorStyles.textArea);
+                style.normal.background = MakeTexture(rangeColor);
+
+                GUI.Box(new Rect(holdToPosition.x, holdToPosition.y, noteSize.x, -rangeSize), GUIContent.none, style);
+
+                style.normal.background = MakeTexture(holdNoteColor);
+
+                GUI.Box(new Rect(tapPosition.x, tapPosition.y, noteSize.x, noteSize.y), GUIContent.none, style);
+                GUI.Box(new Rect(holdToPosition.x, holdToPosition.y, noteSize.x, noteSize.y), GUIContent.none, style);
+            }
         }
     }
 
     private void DrawGhostNote()
     {
-        if (selectionType == EditorSelectionType.AddTapNote && isHoveringCanvas)
+        if (selectionType == EditorSelectionType.Add_Tap_Note && isHoveringCanvas)
         {
-            Color ghostColor = ghostBlockColor;
-
             GUIStyle ghostStyle = new GUIStyle(EditorStyles.textArea);
-            ghostStyle.normal.background = MakeTexture(ghostColor);
+            ghostStyle.normal.background = MakeTexture(ghostTapBlockColor);
+
+            GUI.Box(new Rect(ghostNotePosition.x, ghostNotePosition.y, noteSize.x, noteSize.y), GUIContent.none, ghostStyle);
+        }
+        else if (selectionType == EditorSelectionType.Add_Hold_Note && isHoveringCanvas)
+        {
+            GUIStyle ghostStyle = new GUIStyle(EditorStyles.textArea);
+            ghostStyle.normal.background = MakeTexture(ghostHoldBlockColor);
 
             GUI.Box(new Rect(ghostNotePosition.x, ghostNotePosition.y, noteSize.x, noteSize.y), GUIContent.none, ghostStyle);
         }
     }
 
-    private void UpdateNotePosition(NoteData note, int tapPosition, Lane lane)
+    private void UpdateNoteTapPosition(NoteData note, int tapPosition, Lane lane)
     {
         note.tapPosition = tapPosition;
+        note.lane = lane;
+    }
+
+    private void UpdateNoteHoldToPosition(NoteData note, int tapPosition, Lane lane)
+    {
+        note.holdToPosition = tapPosition;
         note.lane = lane;
     }
 
@@ -370,7 +487,38 @@ public class BeatMapEditorWindow : EditorWindow
         beatmap.notes.Add(note);
     }
 
-    private NoteData GetNoteAtPosition(Vector2 position)
+    private void AddHoldNoteStart(int tapPosition, Lane lane)
+    {
+        NoteData note = new NoteData();
+        note.type = NoteType.Hold;
+        note.lane = lane;
+        note.tapPosition = tapPosition;
+
+        beatmap.notes.Add(note);
+
+        selectedNote = note;
+    }
+
+    private void AddHoldNoteEnd(int holdToPosition)
+    {
+        selectedNote.type = NoteType.Hold;
+
+        int currentTapPosition = selectedNote.tapPosition;
+
+        if (holdToPosition < currentTapPosition)
+        {
+            int tempHold = currentTapPosition;
+            currentTapPosition = holdToPosition;
+            holdToPosition = tempHold;
+        }
+
+        selectedNote.tapPosition = currentTapPosition;
+        selectedNote.holdToPosition = holdToPosition;
+
+        selectedNote = null;
+    }
+
+    private NoteData GetNoteTapPosition(Vector2 position)
     {
         foreach (NoteData note in beatmap.notes)
         {
@@ -397,7 +545,7 @@ public class BeatMapEditorWindow : EditorWindow
         return new Vector2(x, y);
     }
 
-    private int GetTapPosition(Vector2 position)
+    private int GetNotePosition(Vector2 position)
     {
         float noteHeight = beatMapCanvasRect.height / positionSlots;
         int tapPosition = Mathf.FloorToInt((beatMapCanvasRect.height - position.y) / noteHeight);
@@ -425,6 +573,38 @@ public class BeatMapEditorWindow : EditorWindow
 
     //    return highestPosition;
     //}
+
+    private NoteData GetTapNoteFromPosition(Vector3 clickPosition)
+    {
+        NoteData noteData = null;
+
+        foreach (NoteData note in beatmap.notes)
+        {
+            if (note.type == NoteType.Hold && note.tapPosition == GetNotePosition(clickPosition))
+            {
+                noteData = note;
+                break;
+            }
+        }
+
+        return noteData;
+    }
+
+    private NoteData GetHoldNoteFromPosition(Vector3 clickPosition)
+    {
+        NoteData noteData = null;
+
+        foreach (NoteData note in beatmap.notes)
+        {
+            if (note.type == NoteType.Hold && note.holdToPosition == GetNotePosition(clickPosition))
+            {
+                noteData = note;
+                break;
+            }
+        }
+
+        return noteData;
+    }
 
     private Texture2D MakeTexture(Color color)
     {

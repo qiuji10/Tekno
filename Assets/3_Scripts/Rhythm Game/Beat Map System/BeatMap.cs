@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using UnityEditor.Callbacks;
-using UnityEditor;
 
 public enum Division { divisions_4 = 4, divisions_8 = 8, divisions_12 = 12 }
 public enum Lane { Lane1, Lane2, Lane3, Lane4 }
@@ -44,16 +42,5 @@ public class NoteData
     public NoteType type;
     public Lane lane;
     public int tapPosition;
-}
-
-[Serializable]
-public class Note_Tap : NoteData
-{
-
-}
-
-[Serializable]
-public class Note_Hold : NoteData
-{
     public int holdToPosition;
 }
