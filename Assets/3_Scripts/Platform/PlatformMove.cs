@@ -12,8 +12,6 @@ public class PlatformMove : MonoBehaviour, IPlatform
     private int currentPoint;
 
     private bool isMoving;
-    private int bpm = 140; // Beats per minute
-    private float beatDuration; // Duration of one beat in seconds
     private float moveTime;
     private float scaleFactor;
 
@@ -38,19 +36,16 @@ public class PlatformMove : MonoBehaviour, IPlatform
         if (obj.genre == Genre.House)
         {
             eventID = "120_House_PlatformMove";
-            bpm = 120;
             scaleFactor = 0.075f;
         }
         else if (obj.genre == Genre.Techno)
         {
             eventID = "140_Techno_PlatformMove";
-            bpm = 140;
             scaleFactor = 0.25f;
         }
         else if (obj.genre == Genre.Electronic)
         {
             eventID = "160_Electro_PlatformMove";
-            bpm = 160;
             scaleFactor = 0.75f;
         }
 
