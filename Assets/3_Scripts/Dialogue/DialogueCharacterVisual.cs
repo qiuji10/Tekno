@@ -38,7 +38,7 @@ public class DialogueCharacterVisual : MonoBehaviour
     {
         if (animationCoroutine != null) StopCoroutine(animationCoroutine);
     }
-
+    //
     public IEnumerator Animate_Logic(AnimationPattern pattern, float animTime)
     {
         float realTime = 0f;
