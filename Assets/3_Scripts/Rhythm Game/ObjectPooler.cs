@@ -7,6 +7,7 @@ public class ObjectPooler<T> where T : MonoBehaviour
     private T prefab;
     private int poolSize;
     private List<T> pooledObjects;
+    private GameObject parentObject;
 
     public static ObjectPooler<T> Instance
     {
@@ -29,12 +30,13 @@ public class ObjectPooler<T> where T : MonoBehaviour
     {
         this.prefab = prefab;
         this.poolSize = poolSize;
+    }
 
-        for (int i = 0; i < poolSize; i++)
+    private void CreateParentObjectIfNeeded()
+    {
+        if (parentObject == null)
         {
-            T obj = Object.Instantiate(prefab);
-            obj.gameObject.SetActive(false);
-            pooledObjects.Add(obj);
+            parentObject = new GameObject("ObjectPool_" + typeof(T).Name);
         }
     }
 
@@ -53,11 +55,16 @@ public class ObjectPooler<T> where T : MonoBehaviour
         newObj.gameObject.SetActive(true);
         pooledObjects.Add(newObj);
 
+        CreateParentObjectIfNeeded();
+        newObj.transform.SetParent(parentObject.transform);
+
         return newObj;
     }
 
     public void Release(T obj)
     {
         obj.gameObject.SetActive(false);
+        CreateParentObjectIfNeeded();
+        obj.transform.SetParent(parentObject.transform);
     }
 }
