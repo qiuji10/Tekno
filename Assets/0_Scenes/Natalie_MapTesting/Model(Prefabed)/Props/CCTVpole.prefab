@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 949468551807852217}
   - component: {fileID: 4216190634956312860}
   - component: {fileID: 2118411747335775702}
-  - component: {fileID: 482193048348027233}
   m_Layer: 0
   m_Name: CCTVpole
   m_TagString: Untagged
@@ -28,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 461302519643571203}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5992.058, y: 0.0000020661992, z: -42196.605}
-  m_LocalScale: {x: 0.06652262, y: 0.06652262, z: 0.06652262}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -41,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 461302519643571203}
-  m_Mesh: {fileID: -4170348635749507605, guid: a67e05efa1d797946967b443d2d81908, type: 3}
+  m_Mesh: {fileID: -4170348635749507605, guid: 21e899ea9af1bd24c91c35ed0565e28a, type: 3}
 --- !u!23 &2118411747335775702
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -63,6 +62,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2895064947943234598, guid: a67e05efa1d797946967b443d2d81908, type: 3}
+  - {fileID: -6038684531061040045, guid: 21e899ea9af1bd24c91c35ed0565e28a, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,17 +84,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &482193048348027233
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 461302519643571203}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4170348635749507605, guid: a67e05efa1d797946967b443d2d81908, type: 3}
