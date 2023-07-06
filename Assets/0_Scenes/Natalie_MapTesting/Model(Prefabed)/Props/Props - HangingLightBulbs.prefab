@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3198087392950134496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2465022421017615232}
+  - component: {fileID: 3172832462251453975}
+  m_Layer: 0
+  m_Name: Cylinder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2465022421017615232
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3198087392950134496}
+  m_LocalRotation: {x: -0.00000011520234, y: -0.7071069, z: -0.7071067, w: -0.00000011520234}
+  m_LocalPosition: {x: 2.522, y: -0, z: 0}
+  m_LocalScale: {x: 0.16225708, y: 1.2270098, z: 0.2208617}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7751831283160557785}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &3172832462251453975
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3198087392950134496}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5000006
+  m_Height: 2.0000002
+  m_Direction: 1
+  m_Center: {x: -0.0000047087738, y: 0.000028133392, z: -0.0000000894106}
 --- !u!1 &3806478184844484598
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,7 +57,6 @@ GameObject:
   - component: {fileID: 7751831283160557785}
   - component: {fileID: 5783255236639461502}
   - component: {fileID: 2749488425746513481}
-  - component: {fileID: 3434243918020001714}
   m_Layer: 0
   m_Name: Props - HangingLightBulbs
   m_TagString: Untagged
@@ -30,7 +75,9 @@ Transform:
   m_LocalPosition: {x: 9.583995, y: 2.311989, z: 156.19542}
   m_LocalScale: {x: 2.5549152, y: 1.8769813, z: 1.8769813}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2465022421017615232}
+  - {fileID: 7125843604332209273}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -85,17 +132,49 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3434243918020001714
-MeshCollider:
+--- !u!1 &7429580515516450014
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3806478184844484598}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7125843604332209273}
+  - component: {fileID: 4260774647515018058}
+  m_Layer: 0
+  m_Name: Cylinder (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7125843604332209273
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7429580515516450014}
+  m_LocalRotation: {x: -0.00000011520234, y: -0.7071069, z: -0.7071067, w: -0.00000011520234}
+  m_LocalPosition: {x: -2.515, y: 0, z: -0}
+  m_LocalScale: {x: 0.16225708, y: 1.2270098, z: 0.2208617}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7751831283160557785}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &4260774647515018058
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7429580515516450014}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -6632076937963562971, guid: 35925d92895b1db47b3496f69434cab8, type: 3}
+  m_Radius: 0.5000006
+  m_Height: 2.0000002
+  m_Direction: 1
+  m_Center: {x: -0.0000047087738, y: 0.000028133392, z: -0.0000000894106}
