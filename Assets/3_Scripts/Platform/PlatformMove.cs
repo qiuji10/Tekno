@@ -36,17 +36,17 @@ public class PlatformMove : MonoBehaviour, IPlatform
         if (obj.genre == Genre.House)
         {
             eventID = "120_House_PlatformMove";
-            scaleFactor = 0.075f;
+            scaleFactor = 0.15f;
         }
         else if (obj.genre == Genre.Techno)
         {
             eventID = "140_Techno_PlatformMove";
-            scaleFactor = 0.25f;
+            scaleFactor = 0.1f;
         }
         else if (obj.genre == Genre.Electronic)
         {
             eventID = "160_Electro_PlatformMove";
-            scaleFactor = 0.75f;
+            scaleFactor = 0.05f;
         }
 
         // Set the current track
@@ -94,10 +94,14 @@ public class PlatformMove : MonoBehaviour, IPlatform
 
     private void MoveToPoint(Vector3 targetPosition)
     {
-        moveTime += Time.deltaTime;
-        transform.position = Vector3.Lerp(transform.position, targetPosition, TempoManager.GetTimeToBeatCount(1) * scaleFactor);
 
-        if (moveTime >= TempoManager.GetTimeToBeatCount(1))
+        float distance = Vector3.Distance(transform.position, targetPosition);
+        float duration = (distance / TempoManager.GetTimeToBeatCount(1)) * scaleFactor;
+
+        moveTime += Time.deltaTime;
+        transform.position = Vector3.Lerp(transform.position, targetPosition, moveTime / duration);
+
+        if (moveTime >= duration)
         {
             moveTime = 0f;
             isMoving = false;
