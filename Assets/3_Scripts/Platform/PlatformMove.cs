@@ -12,8 +12,6 @@ public class PlatformMove : MonoBehaviour, IPlatform
     private int currentPoint;
 
     private bool isMoving;
-    private int bpm = 140; // Beats per minute
-    private float beatDuration; // Duration of one beat in seconds
     private float moveTime;
     private float scaleFactor;
 
@@ -38,20 +36,17 @@ public class PlatformMove : MonoBehaviour, IPlatform
         if (obj.genre == Genre.House)
         {
             eventID = "120_House_PlatformMove";
-            bpm = 120;
-            scaleFactor = 0.25f;
+            scaleFactor = 0.15f;
         }
         else if (obj.genre == Genre.Techno)
         {
             eventID = "140_Techno_PlatformMove";
-            bpm = 140;
-            scaleFactor = 1.0f;
+            scaleFactor = 0.1f;
         }
         else if (obj.genre == Genre.Electronic)
         {
             eventID = "160_Electro_PlatformMove";
-            bpm = 160;
-            scaleFactor = 4.0f;
+            scaleFactor = 0.05f;
         }
 
         // Set the current track
@@ -99,9 +94,9 @@ public class PlatformMove : MonoBehaviour, IPlatform
 
     private void MoveToPoint(Vector3 targetPosition)
     {
-        float distance = Vector3.Distance(transform.position, targetPosition);
 
-        float duration = ((distance / 60) * bpm) / scaleFactor;
+        float distance = Vector3.Distance(transform.position, targetPosition);
+        float duration = (distance / TempoManager.GetTimeToBeatCount(1)) * scaleFactor;
 
         moveTime += Time.deltaTime;
         transform.position = Vector3.Lerp(transform.position, targetPosition, moveTime / duration);
