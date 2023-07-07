@@ -426,7 +426,11 @@ public class BeatMapEditorWindow : EditorWindow
             if (note.type == NoteType.Tap)
             {
                 Vector2 position = GetNotePosition((int)note.lane, note.tapPosition);
-                GUI.Box(new Rect(position.x, position.y, noteSize.x, noteSize.y), GUIContent.none, EditorStyles.textField);
+
+                GUIStyle style = new GUIStyle(EditorStyles.textArea);
+                style.normal.background = MakeTexture(tapNoteColor);
+
+                GUI.Box(new Rect(position.x, position.y, noteSize.x, noteSize.y), GUIContent.none, style);
             }
             else if (note.type == NoteType.Hold)
             {
