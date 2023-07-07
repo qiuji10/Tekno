@@ -1,11 +1,6 @@
-using NaughtyAttributes;
 using NodeCanvas.BehaviourTrees;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerStatus : MonoBehaviour 
 {
@@ -16,11 +11,13 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] private Sprite yellowHead;
     [SerializeField] private Sprite greenHead;
 
+    [Header("Death")]
+    [SerializeField] private GameObject deathCanvas;
+
     private int totalHealth;
-    private bool isGlitchy;
+    private bool isGlitchy, isDead;
     private CheckpointManager checkpointManager;
     private MaterialModifier matModifier;
-    private Animator _anim;
     private SpectrumUI spectrum;
 
     private void Awake()
@@ -111,8 +108,29 @@ public class PlayerStatus : MonoBehaviour
                 spectrum.images[i].color = Color.red;
             }
 
-            StartCoroutine(BackToLobby());
+
+            if (!isDead)
+            {
+                isDead = true;
+
+                FindObjectOfType<StanceManager>().gameObject.SetActive(false);
+                FindObjectOfType<PauseMenu>().gameObject.SetActive(false);
+
+                GetComponent<PlayerController>().enabled = false;
+                GetComponent<HookAbility>().enabled = false;
+                GetComponent<TeleportAbility>().enabled = false;
+                GetComponent<Attack>().enabled = false;
+
+                deathCanvas.SetActive(true);
+            }
+
+            
         }
+    }
+
+    public void BackLobby()
+    {
+        StartCoroutine(BackToLobby());
     }
 
     private IEnumerator BackToLobby()
@@ -128,14 +146,6 @@ public class PlayerStatus : MonoBehaviour
         MaterialModifier modifier = GetComponentInChildren<MaterialModifier>();
         modifier.ResetMaterial();
 
-        NonDestructible[] nonDestructibles = FindObjectsOfType<NonDestructible>();
-
-        foreach (NonDestructible item in nonDestructibles)
-        {
-            Destroy(item.gameObject);
-            yield return null;
-        }
-
         FindObjectOfType<GameSceneManager>().LoadScene("1_Lobby");
     }
 
@@ -143,8 +153,10 @@ public class PlayerStatus : MonoBehaviour
     {
         isGlitchy = true;
         matModifier.GlitchyEffectOn();
+        yield return null;
         yield return new WaitForSeconds(1f);
         matModifier.GlitchyEffectOff();
+        yield return null;
         isGlitchy = false;
     }
 }

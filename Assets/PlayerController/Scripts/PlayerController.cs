@@ -27,6 +27,42 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     private bool isJumping;
     public bool disableAction = false;
 
+    public float defaultJumpForce
+    {
+        get => jumpForce;
+        set => jumpForce = value;
+    }
+
+    public float defaultAirSpeed
+    {
+        get => airSpeed;
+        set => airSpeed = value;
+    }
+
+    public float defaultMoveSpeed
+    {
+        get => moveSpeed;
+        set => moveSpeed = value;
+    }
+
+    public float defaultMoveDrag
+    {
+        get => moveDrag;
+        set => moveDrag = value;
+    }
+
+    public float defaultFallMultiplier
+    {
+        get => fallMultiplier;
+        set => fallMultiplier = value;
+    }
+
+    public float defaultLowJumpMultiplier
+    {
+        get => lowJumpMultiplier;
+        set => lowJumpMultiplier = value;
+    }
+
     [Header("Ground")]
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundedRadius = 0.13f;
@@ -91,22 +127,43 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         switch (track.genre)
         {
             case Genre.House:
-                moveSpeed = cacheSpeed = 10.8f;
-                animMoveSpeed = 0.7f;
+                //moveSpeed = cacheSpeed = 10.8f;
+                //animMoveSpeed = 0.7f;
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.yellow * 0.5f);
                 break;
             case Genre.Techno:
-                moveSpeed = cacheSpeed = 10.9f;
-                animMoveSpeed = 0.7875f;
+                //moveSpeed = cacheSpeed = 10.9f;
+               // animMoveSpeed = 0.7875f;
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.cyan * 0.5f);
                 break;
             case Genre.Electronic:
-                moveSpeed = cacheSpeed = 11;
-                animMoveSpeed = 0.9f;
+               // moveSpeed = cacheSpeed = 11;
+              //  animMoveSpeed = 0.9f;
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.green * 0.5f);
                 break;
         }
 
+    }
+
+    public void DisableAction()
+    {
+        allowedInput = false;
+        Anim.enabled = false;
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+
+        StanceManager.AllowPlayerSwitchStance = false;
+    }
+
+    public void EnableAction()
+    {
+        allowedInput = true;
+        Anim.enabled = true;
+
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+
+        StanceManager.AllowPlayerSwitchStance = true;
     }
 
     private IEnumerator EnableRB()
