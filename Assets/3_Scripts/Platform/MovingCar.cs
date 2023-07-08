@@ -108,7 +108,7 @@ public class MovingCar : MonoBehaviour
     private void MoveToWaypoint(Vector3 targetPosition)
     {
         moveTime += Time.deltaTime;
-        transform.position = Vector3.Lerp(transform.position, targetPosition, TempoManager.GetTimeToBeatCount(1) * scaleFactor);
+        transform.position = Vector3.Lerp(transform.position, targetPosition, TempoManager.GetTimeToBeatCount(1) /** scaleFactor*/);
 
         if (moveTime >= TempoManager.GetTimeToBeatCount(1))
         {
