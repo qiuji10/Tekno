@@ -8,12 +8,13 @@ public class NoteObject : MonoBehaviour
     public Lane lane;
     public NoteType type;
     public bool visualEnabled;
+    [SerializeField] protected float delayDisableVisual;
 
     [Header("Position Data")]
     public int tapPosition;
     
     public virtual bool SurpassStartPos => Vector3.Dot(transform.position - laneStartPos, transform.forward) < 0f;
-    public virtual bool SurpassEndPos => Vector3.Dot(transform.position - laneEndPos, transform.forward) < 0f;
+    public virtual bool SurpassEndPos => Vector3.Dot(transform.position - laneEndPos, transform.forward) < (1f * delayDisableVisual);
 
     protected float speed;
     protected Vector3 laneStartPos;

@@ -29,7 +29,7 @@ public class StanceManager : MonoBehaviour
     [Header("UI Reference")]
     [SerializeField] TMPro.TMP_Text songNameText;
     [SerializeField] private Image r1_up_img;
-    [SerializeField] private Image r1_down_img;    
+    [SerializeField] private Image r1_down_img;
     [SerializeField] private Image r2_up_img;
     [SerializeField] private Image r2_down_img;
 
@@ -40,6 +40,12 @@ public class StanceManager : MonoBehaviour
     [Header("Input Action References")]
     [SerializeField] private InputActionReference skipTrackAction;
     [SerializeField] private InputActionReference rewindTrackAction;
+
+    [Header("VFX")]
+    [SerializeField] private GameObject[] shockwaveVFX;
+    [SerializeField] private Transform spawnPos;
+    public static float particleSystemTime = 1.65f;
+
 
     private bool firstTimeIgnored;
 
@@ -126,6 +132,8 @@ public class StanceManager : MonoBehaviour
                 songNameText.text = "House - Aggression";
                 hookAbility.enabled = true;
                 teleportAbility.enabled = false;
+                StartCoroutine(StanceShockwave(shockwaveVFX[0], spawnPos));
+
                 break;
             case Genre.Techno:
 
@@ -136,6 +144,8 @@ public class StanceManager : MonoBehaviour
                 songNameText.text = "Techno - Treck No.1";
                 hookAbility.enabled = false;
                 teleportAbility.enabled = false;
+                StartCoroutine(StanceShockwave(shockwaveVFX[1], spawnPos));
+
                 break;
             case Genre.Electronic:
 
@@ -146,6 +156,8 @@ public class StanceManager : MonoBehaviour
                 songNameText.text = "Electro - Ready";
                 hookAbility.enabled = false;
                 teleportAbility.enabled = true;
+                StartCoroutine(StanceShockwave(shockwaveVFX[2], spawnPos));
+
                 break;
         }
     }
@@ -168,5 +180,19 @@ public class StanceManager : MonoBehaviour
         AllowPlayerSwitchStance = true;
         //if (director) director.enabled = false;
     }
+
+    private IEnumerator StanceShockwave(GameObject shockwaveSystem, Transform spawnPoint)
+    {
+        yield return new WaitForSeconds(1.7f);
+
+        ParticleSystem particleSystem = Instantiate(shockwaveSystem, spawnPoint.position, spawnPoint.rotation).GetComponent<ParticleSystem>();
+        particleSystem.Play();
+
+        yield return new WaitForSeconds(particleSystemTime);
+
+        particleSystem.Stop();
+        Destroy(particleSystem.gameObject);
+    }
+
 
 }

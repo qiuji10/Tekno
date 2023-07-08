@@ -8,10 +8,10 @@ public class NoteObject_Hold : NoteObject
     public int holdToPosition;
 
     public override bool SurpassStartPos => Vector3.Dot(noteStart.position - laneStartPos, noteStart.forward) < 0f;
-    public override bool SurpassEndPos => Vector3.Dot(noteEnd.position - laneEndPos, noteEnd.forward) < 0f; //not working currently
+    public override bool SurpassEndPos => Vector3.Dot(noteEnd.position - laneEndPos, noteEnd.forward) < (1f * delayDisableVisual);
 
-    public bool FirstNoteSurpassEndPos => Vector3.Dot(noteStart.position - laneEndPos, noteStart.forward) < 0f;
-    public bool SecondNoteSurpassStartPos => Vector3.Dot(noteEnd.position - laneStartPos, noteEnd.forward) < 0f;
+    public bool FirstNoteSurpassEndPos => Vector3.Dot(noteStart.position - laneEndPos, noteStart.forward) < (1f * delayDisableVisual);
+    public bool SecondNoteSurpassStartPos => Vector3.Dot(noteEnd.position - laneStartPos, noteEnd.forward) < (1f * delayDisableVisual);
 
     [Header("Extra References")]
     [SerializeField] private Transform noteStart;
@@ -51,6 +51,9 @@ public class NoteObject_Hold : NoteObject
 
     public override void Process()
     {
+        if (!visualEnabled && SurpassEndPos)
+            return;
+
         Vector3 velocity = speed * -noteStart.forward * Time.deltaTime;
 
         if (!SurpassEndPos)
@@ -70,15 +73,19 @@ public class NoteObject_Hold : NoteObject
             ToggleNoteMesh(1, true);
         }
 
+        if (SecondNoteSurpassStartPos && !SurpassEndPos)
+        {
+            ToggleNoteMesh(2, true);
+        }
+
         if (FirstNoteSurpassEndPos && !SurpassEndPos)
         {
             ToggleNoteMesh(1, false);
-            SetVfxPosition(1, laneEndPos);
+            SetVfxPosition(1, noteStart.position);
         }
         else if (SurpassStartPos && !SurpassEndPos)
         {
             ToggleVFX(true);
-            ToggleNoteMesh(2, true);
             SetVfxPosition(2, laneStartPos);
         }
         else if (SurpassEndPos)
