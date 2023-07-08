@@ -1,14 +1,18 @@
 using Cinemachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using Random = UnityEngine.Random;
 
 public class TeleportAbility : MonoBehaviour
 {
     [Header("Teleport Data")]
     [SerializeField] private InputActionReference teleportAction;
+    [SerializeField] private InputActionReference skillCheckAction;
     [SerializeField] private MotherNode motherNode;
     [SerializeField] private float teleportRange = 5f;
     [SerializeField] private Transform electricVFX;
@@ -17,168 +21,146 @@ public class TeleportAbility : MonoBehaviour
 
     [Header("Charging values")]
     [SerializeField] private InputActionReference chargingAction;
-    public float maxChargeLevel = 50f;
-    public float initialChargeRate = 10f;
-    public float maxChargeRate = 50f;
-    public float chargeIncreaseAmount = 5f;
-    public float rapidPressThreshold = 0.1f;
-    public float decayRate = 5f;
     [SerializeField] private int numOfNodes = 0;
-    [SerializeField] private int successPress = -1;
-    [SerializeField]private Slider chargeSlider;
+    [SerializeField] private int successPress = 0;
+    [SerializeField]private GameObject chargeSlider;
 
-    private float currentChargeLevel = 0f;
-    private float chargeRate = 0f;
-    private float timeSinceLastPress = 0f;
-    private bool isMaxCharge;
-    public bool keyIsDown;
+    [Header("Skill Check")]
+    public Image[] targetGameObject;
+    public Image handleImage;
+    public Image barNormal;
+    public Image teleportBar;
+    public Image barSuccess;
+    public Image barFail;
+    public int previousValue = 0;
+    private int spawnNum = 5;
+    public int counter;
+    public int randIndex;
+    private bool success;
+    private bool canTeleport = false;
 
     private void OnEnable()
     {
-        //teleportAction.action.performed += Teleport;
-        chargingAction.action.performed += Charge;
-        currentChargeLevel = 0f;
-        chargeSlider.maxValue = maxChargeLevel;
+        TempoManager.OnBeat += TempoManager_OnBeat;
+        skillCheckAction.action.performed += SkillCheck;
+        counter = -1;
+        randIndex = Random.Range(1, spawnNum);
+        successPress = 0;
+        motherNode = null;
         LeanTween.reset();
+    }
+
+    private void OnDestroy()
+    {
+        TempoManager.OnBeat -= TempoManager_OnBeat;
+        motherNode = null;
     }
 
     private void OnDisable()
     {
-        //teleportAction.action.performed -= Teleport;
-        chargingAction.action.performed -= Charge;
-        chargeSlider.gameObject.SetActive(false);
+        skillCheckAction.action.performed -= SkillCheck;
+        TempoManager.OnBeat -= TempoManager_OnBeat;
+        motherNode = null;
+        successPress = 0;
     }
 
-    private void Charge(InputAction.CallbackContext context)
+    private void TempoManager_OnBeat()
+    {
+        if (StanceManager.curTrack.genre != Genre.Electronic)
+        {
+            return;
+        }
+
+        counter++;
+        Debug.Log(counter);
+
+        if (counter == 0 || counter == 5)
+        {
+            handleImage.gameObject.SetActive(false);
+            handleImage.rectTransform.position = targetGameObject[counter].transform.position;
+        }
+        else
+        {
+            handleImage.gameObject.SetActive(true);
+            handleImage.rectTransform.position = targetGameObject[counter].transform.position;
+        }
+
+
+        for (int i = 0; i < targetGameObject.Length; i++)
+        {
+
+            if (i != randIndex)
+            {
+                targetGameObject[i].color = Color.white;
+            }
+        }
+
+        targetGameObject[randIndex].color = Color.green;
+
+        if (counter == 5)
+        {
+            counter = -1;
+        }
+    }
+
+    private void SkillCheck(InputAction.CallbackContext context)
     {
         motherNode = tpSensor.GetNearestObject<MotherNode>();
+
 
         if (StanceManager.curTrack.genre != Genre.Electronic)
         {
             return;
         }
 
-        if (!isMaxCharge && motherNode != null)
+        if (motherNode != null)
         {
-            keyIsDown = true;
             chargeSlider.gameObject.SetActive(true);
-            successPress++;
             numOfNodes = motherNode.teleportPoints.Count;
-        }
-        else
-        {
-            keyIsDown = false;
-            chargeSlider.gameObject.SetActive(false);
-            currentChargeLevel = 0f;
-            successPress = -1;
+
+            if (counter == randIndex)
+            {
+                success = true;
+                successPress++;
+                Debug.Log("Success");
+                StartCoroutine(ChangeSprite());
+                StartCoroutine(ChangeTarget());
+            }
+            else
+            {
+                success = false;
+
+                Debug.Log("Fail");
+                StartCoroutine(ChangeSprite());
+                StartCoroutine(ChangeTarget());
+
+            }
+
+            if (numOfNodes == 0)
+            {
+                canTeleport = false;
+                return;
+            }
+            else if (successPress == numOfNodes)
+            {
+                canTeleport = true;
+                Debug.Log("Here");
+                Teleport();
+
+            }
+
         }
 
-        
-        Debug.Log(successPress);
-
+        previousValue = randIndex;
     }
+
 
     private void Update()
     {
-        /* OLD CHARGE SYSTEM
-          if (keyIsDown)
-        {
-            keyIsDown = false;
-            timeSinceLastPress = 0f;
-            currentChargeLevel += chargeIncreaseAmount;
-            currentChargeLevel = Mathf.Clamp(currentChargeLevel, 0f, maxChargeLevel);
-            chargeSlider.value = currentChargeLevel;
-            rb.isKinematic = true;
-        }
-
-        else if (keyIsDown && !isMaxCharge)
-        {
-            keyIsDown = false;
-            timeSinceLastPress += Time.deltaTime;
-            rb.isKinematic = true;
-
-            if (timeSinceLastPress >= rapidPressThreshold)
-            {
-                chargeRate = Mathf.Lerp(initialChargeRate, maxChargeRate, currentChargeLevel / maxChargeLevel);
-
-                currentChargeLevel += chargeRate * Time.deltaTime;
-                currentChargeLevel = Mathf.Clamp(currentChargeLevel, 0f, maxChargeLevel);
-                chargeSlider.value = currentChargeLevel;
-            }
-
-            if (timeSinceLastPress < rapidPressThreshold)
-            {
-                rb.isKinematic = false;
-            }
-
-
-        }
-        else
-        {
-
-
-            if (!isMaxCharge)
-            {
-                currentChargeLevel -= decayRate * Time.deltaTime;
-                currentChargeLevel = Mathf.Clamp(currentChargeLevel, 0f, maxChargeLevel);
-                chargeSlider.value = currentChargeLevel;
-            }
-
-            if (currentChargeLevel < 1)
-            {
-                rb.isKinematic = false;
-                chargeSlider.gameObject.SetActive(false);
-            }
-        }
-        */
-
-        //New charge system
-        if (currentChargeLevel == maxChargeLevel)
-        {
-            isMaxCharge = true;
-        }
-
-        if (!isMaxCharge && keyIsDown)
-        {
-            currentChargeLevel += decayRate * Time.deltaTime;
-            currentChargeLevel = Mathf.Clamp(currentChargeLevel, 0f, maxChargeLevel);
-            chargeSlider.value = currentChargeLevel;
-            
-        }
-        
-        
-
-        if(isMaxCharge)
-        {
-            if (successPress == numOfNodes)
-            {
-                Debug.Log("Here");
-                CanTeleport();
-            }
-            
-        }
-
-        if(successPress > numOfNodes)
-        {
-            isMaxCharge = false;
-            keyIsDown = false;
-            chargeSlider.gameObject.SetActive(false);
-            successPress = -1;
-            currentChargeLevel = 0;
-        }
-       
 
 
     }
 
-    void CanTeleport()
-    {
-        isMaxCharge = true;
-        keyIsDown = false;
-        Teleport();
-        chargeSlider.gameObject.SetActive(false);
-        successPress = -1;
-    }
     private void Teleport()
     {
         
@@ -186,11 +168,12 @@ public class TeleportAbility : MonoBehaviour
 
         rb.isKinematic = false;
 
-        if (isMaxCharge)
+        if (motherNode != null && canTeleport)
         {
             StartCoroutine(TeleportToNodes());
         }
-       
+
+        successPress = 0;
     }
 
     public void TeleportToNextNode(Transform targetTeleportPoint)
@@ -214,13 +197,41 @@ public class TeleportAbility : MonoBehaviour
                 TeleportToNextNode(teleportPoint);
                 yield return new WaitForSeconds(0.3f); // wait for the player to finish teleporting before teleporting again
                 rb.isKinematic = false;
-                currentChargeLevel = 0;
-                isMaxCharge = false;
                 
             }
+            chargeSlider.gameObject.SetActive(false);
 
-            
+
         }
+    }
+
+    IEnumerator ChangeTarget()
+    {
+        yield return new WaitForSeconds(0.6f);
+
+        randIndex = Random.Range(1, spawnNum);
+        while (randIndex == previousValue)
+        {
+            randIndex = Random.Range(1, spawnNum);
+        }
+    }
+
+    IEnumerator ChangeSprite()
+    {
+        if (success)
+        {
+           teleportBar.sprite = barSuccess.sprite;
+            teleportBar.color = Color.green;
+        }
+        else
+        {
+            teleportBar.sprite = barFail.sprite;
+            teleportBar.color = Color.red;
+        }
+        yield return new WaitForSeconds(0.6f);
+
+        teleportBar.sprite = barNormal.sprite;
+        teleportBar.color = Color.green;
     }
 
 

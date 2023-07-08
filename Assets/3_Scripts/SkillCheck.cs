@@ -8,117 +8,125 @@ using Unity.VisualScripting;
 public class SkillCheck : MonoBehaviour
 {
     [Header("Charging values")]
-    //[SerializeField] private InputActionReference chargingAction;
-    public float maxChargeLevel = 50f;
-    public float chargeRate = 5f;
     [SerializeField] private int numOfNodes = 0;
-    [SerializeField] private int successPress = -1;
+    [SerializeField] private int successPress = 0;
     [SerializeField] private Slider chargeSlider;
-    [SerializeField] private Image target;
-    [SerializeField] private RectTransform targetTransform;
     public Image[] targetGameObject;
-    private float currentChargeLevel = 0f;
-    private bool isMaxCharge;
+    public Image targetImage;
+    public Image barNormal;
+    public Image barSuccess;
+    public Image barFail;
     public int previousValue = 0;
-    private int spawnNum = 4;
-    public float spawnDelay;
-    public float disableDelay;
-    private bool startCharge = false;
-    private int startIndex;
-    private int currentIndex;
+    private int spawnNum = 5;
+    public int counter;
+    public int randIndex;
+    private bool success;
 
     
     private void Start()
     {
-        chargeSlider.maxValue = maxChargeLevel;
-        target.gameObject.SetActive(false);
+        TempoManager.OnBeat += TempoManager_OnBeat;
+        counter = -1;
+        randIndex = Random.Range(1, spawnNum);
 
     }
-    private void Update()
+    private void OnDestroy()
     {
-        if (currentChargeLevel == maxChargeLevel)
-        {
-            isMaxCharge = true;
-            //target.gameObject.SetActive(false);
-        }
+        TempoManager.OnBeat -= TempoManager_OnBeat;
+    }
 
-        if (currentChargeLevel <= 0)
-        {
-            isMaxCharge = false;
-            //target.gameObject.SetActive(false);
-        }
+    private void TempoManager_OnBeat()
+    {
+        counter++;
+        Debug.Log(counter);
 
-        if (!isMaxCharge && startCharge)
+        if(counter == 0 || counter == 5)
         {
-            currentChargeLevel += chargeRate * Time.deltaTime;
-            currentChargeLevel = Mathf.Clamp(currentChargeLevel, 0f, maxChargeLevel);
-            chargeSlider.value = currentChargeLevel;
+            targetImage.gameObject.SetActive(false);
+            targetImage.rectTransform.position = targetGameObject[counter].transform.position;
         }
         else
         {
-            //currentChargeLevel -= decayRate * Time.deltaTime;
-            currentChargeLevel = 0;
-            currentChargeLevel = Mathf.Clamp(currentChargeLevel, 0f, maxChargeLevel);
-            chargeSlider.value = currentChargeLevel;
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            ButtonPressed();
+            targetImage.gameObject.SetActive(true);
+            targetImage.rectTransform.position = targetGameObject[counter].transform.position;
         }
         
-    }
 
-    private void Charge()
-    {
-
-        if (!isMaxCharge)
-        {
-            currentChargeLevel += chargeRate * Time.deltaTime;
-            currentChargeLevel = Mathf.Clamp(currentChargeLevel, 0f, maxChargeLevel);
-            chargeSlider.value = currentChargeLevel;
-        }
-        else
-        {
-            //currentChargeLevel -= decayRate * Time.deltaTime;
-            currentChargeLevel = 0;
-            currentChargeLevel = Mathf.Clamp(currentChargeLevel, 0f, maxChargeLevel);
-            chargeSlider.value = currentChargeLevel;
-        }
-    }
-    IEnumerator SpawnPoints()
-    {
-        yield return new WaitForSeconds(spawnDelay);
-        int randValue = Random.Range(0, spawnNum); // Randomly select the starting index
-
-        while (randValue == previousValue)
-        {
-            randValue = Random.Range(0, spawnNum);
-        }
-
-        for (int i = 0; i < spawnNum; i++)
+        for (int i = 0; i < targetGameObject.Length; i++)
         {
 
-            if (i == randValue)
-            {
-                targetGameObject[i].color = Color.green;
-            }
-            else
+            if (i != randIndex)
             {
                 targetGameObject[i].color = Color.white;
             }
 
-            targetGameObject[i].gameObject.SetActive(true);
+        }
+
+        
+
+        targetGameObject[randIndex].color = Color.green;
+
+        if (counter == 5)
+        {
+            counter = -1;
         }
 
 
-        previousValue = randValue;
     }
 
-    private void ButtonPressed()
+    private void Update()
     {
-        startCharge = true;
-        StartCoroutine(SpawnPoints());
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (counter == randIndex)
+            {
+                success = true;
+                successPress++;
+                Debug.Log("Success");
+                StartCoroutine(ChangeSprite());
+                StartCoroutine(ChangeTarget());
+            }
+            else
+            {
+                success = false;
+                
+                Debug.Log("Fail");
+                StartCoroutine(ChangeSprite());
+                StartCoroutine(ChangeTarget());
+                
+            }
+            previousValue = randIndex;
+
+        }
+
+    }
+
+    IEnumerator ChangeTarget()
+    {
+        yield return new WaitForSeconds(0.6f);
         
+        randIndex = Random.Range(1, spawnNum);
+        while (randIndex == previousValue)
+        {
+            randIndex = Random.Range(1, spawnNum);
+        }
+    }
+
+    IEnumerator ChangeSprite()
+    {
+        if(success)
+        {
+            gameObject.GetComponent<Image>().sprite = barSuccess.sprite;
+            gameObject.GetComponent<Image>().color = Color.green;
+        }
+        else
+        {
+            gameObject.GetComponent<Image>().sprite = barFail.sprite;
+            gameObject.GetComponent<Image>().color = Color.red;
+        }
+        yield return new WaitForSeconds(0.6f);
+
+        gameObject.GetComponent<Image>().sprite = barNormal.sprite;
+        gameObject.GetComponent<Image>().color = Color.green;
     }
 }
