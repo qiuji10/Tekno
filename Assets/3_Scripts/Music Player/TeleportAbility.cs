@@ -201,7 +201,6 @@ public class TeleportAbility : MonoBehaviour
             }
             chargeSlider.gameObject.SetActive(false);
 
-
         }
     }
 
