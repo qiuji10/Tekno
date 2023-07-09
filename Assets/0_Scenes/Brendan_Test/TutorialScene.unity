@@ -11620,7 +11620,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Test
+          m_StringArgument: finalStage3
           m_BoolArgument: 0
         m_CallState: 2
   OnInteractEnd:
@@ -15775,7 +15775,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Test
+          m_StringArgument: stage1 start
           m_BoolArgument: 0
         m_CallState: 2
   OnInteractEnd:
@@ -21483,6 +21483,88 @@ RectTransform:
   m_AnchoredPosition: {x: 0.044921875, y: 121.02399}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1455165343
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1455165344}
+  - component: {fileID: 1455165346}
+  - component: {fileID: 1455165345}
+  m_Layer: 0
+  m_Name: Dialoguetrigger (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1455165344
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455165343}
+  m_LocalRotation: {x: -0, y: -0.71255577, z: -0, w: 0.7016155}
+  m_LocalPosition: {x: -210, y: 322.28506, z: -3970.2}
+  m_LocalScale: {x: 350.26437, y: 8.677042, z: 29.903795}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1528878310}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1455165345
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455165343}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1455165346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455165343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af5119e4a631dea488e64d37e22505eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerOnce: 1
+  disablePlayerControl: 1
+  prompt: {fileID: 0}
+  interactKey: {fileID: 0}
+  eventType: 0
+  genre: 3
+  OnInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 44351236}
+        m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+        m_MethodName: StartDialogue
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: finalStage2
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnInteractEnd:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1470284931
 GameObject:
   m_ObjectHideFlags: 0
@@ -22100,6 +22182,7 @@ Transform:
   - {fileID: 1175971527}
   - {fileID: 4977427670080957435}
   - {fileID: 4977427670596993583}
+  - {fileID: 1455165344}
   m_Father: {fileID: 916124607}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -22398,7 +22481,7 @@ PrefabInstance:
     - target: {fileID: 9090743067838074643, guid: e16af58e0af16994ba78158083211198,
         type: 3}
       propertyPath: dialogueDatas.Array.size
-      value: 10
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 9090743067838074643, guid: e16af58e0af16994ba78158083211198,
         type: 3}
@@ -22464,13 +22547,25 @@ PrefabInstance:
         type: 3}
       propertyPath: dialogueDatas.Array.data[10]
       value: 
-      objectReference: {fileID: 11400000, guid: 2bef4c6290514424890c695b2a00804d,
+      objectReference: {fileID: 11400000, guid: b5da47fb9f71ebf4a840c7dde3bb4de8,
         type: 2}
     - target: {fileID: 9090743067838074643, guid: e16af58e0af16994ba78158083211198,
         type: 3}
       propertyPath: dialogueDatas.Array.data[11]
       value: 
-      objectReference: {fileID: 11400000, guid: 2bef4c6290514424890c695b2a00804d,
+      objectReference: {fileID: 11400000, guid: 0cfa599448c5ef44ba79cdbe821e8956,
+        type: 2}
+    - target: {fileID: 9090743067838074643, guid: e16af58e0af16994ba78158083211198,
+        type: 3}
+      propertyPath: dialogueDatas.Array.data[12]
+      value: 
+      objectReference: {fileID: 11400000, guid: 4c12240000e4da949b5f60d64bd1e096,
+        type: 2}
+    - target: {fileID: 9090743067838074643, guid: e16af58e0af16994ba78158083211198,
+        type: 3}
+      propertyPath: dialogueDatas.Array.data[13]
+      value: 
+      objectReference: {fileID: 11400000, guid: 99fa967d7b6f0154e861a0fb6b564cb2,
         type: 2}
     - target: {fileID: 9090743067838074644, guid: e16af58e0af16994ba78158083211198,
         type: 3}
@@ -22555,7 +22650,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Test
+          m_StringArgument: finalStage1
           m_BoolArgument: 0
         m_CallState: 2
   OnInteractEnd:
