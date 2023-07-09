@@ -2181,7 +2181,7 @@ Transform:
   m_GameObject: {fileID: 6397968323028654099}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -37.35, y: 1.9, z: -35.22}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8635826427935689999}
@@ -2351,6 +2351,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportAction: {fileID: 7589435723925371507, guid: 1870834d611a202418d6e474a9fb0619,
     type: 3}
+  skillCheckAction: {fileID: 0}
   motherNode: {fileID: 0}
   teleportRange: 5
   electricVFX: {fileID: 7646408062528310940, guid: 318aeb31f58e53d43914185073a87c6c,
@@ -2359,14 +2360,19 @@ MonoBehaviour:
   rb: {fileID: 6397968323028654098}
   chargingAction: {fileID: 7589435723925371507, guid: 1870834d611a202418d6e474a9fb0619,
     type: 3}
-  maxChargeLevel: 100
-  initialChargeRate: 1
-  maxChargeRate: 10
-  chargeIncreaseAmount: 5
-  rapidPressThreshold: 0.1
-  decayRate: 10
-  chargeSlider: {fileID: 739480077089560463}
-  keyIsDown: 0
+  numOfNodes: 0
+  successPress: -1
+  chargeSlider: {fileID: 0}
+  targetGameObject: []
+  handleImage: {fileID: 0}
+  barNormal: {fileID: 0}
+  teleportBar: {fileID: 0}
+  barSuccess: {fileID: 0}
+  barFail: {fileID: 0}
+  previousValue: 0
+  counter: 0
+  randIndex: 0
+  delayTime: 0
 --- !u!114 &1333158407432279658
 MonoBehaviour:
   m_ObjectHideFlags: 0
