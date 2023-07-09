@@ -38,6 +38,8 @@ public class TeleportAbility : MonoBehaviour
     public int randIndex;
     private bool success;
     private bool canTeleport = false;
+    public float delayTime;
+    private bool pauseCounter = false;
 
     private void OnEnable()
     {
@@ -71,8 +73,12 @@ public class TeleportAbility : MonoBehaviour
             return;
         }
 
-        counter++;
-        Debug.Log(counter);
+        if (!pauseCounter)
+        {
+            counter++;
+        }
+        
+        //Debug.Log(counter);
 
         if (counter == 0 || counter == 5)
         {
@@ -122,6 +128,7 @@ public class TeleportAbility : MonoBehaviour
             {
                 success = true;
                 successPress++;
+                pauseCounter = true;
                 Debug.Log("Success");
                 StartCoroutine(ChangeSprite());
                 StartCoroutine(ChangeTarget());
@@ -130,12 +137,13 @@ public class TeleportAbility : MonoBehaviour
             {
                 success = true;
                 successPress++;
+                handleImage.gameObject.SetActive(true);
             }
             else
             {
                 
                 success = false;
-
+                pauseCounter = false;
                 Debug.Log("Fail");
                 StartCoroutine(ChangeSprite());
                 StartCoroutine(ChangeTarget());
@@ -212,7 +220,7 @@ public class TeleportAbility : MonoBehaviour
 
     IEnumerator ChangeTarget()
     {
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(delayTime);
 
         randIndex = Random.Range(1, spawnNum);
         while (randIndex == previousValue)
@@ -225,18 +233,21 @@ public class TeleportAbility : MonoBehaviour
     {
         if (success)
         {
-           teleportBar.sprite = barSuccess.sprite;
+            teleportBar.sprite = barSuccess.sprite;
             teleportBar.color = Color.green;
         }
         else
         {
             teleportBar.sprite = barFail.sprite;
             teleportBar.color = Color.red;
+            
         }
-        yield return new WaitForSeconds(0.6f);
-
+        yield return new WaitForSeconds(delayTime);
+        counter = -1;
+        pauseCounter = false;
         teleportBar.sprite = barNormal.sprite;
         teleportBar.color = Color.green;
+        handleImage.gameObject.SetActive(true);
     }
 
 
