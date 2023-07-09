@@ -231,6 +231,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
                 isJumping = false;
                 _anim.ResetTrigger(jump);
                 _anim.SetTrigger(jumpGrounded);
+                _rb.velocity = Vector3.zero;
             }
             _rb.drag = moveDrag;
         }
