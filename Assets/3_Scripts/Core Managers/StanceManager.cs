@@ -66,10 +66,6 @@ public class StanceManager : MonoBehaviour
         AllowPlayerSwitchStance = true;
         //cart = director.GetComponent<CinemachineDollyCart>();
         musicPlayer = GetComponent<SimpleMusicPlayer>();
-    }
-
-    private void Start()
-    {
         trackIndex = 1;
         PlayTrack(trackIndex);
     }
