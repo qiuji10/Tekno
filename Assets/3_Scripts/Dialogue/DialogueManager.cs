@@ -107,6 +107,8 @@ public class DialogueManager : MonoBehaviour
         DisplayNextSentence();
     }
 
+ 
+
     public void StartDialogue(string dialogueName)
     {
         DialogueData dialogueData = GetDialogue(dialogueName);
