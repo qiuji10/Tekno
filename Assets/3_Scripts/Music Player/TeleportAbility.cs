@@ -22,7 +22,7 @@ public class TeleportAbility : MonoBehaviour
     [Header("Charging values")]
     [SerializeField] private InputActionReference chargingAction;
     [SerializeField] private int numOfNodes = 0;
-    [SerializeField] private int successPress = 0;
+    [SerializeField] private int successPress = -1;
     [SerializeField]private GameObject chargeSlider;
 
     [Header("Skill Check")]
@@ -45,7 +45,7 @@ public class TeleportAbility : MonoBehaviour
         skillCheckAction.action.performed += SkillCheck;
         counter = -1;
         randIndex = Random.Range(1, spawnNum);
-        successPress = 0;
+        successPress = -1;
         motherNode = null;
         LeanTween.reset();
     }
@@ -61,7 +61,7 @@ public class TeleportAbility : MonoBehaviour
         skillCheckAction.action.performed -= SkillCheck;
         TempoManager.OnBeat -= TempoManager_OnBeat;
         motherNode = null;
-        successPress = 0;
+        successPress = -1;
     }
 
     private void TempoManager_OnBeat()
@@ -126,8 +126,14 @@ public class TeleportAbility : MonoBehaviour
                 StartCoroutine(ChangeSprite());
                 StartCoroutine(ChangeTarget());
             }
+            else if(successPress == -1 && counter != randIndex)
+            {
+                success = true;
+                successPress++;
+            }
             else
             {
+                
                 success = false;
 
                 Debug.Log("Fail");
@@ -173,7 +179,7 @@ public class TeleportAbility : MonoBehaviour
             StartCoroutine(TeleportToNodes());
         }
 
-        successPress = 0;
+        successPress = -1;
     }
 
     public void TeleportToNextNode(Transform targetTeleportPoint)
