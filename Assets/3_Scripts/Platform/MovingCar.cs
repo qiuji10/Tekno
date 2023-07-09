@@ -53,7 +53,6 @@ public class MovingCar : MonoBehaviour
         currentTrack = obj;
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
 
-        // Reset the positions of all cars
         ResetCarPositions();
     }
 
@@ -123,10 +122,7 @@ public class MovingCar : MonoBehaviour
             waypoints[i].position = originalPositions[i];
         }
 
-        // Reset the current waypoint index
         currentWaypointIndex = 0;
-
-        // Enable the car renderer
         carRenderer.enabled = true;
     }
 
