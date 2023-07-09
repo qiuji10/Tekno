@@ -121,6 +121,7 @@ public class TeleportAbility : MonoBehaviour
 
         if (motherNode != null)
         {
+            pauseCounter = false;
             chargeSlider.gameObject.SetActive(true);
             numOfNodes = motherNode.teleportPoints.Count;
 
@@ -137,13 +138,12 @@ public class TeleportAbility : MonoBehaviour
             {
                 success = true;
                 successPress++;
-                handleImage.gameObject.SetActive(true);
             }
             else
             {
                 
                 success = false;
-                pauseCounter = false;
+                pauseCounter = true;
                 Debug.Log("Fail");
                 StartCoroutine(ChangeSprite());
                 StartCoroutine(ChangeTarget());
@@ -163,6 +163,12 @@ public class TeleportAbility : MonoBehaviour
 
             }
 
+        }
+        else
+        {
+            pauseCounter = true;
+            successPress = -1;
+            chargeSlider.gameObject.SetActive(false);
         }
 
         previousValue = randIndex;
