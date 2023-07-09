@@ -44,7 +44,7 @@ public class StanceManager : MonoBehaviour
     [Header("VFX")]
     [SerializeField] private GameObject[] shockwaveVFX;
     [SerializeField] private Transform spawnPos;
-    public static float particleSystemTime = 1.65f;
+    public static float particleSystemTime = 1.2f;
 
 
     private bool firstTimeIgnored;
@@ -183,7 +183,7 @@ public class StanceManager : MonoBehaviour
 
     private IEnumerator StanceShockwave(GameObject shockwaveSystem, Transform spawnPoint)
     {
-        yield return new WaitForSeconds(1.7f);
+        yield return new WaitForSeconds(1.65f);
 
         ParticleSystem particleSystem = Instantiate(shockwaveSystem, spawnPoint.position, spawnPoint.rotation).GetComponent<ParticleSystem>();
         particleSystem.Play();
