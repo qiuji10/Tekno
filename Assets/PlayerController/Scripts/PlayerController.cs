@@ -155,6 +155,16 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         StanceManager.AllowPlayerSwitchStance = false;
     }
 
+    public void DisableAction2()
+    {
+        allowedInput = false;
+        Anim.enabled = true;
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+
+        StanceManager.AllowPlayerSwitchStance = false;
+    }
+
     public void EnableAction()
     {
         allowedInput = true;
@@ -174,6 +184,12 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            transform.rotation = Quaternion.Euler(Vector3.zero);
+            transform.localScale = Vector3.one;
+        }
+
         Rotation();
         IsGround();
         isActionDisable();
