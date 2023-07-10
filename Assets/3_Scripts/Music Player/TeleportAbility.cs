@@ -68,7 +68,7 @@ public class TeleportAbility : MonoBehaviour
 
     private void TempoManager_OnBeat()
     {
-        if (StanceManager.curTrack.genre != Genre.Electronic)
+        if (StanceManager.curTrack.genre != Genre.Electronic || motherNode == null)
         {
             return;
         }
@@ -78,14 +78,16 @@ public class TeleportAbility : MonoBehaviour
             counter++;
         }
         
-        //Debug.Log(counter);
+        Debug.Log(counter);
+
+        Debug.Log(targetGameObject.Length);
 
         if (counter == 0 || counter == 5)
         {
             handleImage.gameObject.SetActive(false);
             handleImage.rectTransform.position = targetGameObject[counter].transform.position;
         }
-        else
+        else if (counter == 1 || counter == 2 || counter == 3 || counter == 4)
         {
             handleImage.gameObject.SetActive(true);
             handleImage.rectTransform.position = targetGameObject[counter].transform.position;

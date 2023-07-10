@@ -184,6 +184,12 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            transform.rotation = Quaternion.Euler(Vector3.zero);
+            transform.localScale = Vector3.one;
+        }
+
         Rotation();
         IsGround();
         isActionDisable();
