@@ -70,14 +70,16 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TMP_Text characterNameText;
     [SerializeField] private TMP_Text dialogueText;
 
-    private bool isRunning;
+    private bool dialogueIsOn;
     private int curCharacterIndex;
 
     private Dialogue curDialogue;
     private Coroutine typingCoroutine, endCoroutine;
     private Queue<Dialogue> dialogues = new Queue<Dialogue>();
 
+    public static event Action OnDialogueStart;
     public static event Action OnDialogueEnd;
+    public static bool IsRunning;
 
     private void OnEnable()
     {
@@ -91,7 +93,7 @@ public class DialogueManager : MonoBehaviour
 
     private void Action_performed(InputAction.CallbackContext context)
     {
-        if (isRunning)
+        if (dialogueIsOn)
             DisplayNextSentence();
     }
 
@@ -107,10 +109,10 @@ public class DialogueManager : MonoBehaviour
         DisplayNextSentence();
     }
 
- 
-
     public void StartDialogue(string dialogueName)
     {
+        IsRunning = true;
+
         DialogueData dialogueData = GetDialogue(dialogueName);
 
         if (dialogues.Count > 0) dialogues.Clear();
@@ -171,7 +173,8 @@ public class DialogueManager : MonoBehaviour
         }
 
         curCharacterIndex = 0;
-        isRunning = false;
+        dialogueIsOn = false;
+        IsRunning = false;
 
         StopAllCoroutines();
         OnDialogueEnd?.Invoke();
@@ -297,7 +300,7 @@ public class DialogueManager : MonoBehaviour
     private IEnumerator StartSequence()
     {
         yield return IntroOutroAnimation(true);
-        isRunning = true;
+        dialogueIsOn = true;
         DisplayNextSentence();
     }
 
