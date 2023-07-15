@@ -8,40 +8,59 @@ public class IntroScreen : MonoBehaviour
 {
     public Cinemachine.CinemachineVirtualCameraBase vcam;
     public Canvas canvas;
+    public PlayerData playerData;
 
     public UnityEvent OnAnyKeyDown;
 
+    private bool playerIn;
+
     private void Awake()
     {
-        if(PlayerPrefs.GetInt("Intro") == 1)
+        Collider[] overlapColliders = Physics.OverlapSphere(transform.position, 5);
+
+        for (int i = 0; i < overlapColliders.Length; i++)
         {
-            OnAnyKeyDown?.Invoke();
-            canvas.enabled = false;
-            vcam.Priority = 0;
-            gameObject.SetActive(false);
+            if (overlapColliders[i].CompareTag("Player"))
+            {
+                playerIn = true;
+            }
         }
+
+        DisableSelf();
     }
 
     private void Update()
     {
-        if (Input.anyKeyDown)
+        if (Input.anyKeyDown && playerIn)
         {
-            PlayerPrefs.SetInt("Intro", 1);
-            OnAnyKeyDown?.Invoke();
+            EndIntro();
+        }
+    }
+
+    private void EndIntro()
+    {
+        OnAnyKeyDown?.Invoke();
+        canvas.enabled = false;
+        vcam.Priority = 0;
+        gameObject.SetActive(false);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && !playerIn)
+        {
+            playerIn = true;
+            playerData.controller.DisableAction();
+        }
+    }
+
+    private void DisableSelf()
+    {
+        if (!playerIn)
+        {
             canvas.enabled = false;
             vcam.Priority = 0;
             gameObject.SetActive(false);
         }
-    }
-
-    private void OnApplicationQuit()
-    {
-        PlayerPrefs.SetInt("Intro", 0);
-    }
-
-    [Button]
-    private void ClearIntroPlayerPref()
-    {
-        PlayerPrefs.SetInt("Intro", 0);
     }
 }

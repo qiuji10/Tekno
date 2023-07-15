@@ -8,11 +8,6 @@ public class DissolveController : MonoBehaviour
     public float dissolveAmount = 0f;
     public float dissolveSpeed = 1f;
 
-    void Update()
-    {
-        material.SetFloat("_Dissolve", dissolveAmount);
-    }
-
     public void SetDissolveAmount(float endValue, float duration)
     {
         StartCoroutine(DissolveCoroutine(endValue, duration));
@@ -27,7 +22,7 @@ public class DissolveController : MonoBehaviour
         {
             timeElapsed += Time.deltaTime;
             dissolveAmount = Mathf.Lerp(startValue, endValue, timeElapsed / duration);
-
+            material.SetFloat("_Dissolve", dissolveAmount);
             yield return null;
         }
 

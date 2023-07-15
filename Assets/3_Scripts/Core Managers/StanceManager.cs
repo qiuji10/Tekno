@@ -174,6 +174,7 @@ public class StanceManager : MonoBehaviour
 
     private IEnumerator EnableInput(float time)
     {
+        AllowPlayerSwitchStance = false;
         PlayerController.allowedInput = false;
         yield return new WaitForSeconds(time);
         PlayerController.allowedInput = true;
