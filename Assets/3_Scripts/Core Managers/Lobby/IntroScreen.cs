@@ -59,7 +59,6 @@ public class IntroScreen : MonoBehaviour
         if (!playerIn)
         {
             canvas.enabled = false;
-            vcam.Priority = 0;
             gameObject.SetActive(false);
         }
     }

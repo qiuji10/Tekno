@@ -29,7 +29,7 @@ public class CameraSetter : MonoBehaviour
     public void LoadCam()
     {
         brain.m_DefaultBlend.m_Time = blendTime;
-        InUsedCam.Priority = 11;
+        InUsedCam.Priority = 12;
     }
 
     public void UnloadCam()
