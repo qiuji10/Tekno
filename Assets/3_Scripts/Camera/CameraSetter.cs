@@ -34,6 +34,7 @@ public class CameraSetter : MonoBehaviour
 
     public void UnloadCam()
     {
+        Debug.Log("unload cam");
         InUsedCam.Priority = 9;
     }
 

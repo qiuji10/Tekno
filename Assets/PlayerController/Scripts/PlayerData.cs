@@ -2,37 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ElevatorDestination { Gameplay, Tutorial, Lobby }
-
 public class PlayerData : MonoBehaviour
 {
     //public static PlayerData Instance;
+    public GameObject player;
     public PlayerController controller;
-
-    public ElevatorDestination destination;
-
-    //private void Awake()
-    //{
-    //    if (Instance == null)
-    //    {
-    //        Instance = this;
-    //    }
-    //    else
-    //    {
-    //        Destroy(this.gameObject);
-    //        return;
-    //    }
-
-    //    DontDestroyOnLoad(gameObject);
-    //}
 
     private void Start()
     {
-        controller = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        player = GameObject.FindGameObjectWithTag("Player");
+        controller = player.GetComponent<PlayerController>();
     }
 
     public void EnablePlayerController()
     {
+        if (controller == null)
+        {
+            controller = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        }
+
         controller.enabled = true;
     }
 
