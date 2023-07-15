@@ -155,20 +155,12 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         StanceManager.AllowPlayerSwitchStance = false;
     }
 
-    public void DisableAction2()
-    {
-        allowedInput = false;
-        Anim.enabled = true;
-        _rb.velocity = Vector3.zero;
-        _rb.angularVelocity = Vector3.zero;
-
-        StanceManager.AllowPlayerSwitchStance = false;
-    }
-
     public void EnableAction()
     {
         allowedInput = true;
         Anim.enabled = true;
+
+        Anim.Play("Tekno Idle");
 
         _rb.velocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;

@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public enum Genre { House, Techno, Electronic, All }
@@ -46,19 +45,24 @@ public class StanceManager : MonoBehaviour
     [SerializeField] private Transform spawnPos;
     public static float particleSystemTime = 1.2f;
 
-
     private bool firstTimeIgnored;
 
     private void OnEnable()
     {
         skipTrackAction.action.performed += SkipTrack;
         rewindTrackAction.action.performed += RewindTrack;
+
+        DialogueManager.OnDialogueStart += DisableSwitchStance;
+        DialogueManager.OnDialogueEnd += EnableSwitchStance;
     }
 
     private void OnDisable()
     {
         skipTrackAction.action.performed -= SkipTrack;
         rewindTrackAction.action.performed -= RewindTrack;
+
+        DialogueManager.OnDialogueStart -= DisableSwitchStance;
+        DialogueManager.OnDialogueEnd -= EnableSwitchStance;
     }
 
     private void Awake()
