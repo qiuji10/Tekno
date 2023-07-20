@@ -214,6 +214,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         
 
     }
+
     private void IsGround()
     {
         //isGround = Physics.Raycast(transform.position, Vector3.down, transform.localScale.y * 0.5f + 0.2f, groundLayer);
@@ -334,6 +335,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
             _anim.SetTrigger(jump);
             _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
             _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            Debug.Log("Current jump force: " + jumpForce);
         }
     }
 
