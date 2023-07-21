@@ -43,7 +43,7 @@ public class UIEnable : MonoBehaviour
         {
             healthUIReference.GetComponent<Canvas>().enabled = true;
             healthCanvas.GetComponent<Canvas>().enabled = true;
-            playerController.DisableAction2();
+            playerController.DisableAction();
             disablePlayerControl = true;
 
         }
@@ -59,7 +59,7 @@ public class UIEnable : MonoBehaviour
         {
             stanceManagerUIReference.GetComponent<Canvas>().enabled = true;
             stanceManagerCanvas.GetComponent<Canvas>().enabled = true;
-            playerController.DisableAction2();
+            playerController.DisableAction();
             disablePlayerControl = true;
         }
         else
