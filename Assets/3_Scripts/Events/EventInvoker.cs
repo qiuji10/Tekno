@@ -57,6 +57,11 @@ public class EventInvoker : MonoBehaviour
         }
     }
 
+    public void Invoke_OnInteract()
+    {
+        OnInteract?.Invoke();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (StanceManager.curTrack.genre != genre && genre != Genre.All) return;

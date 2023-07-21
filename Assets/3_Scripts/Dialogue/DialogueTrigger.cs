@@ -81,7 +81,7 @@ public class DialogueTrigger : MonoBehaviour
                     if (player == null)
                         other.TryGetComponent(out player);
                     
-                    player.DisableAction2();
+                    player.DisableAction();
                 }
             }
 

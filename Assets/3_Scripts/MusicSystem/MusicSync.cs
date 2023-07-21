@@ -22,10 +22,17 @@ public class MusicSync : MonoBehaviour
     public bool RotateY;
     public bool RotateZ;
     public Vector3 scaleMod = Vector3.one;
+
     private void Awake()
     {
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicScale);
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicRotate);
+    }
+
+    private void OnDestroy()
+    {
+        Koreographer.Instance.UnregisterForEvents(eventID, OnMusicScale);
+        Koreographer.Instance.UnregisterForEvents(eventID, OnMusicRotate);
     }
 
     private void OnMusicScale(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
@@ -40,12 +47,11 @@ public class MusicSync : MonoBehaviour
         }
       
     }
-        private void OnMusicRotate(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
+    
+    private void OnMusicRotate(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
     {
         if (RotationSelection)
         {
-            
-
             float x = RotateX ? evt.GetValueOfCurveAtTime(sampleTime) * 360.0f: 0.0f;
             float y = RotateY ? evt.GetValueOfCurveAtTime(sampleTime) * 360.0f : 0.0f;
             float z = RotateZ ? evt.GetValueOfCurveAtTime(sampleTime) * 360.0f : 0.0f;

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 using Random = UnityEngine.Random;
 
 public class TeleportAbility : MonoBehaviour
@@ -68,7 +67,7 @@ public class TeleportAbility : MonoBehaviour
 
     private void TempoManager_OnBeat()
     {
-        if (StanceManager.curTrack.genre != Genre.Electronic)
+        if (StanceManager.curTrack.genre != Genre.Electronic || motherNode == null)
         {
             return;
         }
@@ -78,14 +77,16 @@ public class TeleportAbility : MonoBehaviour
             counter++;
         }
         
-        //Debug.Log(counter);
+        Debug.Log(counter);
+
+        Debug.Log(targetGameObject.Length);
 
         if (counter == 0 || counter == 5)
         {
             handleImage.gameObject.SetActive(false);
             handleImage.rectTransform.position = targetGameObject[counter].transform.position;
         }
-        else
+        else if (counter == 1 || counter == 2 || counter == 3 || counter == 4)
         {
             handleImage.gameObject.SetActive(true);
             handleImage.rectTransform.position = targetGameObject[counter].transform.position;
@@ -121,6 +122,7 @@ public class TeleportAbility : MonoBehaviour
 
         if (motherNode != null)
         {
+            pauseCounter = false;
             chargeSlider.gameObject.SetActive(true);
             numOfNodes = motherNode.teleportPoints.Count;
 
@@ -137,13 +139,12 @@ public class TeleportAbility : MonoBehaviour
             {
                 success = true;
                 successPress++;
-                handleImage.gameObject.SetActive(true);
             }
             else
             {
                 
                 success = false;
-                pauseCounter = false;
+                pauseCounter = true;
                 Debug.Log("Fail");
                 StartCoroutine(ChangeSprite());
                 StartCoroutine(ChangeTarget());
@@ -163,6 +164,12 @@ public class TeleportAbility : MonoBehaviour
 
             }
 
+        }
+        else
+        {
+            pauseCounter = true;
+            successPress = -1;
+            chargeSlider.gameObject.SetActive(false);
         }
 
         previousValue = randIndex;
