@@ -670,7 +670,7 @@ GameObject:
   - component: {fileID: 29355604}
   - component: {fileID: 29355603}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: StanceCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -904,9 +904,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1387844923}
-        m_TargetAssemblyTypeName: GameobjectSetActive, Assembly-CSharp
-        m_MethodName: Dissolve
+      - m_Target: {fileID: 464868722}
+        m_TargetAssemblyTypeName: UIEnable, Assembly-CSharp
+        m_MethodName: EnableStanceUICanvas
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1508,7 +1508,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 62b734bbde8143b4aa2b2a3e871f603c, type: 2}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2106,7 +2106,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 62b734bbde8143b4aa2b2a3e871f603c, type: 2}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2263,7 +2263,7 @@ PrefabInstance:
     - target: {fileID: 4734267588028944829, guid: caed0391b47b24843ad7db2cc838a575,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5402261152634505991, guid: caed0391b47b24843ad7db2cc838a575,
         type: 3}
@@ -3143,7 +3143,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 430723323ef6ecc4d9d5bc9d3ea1710e, type: 2}
+      objectReference: {fileID: 2100000, guid: a049671b88792c34781ba2b9231fab5d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ecf4261eb5928e41b9668d022a2a1dc, type: 3}
 --- !u!4 &290422956 stripped
@@ -3675,7 +3675,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 430723323ef6ecc4d9d5bc9d3ea1710e, type: 2}
+      objectReference: {fileID: 2100000, guid: a049671b88792c34781ba2b9231fab5d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ecf4261eb5928e41b9668d022a2a1dc, type: 3}
 --- !u!4 &325459339 stripped
@@ -4268,7 +4268,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 430723323ef6ecc4d9d5bc9d3ea1710e, type: 2}
+      objectReference: {fileID: 2100000, guid: a049671b88792c34781ba2b9231fab5d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ecf4261eb5928e41b9668d022a2a1dc, type: 3}
 --- !u!4 &351122025 stripped
@@ -4496,7 +4496,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &378848169
 Transform:
   m_ObjectHideFlags: 0
@@ -5963,7 +5963,6 @@ GameObject:
   m_Component:
   - component: {fileID: 464868721}
   - component: {fileID: 464868722}
-  - component: {fileID: 464868723}
   m_Layer: 0
   m_Name: enableUI
   m_TagString: Untagged
@@ -6000,28 +5999,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bafda5cfd5af7f499779cb2150a67b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthUIReference: {fileID: 0}
-  stanceManagerUIReference: {fileID: 0}
-  DisableCanvas: {fileID: -5402125171716273264, guid: 1870834d611a202418d6e474a9fb0619,
+  interactKey: {fileID: -5402125171716273264, guid: 1870834d611a202418d6e474a9fb0619,
     type: 3}
+  disablePlayerControl: 0
   healthCanvas: {fileID: 2113237766}
   stanceManagerCanvas: {fileID: 1541796919}
---- !u!114 &464868723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 464868718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47d5b502f00642f48a149c5d497ef7a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  activeList:
-  - {fileID: 2113237766}
-  inactiveList: []
-  dissolveDuration: 0.2
+  healthUIReference: {fileID: 0}
+  stanceManagerUIReference: {fileID: 0}
+  playerController: {fileID: 0}
+  player: {fileID: 0}
+  triggerDelay: 4
 --- !u!1 &470039620
 GameObject:
   m_ObjectHideFlags: 0
@@ -6666,7 +6653,7 @@ PrefabInstance:
     - target: {fileID: 5402261152634505991, guid: caed0391b47b24843ad7db2cc838a575,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -145.90007
+      value: -145.9
       objectReference: {fileID: 0}
     - target: {fileID: 5402261152634505991, guid: caed0391b47b24843ad7db2cc838a575,
         type: 3}
@@ -6676,7 +6663,7 @@ PrefabInstance:
     - target: {fileID: 5402261152634505991, guid: caed0391b47b24843ad7db2cc838a575,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4459.5815
+      value: -4475
       objectReference: {fileID: 0}
     - target: {fileID: 5402261152634505991, guid: caed0391b47b24843ad7db2cc838a575,
         type: 3}
@@ -13449,7 +13436,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 430723323ef6ecc4d9d5bc9d3ea1710e, type: 2}
+      objectReference: {fileID: 2100000, guid: a049671b88792c34781ba2b9231fab5d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ecf4261eb5928e41b9668d022a2a1dc, type: 3}
 --- !u!4 &935623493 stripped
@@ -16363,7 +16350,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 62b734bbde8143b4aa2b2a3e871f603c, type: 2}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -16475,7 +16462,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 62b734bbde8143b4aa2b2a3e871f603c, type: 2}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -17543,7 +17530,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 430723323ef6ecc4d9d5bc9d3ea1710e, type: 2}
+      objectReference: {fileID: 2100000, guid: a049671b88792c34781ba2b9231fab5d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ecf4261eb5928e41b9668d022a2a1dc, type: 3}
 --- !u!4 &1216505907 stripped
@@ -18894,7 +18881,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 62b734bbde8143b4aa2b2a3e871f603c, type: 2}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -18979,7 +18966,7 @@ PrefabInstance:
     - target: {fileID: 5402261152634505991, guid: caed0391b47b24843ad7db2cc838a575,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -144.18416
+      value: -144.18404
       objectReference: {fileID: 0}
     - target: {fileID: 5402261152634505991, guid: caed0391b47b24843ad7db2cc838a575,
         type: 3}
@@ -18989,7 +18976,7 @@ PrefabInstance:
     - target: {fileID: 5402261152634505991, guid: caed0391b47b24843ad7db2cc838a575,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4611.987
+      value: -4593.987
       objectReference: {fileID: 0}
     - target: {fileID: 5402261152634505991, guid: caed0391b47b24843ad7db2cc838a575,
         type: 3}
@@ -19936,7 +19923,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1387844922
 Transform:
   m_ObjectHideFlags: 0
@@ -20780,19 +20767,7 @@ MonoBehaviour:
       m_Calls: []
   OnExit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 464868722}
-        m_TargetAssemblyTypeName: UIEnable, Assembly-CSharp
-        m_MethodName: DisableUICanvas
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   triggerOnce: 1
   triggerDelay: 0
 --- !u!65 &1420363550
@@ -20856,9 +20831,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 464868723}
-        m_TargetAssemblyTypeName: GameobjectSetActive, Assembly-CSharp
-        m_MethodName: Dissolve
+      - m_Target: {fileID: 464868722}
+        m_TargetAssemblyTypeName: UIEnable, Assembly-CSharp
+        m_MethodName: EnableHealthUICanvas
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -21928,7 +21903,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 430723323ef6ecc4d9d5bc9d3ea1710e, type: 2}
+      objectReference: {fileID: 2100000, guid: a049671b88792c34781ba2b9231fab5d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ecf4261eb5928e41b9668d022a2a1dc, type: 3}
 --- !u!4 &1516495486 stripped
@@ -22076,7 +22051,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 62b734bbde8143b4aa2b2a3e871f603c, type: 2}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -22586,7 +22561,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1541796920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22634,7 +22609,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1541796919}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
@@ -23069,7 +23044,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 62b734bbde8143b4aa2b2a3e871f603c, type: 2}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -23126,7 +23101,7 @@ GameObject:
   - component: {fileID: 1566151532}
   - component: {fileID: 1566151531}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: HealthCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26107,22 +26082,22 @@ PrefabInstance:
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -683.4
+      value: -683.3973
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 506.1
+      value: 511.16
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3436.9
+      value: -3436.8992
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7153438
+      value: 0.728731
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
@@ -26132,7 +26107,7 @@ PrefabInstance:
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.6987727
+      value: 0.68480015
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
@@ -26147,7 +26122,7 @@ PrefabInstance:
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -88.657
+      value: 86.44
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
@@ -26475,7 +26450,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1797911178}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -146.19841, y: 393.60004, z: -4459.6055}
+  m_LocalPosition: {x: -146.19849, y: 393.60004, z: -4475.0244}
   m_LocalScale: {x: 25.251053, y: 3.7660308, z: 26.334354}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -28555,37 +28530,37 @@ PrefabInstance:
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -683.4
+      value: -683.3759
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 506.1
+      value: 511.2
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3436.9
+      value: -3436.891
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7153438
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.6987727
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
@@ -28595,7 +28570,7 @@ PrefabInstance:
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -88.657
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
@@ -28896,7 +28871,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1962337237}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -47, y: 39.709633, z: -437}
+  m_LocalPosition: {x: -47, y: 40, z: -437}
   m_LocalScale: {x: 12.529758, y: 2.0935414, z: 12.0810585}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -28938,7 +28913,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 62b734bbde8143b4aa2b2a3e871f603c, type: 2}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -30156,7 +30131,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2013442788}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -144.3, y: 393.60016, z: -4612.2}
+  m_LocalPosition: {x: -144.3, y: 393.60016, z: -4594.2}
   m_LocalScale: {x: 25.251053, y: 3.766031, z: 26.334356}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -31854,7 +31829,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2113237767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31902,7 +31877,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2113237766}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
