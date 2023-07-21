@@ -39,18 +39,20 @@ public class BeatIndicator : MonoBehaviour
 
     private void StanceManager_OnStanceChange(Track obj)
     {
-        // Determine which event ID to use based on the track's genre
-        if (obj.genre == Genre.House)
+        switch (obj.genre)
         {
-            eventID = "120_House_MovingCar";
-        }
-        else if (obj.genre == Genre.Techno)
-        {
-            eventID = "140_Techno_MovingCar";
-        }
-        else if (obj.genre == Genre.Electronic)
-        {
-            eventID = "160_Electro_MovingCar";
+            case Genre.House:
+                eventID = "120_House_MovingCar";
+                break;
+            case Genre.Techno:
+                eventID = "140_Techno_MovingCar";
+                break;
+            case Genre.Electronic:
+                eventID = "160_Electro_MovingCar";
+                break;
+            default:
+                eventID = "140_Tekno_MovingCar";
+                break;
         }
 
         // Set the current track
