@@ -32,21 +32,23 @@ public class PlatformMove : MonoBehaviour, IPlatform
 
     private void StanceManager_OnStanceChange(Track obj)
     {
-        // Determine which event ID to use based on the track's genre
-        if (obj.genre == Genre.House)
+        switch (obj.genre)
         {
-            eventID = "120_House_PlatformMove";
-            scaleFactor = 0.15f;
-        }
-        else if (obj.genre == Genre.Techno)
-        {
-            eventID = "140_Techno_PlatformMove";
-            scaleFactor = 0.1f;
-        }
-        else if (obj.genre == Genre.Electronic)
-        {
-            eventID = "160_Electro_PlatformMove";
-            scaleFactor = 0.05f;
+            case Genre.House:
+                eventID = "120_House_PlatformMove";
+                scaleFactor = 0.15f;
+                break;
+            case Genre.Techno:
+                eventID = "140_Techno_PlatformMove";
+                scaleFactor = 0.1f;
+                break;
+            case Genre.Electronic:
+                eventID = "160_Electro_PlatformMove";
+                break;
+            default:
+                eventID = "140_Techno_PlatformMove";
+                scaleFactor = 0.05f;
+                break;
         }
 
         // Set the current track
