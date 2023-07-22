@@ -6105,7 +6105,7 @@ MonoBehaviour:
   stanceManagerUIReference: {fileID: 0}
   playerController: {fileID: 0}
   player: {fileID: 0}
-  triggerDelay: 3
+  triggerDelay: 7
 --- !u!1 &470039620
 GameObject:
   m_ObjectHideFlags: 0
@@ -20687,7 +20687,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1420363548}
   - component: {fileID: 1420363550}
-  - component: {fileID: 1420363549}
   - component: {fileID: 1420363551}
   m_Layer: 0
   m_Name: Dialogue Trigger
@@ -20711,46 +20710,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 125.085}
---- !u!114 &1420363549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1420363547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 637bef70de314c041acdd5ed3f7eda5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactKey: {fileID: -3586359921819425980, guid: 1870834d611a202418d6e474a9fb0619,
-    type: 3}
-  eventType: 0
-  genre: 3
-  prompt: {fileID: 0}
-  OnInteract:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 464868722}
-        m_TargetAssemblyTypeName: UIEnable, Assembly-CSharp
-        m_MethodName: DisableUICanvas
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnInteractDelay:
-    m_PersistentCalls:
-      m_Calls: []
-  OnExit:
-    m_PersistentCalls:
-      m_Calls: []
-  triggerOnce: 1
-  triggerDelay: 0
 --- !u!65 &1420363550
 BoxCollider:
   m_ObjectHideFlags: 0
