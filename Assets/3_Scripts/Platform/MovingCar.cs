@@ -10,23 +10,27 @@ public class MovingCar : MonoBehaviour
     public string eventID;
     public Transform[] waypoints;
     private int currentWaypointIndex;
+    public int carIndex;
+
     private bool isMoving;
+    private float moveTime;
+
+    public MeshRenderer carRenderer;
 
     // Koreography Sync with Stance Manager
     private Track track;
     public static Track currentTrack;
 
-    // IPlatform Interface
-    private bool playerOnPlatform;
-    private GameObject parental;
-    public Transform player { get; set; }
-    public bool PlayerOnPlatform { get; set; }
-
-    private int carIndex;
+    private Vector3[] originalPositions;
 
     private void OnEnable()
     {
         StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+    }
+
+    private void OnDisable()
+    {
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 
     private void StanceManager_OnStanceChange(Track obj)
@@ -48,32 +52,38 @@ public class MovingCar : MonoBehaviour
         // Set the current track
         currentTrack = obj;
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
-    }
 
-    private void OnDisable()
-    {
-        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
+        ResetCarPositions();
     }
 
     private void Awake()
     {
+        originalPositions = new Vector3[waypoints.Length];
+        for (int i = 0; i < waypoints.Length; i++)
+        {
+            originalPositions[i] = waypoints[i].position;
+        }
+
         StanceManager_OnStanceChange(StanceManager.curTrack);
         track = currentTrack;
     }
 
     private void Update()
     {
-        if (isMoving)
+        if (isMoving && !PauseMenu.isPause)
         {
-            MoveToWaypoint(waypoints[currentWaypointIndex].position);
+            Vector3 newPosition = waypoints[currentWaypointIndex].position;
+
+            if (!Mathf.Approximately(newPosition.x, float.NaN) && !Mathf.Approximately(newPosition.y, float.NaN) && !Mathf.Approximately(newPosition.z, float.NaN))
+                MoveToWaypoint(waypoints[currentWaypointIndex].position);
         }
     }
 
     private void OnMusicEvent(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
     {
-        int targetCarIndex = evt.GetIntValue();
+        int intValueEvt = evt.GetIntValue();
 
-        if (targetCarIndex == carIndex)
+        if (carIndex == intValueEvt)
         {
             MoveToNextWaypoint();
         }
@@ -81,24 +91,39 @@ public class MovingCar : MonoBehaviour
 
     private void MoveToNextWaypoint()
     {
-        currentWaypointIndex++;
-        if (currentWaypointIndex >= waypoints.Length)
+        if (!isMoving)
         {
-            currentWaypointIndex = 0;
-        }
+            currentWaypointIndex++;
+            if (currentWaypointIndex >= waypoints.Length) { currentWaypointIndex = 0; }
 
-        isMoving = true;
+            if (currentWaypointIndex == 0) { carRenderer.enabled = false; }
+            else { carRenderer.enabled = true; }
+
+            isMoving = true;
+        }
     }
 
     private void MoveToWaypoint(Vector3 targetPosition)
     {
-        float moveSpeed = 5f;
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        moveTime += Time.deltaTime;
+        transform.position = Vector3.Lerp(transform.position, targetPosition, TempoManager.GetTimeToBeatCount(1));
 
-        if (transform.position == targetPosition)
+        if (moveTime >= TempoManager.GetTimeToBeatCount(1))
         {
+            moveTime = 0f;
             isMoving = false;
         }
+    }
+
+    private void ResetCarPositions()
+    {
+        for (int i = 0; i < waypoints.Length; i++)
+        {
+            waypoints[i].position = originalPositions[i];
+        }
+
+        currentWaypointIndex = 0;
+        carRenderer.enabled = true;
     }
 
     private void OnDestroy()

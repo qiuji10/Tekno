@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public enum Genre { House, Techno, Electronic, All }
@@ -29,7 +28,7 @@ public class StanceManager : MonoBehaviour
     [Header("UI Reference")]
     [SerializeField] TMPro.TMP_Text songNameText;
     [SerializeField] private Image r1_up_img;
-    [SerializeField] private Image r1_down_img;    
+    [SerializeField] private Image r1_down_img;
     [SerializeField] private Image r2_up_img;
     [SerializeField] private Image r2_down_img;
 
@@ -41,18 +40,29 @@ public class StanceManager : MonoBehaviour
     [SerializeField] private InputActionReference skipTrackAction;
     [SerializeField] private InputActionReference rewindTrackAction;
 
+    [Header("VFX")]
+    [SerializeField] private GameObject[] shockwaveVFX;
+    [SerializeField] private Transform spawnPos;
+    public static float particleSystemTime = 1.2f;
+
     private bool firstTimeIgnored;
 
     private void OnEnable()
     {
         skipTrackAction.action.performed += SkipTrack;
         rewindTrackAction.action.performed += RewindTrack;
+
+        DialogueManager.OnDialogueStart += DisableSwitchStance;
+        DialogueManager.OnDialogueEnd += EnableSwitchStance;
     }
 
     private void OnDisable()
     {
         skipTrackAction.action.performed -= SkipTrack;
         rewindTrackAction.action.performed -= RewindTrack;
+
+        DialogueManager.OnDialogueStart -= DisableSwitchStance;
+        DialogueManager.OnDialogueEnd -= EnableSwitchStance;
     }
 
     private void Awake()
@@ -60,10 +70,6 @@ public class StanceManager : MonoBehaviour
         AllowPlayerSwitchStance = true;
         //cart = director.GetComponent<CinemachineDollyCart>();
         musicPlayer = GetComponent<SimpleMusicPlayer>();
-    }
-
-    private void Start()
-    {
         trackIndex = 1;
         PlayTrack(trackIndex);
     }
@@ -126,6 +132,8 @@ public class StanceManager : MonoBehaviour
                 songNameText.text = "House - Aggression";
                 hookAbility.enabled = true;
                 teleportAbility.enabled = false;
+                StartCoroutine(StanceShockwave(shockwaveVFX[0], spawnPos));
+
                 break;
             case Genre.Techno:
 
@@ -136,6 +144,8 @@ public class StanceManager : MonoBehaviour
                 songNameText.text = "Techno - Treck No.1";
                 hookAbility.enabled = false;
                 teleportAbility.enabled = false;
+                StartCoroutine(StanceShockwave(shockwaveVFX[1], spawnPos));
+
                 break;
             case Genre.Electronic:
 
@@ -146,6 +156,8 @@ public class StanceManager : MonoBehaviour
                 songNameText.text = "Electro - Ready";
                 hookAbility.enabled = false;
                 teleportAbility.enabled = true;
+                StartCoroutine(StanceShockwave(shockwaveVFX[2], spawnPos));
+
                 break;
         }
     }
@@ -162,11 +174,26 @@ public class StanceManager : MonoBehaviour
 
     private IEnumerator EnableInput(float time)
     {
+        AllowPlayerSwitchStance = false;
         PlayerController.allowedInput = false;
         yield return new WaitForSeconds(time);
         PlayerController.allowedInput = true;
         AllowPlayerSwitchStance = true;
         //if (director) director.enabled = false;
     }
+
+    private IEnumerator StanceShockwave(GameObject shockwaveSystem, Transform spawnPoint)
+    {
+        yield return new WaitForSeconds(1.65f);
+
+        ParticleSystem particleSystem = Instantiate(shockwaveSystem, spawnPoint.position, spawnPoint.rotation).GetComponent<ParticleSystem>();
+        particleSystem.Play();
+
+        yield return new WaitForSeconds(particleSystemTime);
+
+        particleSystem.Stop();
+        Destroy(particleSystem.gameObject);
+    }
+
 
 }

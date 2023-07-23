@@ -59,31 +59,6 @@ public class EnemyBase : MonoBehaviour, IKnockable
         isKnockng = false;
     }
 
-    private void Update()
-    {
-        Vector3 currentFacing = transform.forward;
-        float currentAngularVelocity = Vector3.Angle(currentFacing, lastFacing) / Time.deltaTime; //degrees per second
-        lastFacing = currentFacing;
-
-        if (_agent.velocity != Vector3.zero)
-        {
-            float currentWeight = _anim.GetLayerWeight(1);
-            _anim.SetLayerWeight(1, Mathf.SmoothDamp(currentWeight, walkingSpeed, ref velocity, 0.1f));
-        }
-        else if (currentAngularVelocity > 1f)
-        {
-            _anim.SetLayerWeight(1, 0.5f);
-        }
-        else
-        {
-            float currentWeight = _anim.GetLayerWeight(1);
-            _anim.SetLayerWeight(1, Mathf.SmoothDamp(currentWeight, 0, ref velocity, 0.1f));
-        }
-
-        if (_camTR)
-            warningPrompt.rotation = Quaternion.LookRotation(warningPrompt.position - _camTR.position);
-    }
-
     private void LateUpdate()
     {
         if (danceTimer >= 0)
@@ -96,6 +71,9 @@ public class EnemyBase : MonoBehaviour, IKnockable
             _anim.SetFloat("DanceBlendTree", Random.Range(0f, 1f));
             danceTimer = Random.Range(1f, 10f);
         }
+
+        if (_camTR)
+            warningPrompt.rotation = Quaternion.LookRotation(warningPrompt.position - _camTR.position);
     }
 
     private void FixedUpdate()

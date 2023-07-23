@@ -364,7 +364,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 766802702}
   m_LocalRotation: {x: -0.06331368, y: 0.5482215, z: 0.041674018, w: 0.8328912}
-  m_LocalPosition: {x: -81.652176, y: 0.26000214, z: 2.400055}
+  m_LocalPosition: {x: 0.017801922, y: 0, z: -2.9999492}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1289,7 +1289,7 @@ Transform:
   m_GameObject: {fileID: 8301616063141171594}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 766802703}
@@ -1310,7 +1310,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.544
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1318,7 +1318,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 64.63
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -1406,7 +1406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0747fa45e39d44b8c774677f2fc673, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicPlayer: {fileID: 0}
+  musicPlayer: {fileID: 8301616063141171606}
   stanceAudio: {fileID: 8301616063141171607}
   tracks:
   - {fileID: 11400000, guid: 8167cc06bc5e1df45aa3ed677a91ba3b, type: 2}
@@ -1423,6 +1423,11 @@ MonoBehaviour:
     type: 3}
   rewindTrackAction: {fileID: -1124215857078674407, guid: 1870834d611a202418d6e474a9fb0619,
     type: 3}
+  shockwaveVFX:
+  - {fileID: 214260650560817261, guid: 6da67901cbc583d4188e6af0230d412f, type: 3}
+  - {fileID: 2887270335216098034, guid: 0b06eec83340d31468a5c3aa68545659, type: 3}
+  - {fileID: 2615605496638772009, guid: e193f77acbdd87c41b8ac72ea13146e5, type: 3}
+  spawnPos: {fileID: 0}
 --- !u!114 &8301616063141171606
 MonoBehaviour:
   m_ObjectHideFlags: 0

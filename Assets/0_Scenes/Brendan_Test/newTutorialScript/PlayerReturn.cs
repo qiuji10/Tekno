@@ -1,6 +1,7 @@
 using UnityEngine;
+using System.Collections;
 
-public class PlayerReturn: MonoBehaviour
+public class PlayerReturn : MonoBehaviour
 {
     [SerializeField]
     private Transform teleportDestination;
@@ -15,8 +16,24 @@ public class PlayerReturn: MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerTransform.position = teleportDestination.position;
+            TeleportPlayer();
         }
     }
 
+    public void TeleportPlayer()
+    { 
+       playerTransform.position = teleportDestination.position;
+       
+    }
+
+    public void TeleportWithDelay()
+    {
+        StartCoroutine(DelayBeforeTeleport());
+    }
+
+     IEnumerator DelayBeforeTeleport()
+    {
+        yield return new WaitForSeconds(1);
+        playerTransform.position = teleportDestination.position;
+    }
 }

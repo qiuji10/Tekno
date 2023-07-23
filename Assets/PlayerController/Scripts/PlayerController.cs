@@ -160,6 +160,8 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         allowedInput = true;
         Anim.enabled = true;
 
+        Anim.Play("Tekno Idle");
+
         _rb.velocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
 
@@ -174,6 +176,12 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            transform.rotation = Quaternion.Euler(Vector3.zero);
+            transform.localScale = Vector3.one;
+        }
+
         Rotation();
         IsGround();
         isActionDisable();
@@ -206,6 +214,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         
 
     }
+
     private void IsGround()
     {
         //isGround = Physics.Raycast(transform.position, Vector3.down, transform.localScale.y * 0.5f + 0.2f, groundLayer);
@@ -221,6 +230,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
                 isJumping = false;
                 _anim.ResetTrigger(jump);
                 _anim.SetTrigger(jumpGrounded);
+                _rb.velocity = Vector3.zero;
             }
             _rb.drag = moveDrag;
         }
@@ -325,6 +335,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
             _anim.SetTrigger(jump);
             _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
             _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            Debug.Log("Current jump force: " + jumpForce);
         }
     }
 

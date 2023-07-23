@@ -8,40 +8,58 @@ public class IntroScreen : MonoBehaviour
 {
     public Cinemachine.CinemachineVirtualCameraBase vcam;
     public Canvas canvas;
+    public PlayerData playerData;
 
     public UnityEvent OnAnyKeyDown;
 
+    private bool playerIn;
+
     private void Awake()
     {
-        if(PlayerPrefs.GetInt("Intro") == 1)
+        Collider[] overlapColliders = Physics.OverlapSphere(transform.position, 5);
+
+        for (int i = 0; i < overlapColliders.Length; i++)
         {
-            OnAnyKeyDown?.Invoke();
-            canvas.enabled = false;
-            vcam.Priority = 0;
-            gameObject.SetActive(false);
+            if (overlapColliders[i].CompareTag("Player"))
+            {
+                playerIn = true;
+            }
         }
+
+        DisableSelf();
     }
 
     private void Update()
     {
-        if (Input.anyKeyDown)
+        if (Input.anyKeyDown && playerIn)
         {
-            PlayerPrefs.SetInt("Intro", 1);
-            OnAnyKeyDown?.Invoke();
-            canvas.enabled = false;
-            vcam.Priority = 0;
-            gameObject.SetActive(false);
+            EndIntro();
         }
     }
 
-    private void OnApplicationQuit()
+    private void EndIntro()
     {
-        PlayerPrefs.SetInt("Intro", 0);
+        OnAnyKeyDown?.Invoke();
+        canvas.enabled = false;
+        vcam.Priority = 0;
+        gameObject.SetActive(false);
     }
 
-    [Button]
-    private void ClearIntroPlayerPref()
+    private void OnTriggerEnter(Collider other)
     {
-        PlayerPrefs.SetInt("Intro", 0);
+        if (other.CompareTag("Player") && !playerIn)
+        {
+            playerIn = true;
+            playerData.controller.DisableAction();
+        }
+    }
+
+    private void DisableSelf()
+    {
+        if (!playerIn)
+        {
+            canvas.enabled = false;
+            gameObject.SetActive(false);
+        }
     }
 }

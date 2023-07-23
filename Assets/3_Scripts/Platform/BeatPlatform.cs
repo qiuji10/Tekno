@@ -43,6 +43,25 @@ public class BeatPlatform : MonoBehaviour
         if (points[beatCount].position == prevPos) return;
 
         prevPos = points[beatCount].position;
-        transform.LeanMoveLocal(points[beatCount].localPosition, TempoManager.GetTimeToBeatCount(1));
+        StartCoroutine(MoveLogic());
+    }
+
+    private IEnumerator MoveLogic()
+    {
+        Vector3 oldPos = transform.position;
+        Vector3 newPos = points[beatCount].position;
+
+        float timer = 0f;
+        float time = (60f / TempoManager.staticBPM) * 1f;
+
+        while (timer < time)
+        {
+            float ratio = Mathf.SmoothStep(0f, 1f, timer / time);
+            transform.position = Vector3.Lerp(oldPos, newPos, ratio);
+            timer += Time.deltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+
+        transform.position = newPos;
     }
 }
