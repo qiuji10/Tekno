@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -86,7 +87,14 @@ public class BeatMap_Input : MonoBehaviour
 
         if (note != null && note is NoteObject_Hold)
         {
-            (note as NoteObject_Hold).ToggleCollider(true);
+            if ((note as NoteObject_Hold).percentage < 0.9)
+            {
+                (note as NoteObject_Hold).ToggleCollider(true);
+            }
+            else
+            {
+                (note as NoteObject_Hold).ToggleCollider(false);
+            }
         }
     }
 
@@ -153,17 +161,38 @@ public class BeatMap_Input : MonoBehaviour
     {
         float curTime = Time.time;
 
-        float windowTime = timeWindow;
-
-        NoteObject note = inputData[(Lane)index];
+        float windowTime = 0.5f;
 
         yield return new WaitUntil(() => Time.time > curTime + windowTime || inputData[(Lane)index] != null);
 
-        if (triAction.action.IsPressed())
+        NoteObject note = inputData[(Lane)index];
+
+        if (note != null)
         {
-            if (note != null && note is NoteObject_Hold)
+            InputAction action = null;
+
+            switch (index)
             {
-                (note as NoteObject_Hold).ToggleCollider(false);
+                case 0:
+                    action = leftAction.action;
+                    break;
+                case 1:
+                    action = upAction.action;
+                    break;
+                case 2:
+                    action = triAction.action;
+                    break;
+                case 3:
+                    action = cirAction.action;
+                    break;
+            }
+
+            if (action.IsPressed())
+            {
+                if (note != null && note is NoteObject_Hold)
+                {
+                    (note as NoteObject_Hold).ToggleCollider(false);
+                }
             }
         }
     }

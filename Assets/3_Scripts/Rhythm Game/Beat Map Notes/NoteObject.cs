@@ -37,7 +37,8 @@ public class NoteObject : MonoBehaviour
 
     public void DisableNote(float delay)
     {
-        StartCoroutine(DisableNote_Delay(delay));
+        if (gameObject.activeInHierarchy)
+            StartCoroutine(DisableNote_Delay(delay));
     }
 
     private IEnumerator DisableNote_Delay(float delay)

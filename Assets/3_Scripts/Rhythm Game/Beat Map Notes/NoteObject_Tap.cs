@@ -57,6 +57,7 @@ public class NoteObject_Tap : NoteObject
         if (other.CompareTag("BeatPoint"))
         {
             Debug.Log("HI");
+            StopAllCoroutines();
             gameObject.SetActive(false);
         }
     }

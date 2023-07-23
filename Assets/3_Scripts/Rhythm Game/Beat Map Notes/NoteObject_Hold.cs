@@ -13,6 +13,8 @@ public class NoteObject_Hold : NoteObject
     public bool FirstNoteSurpassEndPos => Vector3.Dot(noteStart.position - laneEndPos, noteStart.forward) < (1f * delayDisableVisual);
     public bool SecondNoteSurpassStartPos => Vector3.Dot(noteEnd.position - laneStartPos, noteEnd.forward) < (1f * delayDisableVisual);
 
+    public float percentage => 1 - (Vector3.Distance(noteEnd.position, laneEndPos) / Vector3.Distance(laneStartPos, laneEndPos));
+
     [Header("Extra References")]
     [SerializeField] private Transform noteStart;
     [SerializeField] private Transform noteEnd;
@@ -97,6 +99,7 @@ public class NoteObject_Hold : NoteObject
             
             if (_col.gameObject.activeInHierarchy)
             {
+                
                 SetVfxPosition(1, noteStart.position);
             }
             else
