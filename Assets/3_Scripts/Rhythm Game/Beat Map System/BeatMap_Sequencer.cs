@@ -55,6 +55,12 @@ public class BeatMap_Sequencer : MonoBehaviour
         {
             NoteObject note = rhythmNotes[i];
 
+            if (note == null)
+            {
+                rhythmNotes.Remove(note);
+                return;
+            }
+
             if (note.type == NoteType.Tap)
             {
                 if (!note.SurpassEndPos && note.SurpassStartPos && !note.visualEnabled)

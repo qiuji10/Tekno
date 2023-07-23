@@ -34,4 +34,15 @@ public class NoteObject : MonoBehaviour
     {
 
     }
+
+    public void DisableNote(float delay)
+    {
+        StartCoroutine(DisableNote_Delay(delay));
+    }
+
+    private IEnumerator DisableNote_Delay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        gameObject.SetActive(false);
+    }
 }

@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI.Extensions;
 
 public class NoteObject_Tap : NoteObject
 {
@@ -27,6 +29,11 @@ public class NoteObject_Tap : NoteObject
     public override void Process()
     {
         transform.position += speed * -transform.forward * Time.deltaTime;
+
+        if (SurpassEndPos)
+        {
+            DisableNote(0.096f);
+        }
     }
 
     public override void EnableVisual()
@@ -43,5 +50,14 @@ public class NoteObject_Tap : NoteObject
 
         visualEnabled = false;
         _mesh.enabled = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("BeatPoint"))
+        {
+            Debug.Log("HI");
+            gameObject.SetActive(false);
+        }
     }
 }

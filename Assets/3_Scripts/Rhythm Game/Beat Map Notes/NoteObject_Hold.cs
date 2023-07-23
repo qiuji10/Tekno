@@ -16,6 +16,7 @@ public class NoteObject_Hold : NoteObject
     [Header("Extra References")]
     [SerializeField] private Transform noteStart;
     [SerializeField] private Transform noteEnd;
+    [SerializeField] private BoxCollider _col;
 
     [Header("Visual Effects")]
     [SerializeField] private VisualEffect _effect;
@@ -36,8 +37,17 @@ public class NoteObject_Hold : NoteObject
 
     public void InitNoteData(Vector3 noteStartPos, Vector3 noteEndPos, LaneData lane, float speed)
     {
-        SetNotePosition(1, noteStartPos);
-        SetNotePosition(2, noteEndPos);
+        SetNotePosition(noteStart, noteStartPos);
+        SetNotePosition(noteEnd, noteEndPos);
+
+        // Set the rotation of _col.gameObject to match the rotation of the notes
+        _col.transform.rotation = Quaternion.LookRotation((lane.startPos.position - lane.endPos.position).normalized);
+
+        // Set the position of _col.gameObject to be in between the start and end notes
+        _col.transform.position = (noteStartPos + noteEndPos) / 2f;
+
+        // Set _col.size.z to be the distance between the start and end notes
+        _col.size = new Vector3(_col.size.x, _col.size.y, Vector3.Distance(noteStartPos, noteEndPos));
 
         noteStart.rotation = noteEnd.rotation = Quaternion.LookRotation((lane.startPos.position - lane.endPos.position).normalized);
 
@@ -61,8 +71,9 @@ public class NoteObject_Hold : NoteObject
             SetVfxPosition(1, noteStart.position + velocity);
             SetVfxPosition(2, noteEnd.position + velocity);
 
-            SetNotePosition(1, noteStart.position + velocity);
-            SetNotePosition(2, noteEnd.position + velocity);
+            SetNotePosition(noteStart, noteStart.position + velocity);
+            SetNotePosition(noteEnd, noteEnd.position + velocity);
+            SetNotePosition(_col.transform, _col.transform.position + velocity);
 
             ToggleNoteMesh(1, false);
             ToggleNoteMesh(1, false);
@@ -80,8 +91,18 @@ public class NoteObject_Hold : NoteObject
 
         if (FirstNoteSurpassEndPos && !SurpassEndPos)
         {
+            BeatMap_Input.inputData[lane] = this;
+
             ToggleNoteMesh(1, false);
-            SetVfxPosition(1, noteStart.position);
+            
+            if (_col.gameObject.activeInHierarchy)
+            {
+                SetVfxPosition(1, noteStart.position);
+            }
+            else
+            {
+                SetVfxPosition(1, laneEndPos);
+            }
         }
         else if (SurpassStartPos && !SurpassEndPos)
         {
@@ -90,7 +111,9 @@ public class NoteObject_Hold : NoteObject
         }
         else if (SurpassEndPos)
         {
+            BeatMap_Input.inputData[lane] = null;
             DisableVisual(true);
+            gameObject.SetActive(false);
         }
     }
 
@@ -137,16 +160,9 @@ public class NoteObject_Hold : NoteObject
             _effect.enabled = false;
     }
 
-    private void SetNotePosition(int index, Vector3 position)
+    private void SetNotePosition(Transform movingTransform, Vector3 position)
     {
-        if (index == 1)
-        {
-            noteStart.position = position;
-        }
-        else if (index == 2)
-        {
-            noteEnd.position = position;
-        }
+        movingTransform.position = position;
     }
 
     private void SetVfxPosition(int index, Vector3 position)
@@ -158,6 +174,19 @@ public class NoteObject_Hold : NoteObject
         else if (index == 2)
         {
             _effect.SetVector3(pos2, position);
+        }
+    }
+
+    public void ToggleCollider(bool isOn)
+    {
+        _col.gameObject.SetActive(isOn);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("BeatPoint") && BeatMap_Input.inputData[lane] != this)
+        {
+            BeatMap_Input.inputData[lane] = this;
         }
     }
 }
