@@ -115,6 +115,7 @@ public class NoteObject_Hold : NoteObject
         else if (SurpassEndPos)
         {
             BeatMap_Input.inputData[lane] = null;
+            BeatMap_Input.CallLongNoteEnd(lane);
             DisableVisual(true);
             gameObject.SetActive(false);
         }

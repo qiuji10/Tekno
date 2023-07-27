@@ -7,10 +7,14 @@ public class NoteObject_Tap : NoteObject
 {
     private MeshRenderer _mesh;
     private Coroutine disableTask;
+    private ParticleSystem particle;
+    private Light pointLight;
 
     private void Awake()
     {
         _mesh = GetComponent<MeshRenderer>();
+        particle = GetComponentInChildren<ParticleSystem>();
+        pointLight = GetComponentInChildren<Light>();
     }
 
     public void InitNoteData(Vector3 position, LaneData lane, float speed)
@@ -20,6 +24,15 @@ public class NoteObject_Tap : NoteObject
 
         laneStartPos = lane.startPos.position;
         laneEndPos = lane.endPos.position;
+
+        // Access the main module of the ParticleSystem
+        ParticleSystem.MainModule mainModule = particle.main;
+        ParticleSystem.ColorOverLifetimeModule colorOverLifetime = particle.colorOverLifetime;
+
+        // Change the start color to a new color (e.g., red)
+        _mesh.material = lane.material;
+        mainModule.startColor = new ParticleSystem.MinMaxGradient(baseColor);
+        colorOverLifetime.color = new ParticleSystem.MinMaxGradient(rangeColor);
 
         this.speed = speed;
 
@@ -42,6 +55,8 @@ public class NoteObject_Tap : NoteObject
 
         visualEnabled = true;
         _mesh.enabled = true;
+        pointLight.enabled = true;
+        particle.Play();
     }
 
     public override void DisableVisual(bool forceDisable = false)
@@ -50,6 +65,8 @@ public class NoteObject_Tap : NoteObject
 
         visualEnabled = false;
         _mesh.enabled = false;
+        pointLight.enabled = false;
+        particle.Stop();
     }
 
     public override void DisableNote(float delay)
@@ -70,6 +87,10 @@ public class NoteObject_Tap : NoteObject
         {
             Debug.Log("HI");
             StopAllCoroutines();
+            particle.transform.parent = null;
+            particle.Stop();
+            pointLight.gameObject.SetActive(false);
+            BeatMap_Input.CallSuccess(lane);
             gameObject.SetActive(false);
         }
     }

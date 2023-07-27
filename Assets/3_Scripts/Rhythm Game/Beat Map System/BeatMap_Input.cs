@@ -1,6 +1,8 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,10 +19,13 @@ public class BeatMap_Input : MonoBehaviour
 
     [Header("Lane Reference")]
     [SerializeField] private GameObject[] lane;
+    [SerializeField] private ParticleAttractorSpherical[] particles;
+    [SerializeField] private RhythmGameMiniAmp[] amps;
 
     private Coroutine[] task = new Coroutine[4];
 
     public static Dictionary<Lane, NoteObject> inputData = new Dictionary<Lane, NoteObject>(4);
+    public static event Action<Lane> OnNoteSuccess, OnLongNoteEnd;
 
     private void Awake()
     {
@@ -40,6 +45,9 @@ public class BeatMap_Input : MonoBehaviour
         upAction.action.canceled += OnKeyUp;
         triAction.action.canceled += OnKeyUp;
         cirAction.action.canceled += OnKeyUp;
+
+        OnNoteSuccess += SuccessEffect;
+        OnLongNoteEnd += StopMiniAmpEffect;
     }
 
     private void OnDestroy()
@@ -55,6 +63,29 @@ public class BeatMap_Input : MonoBehaviour
         upAction.action.canceled -= OnKeyUp;
         triAction.action.canceled -= OnKeyUp;
         cirAction.action.canceled -= OnKeyUp;
+
+        OnNoteSuccess -= SuccessEffect;
+        OnLongNoteEnd -= StopMiniAmpEffect;
+    }
+
+    public static void CallSuccess(Lane lane)
+    {
+        OnNoteSuccess?.Invoke(lane);
+    }
+
+    public static void CallLongNoteEnd(Lane lane)
+    {
+        OnLongNoteEnd?.Invoke(lane);
+    }
+
+    public void StopMiniAmpEffect(Lane lane)
+    {
+        amps[(int)lane].StopHitEffect();
+    }
+
+    public void SuccessEffect(Lane lane)
+    {
+        particles[(int)lane].Play();
     }
 
     private void OnKeyUp(InputAction.CallbackContext context)
@@ -145,15 +176,12 @@ public class BeatMap_Input : MonoBehaviour
             if (inputData[(Lane)index] is NoteObject_Hold)
             {
                 Debug.Log("yo");
+                amps[index].StopHitEffect();
                 yield return new WaitUntil(() => inputData[(Lane)index] == null);
 
+                OnNoteSuccess?.Invoke((Lane)index);
                 gameObject.SetActive(false);
-
                 yield break;
-            }
-            else
-            {
-               
             }
         }
 
@@ -203,8 +231,10 @@ public class BeatMap_Input : MonoBehaviour
                     StopCoroutine(task[index]);
                     lane[index].SetActive(true);
                     (note as NoteObject_Hold).ToggleCollider(false);
+                    amps[index].StopHitEffect();
                     yield return new WaitUntil(() => inputData[(Lane)index] == null);
                     lane[index].SetActive(false);
+                    OnNoteSuccess?.Invoke((Lane)index);
                 }
             }
         }
