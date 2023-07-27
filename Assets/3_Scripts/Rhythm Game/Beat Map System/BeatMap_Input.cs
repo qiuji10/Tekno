@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -147,23 +146,32 @@ public class BeatMap_Input : MonoBehaviour
             {
                 Debug.Log("yo");
                 yield return new WaitUntil(() => inputData[(Lane)index] == null);
+
+                gameObject.SetActive(false);
+
+                yield break;
             }
-            //else
-            //{
-            //    yield return new WaitForSeconds(timeWindow);
-            //}
+            else
+            {
+               
+            }
         }
+
         yield return new WaitForSeconds(timeWindow);
         gameObject.SetActive(false);
+
     }
 
     private IEnumerator EarlyWindow(int index)
     {
-        float curTime = Time.time;
+        float prevTime = Time.time;
 
-        float windowTime = 0.5f;
+        float windowTime = 0.096f;
 
-        yield return new WaitUntil(() => Time.time > curTime + windowTime || inputData[(Lane)index] != null);
+        yield return new WaitUntil(() => Time.time > prevTime + windowTime || inputData[(Lane)index] != null);
+
+        if (Time.time > prevTime + windowTime)
+            yield break;
 
         NoteObject note = inputData[(Lane)index];
 
@@ -191,7 +199,12 @@ public class BeatMap_Input : MonoBehaviour
             {
                 if (note != null && note is NoteObject_Hold)
                 {
+                    Debug.Log("yoyo");
+                    StopCoroutine(task[index]);
+                    lane[index].SetActive(true);
                     (note as NoteObject_Hold).ToggleCollider(false);
+                    yield return new WaitUntil(() => inputData[(Lane)index] == null);
+                    lane[index].SetActive(false);
                 }
             }
         }

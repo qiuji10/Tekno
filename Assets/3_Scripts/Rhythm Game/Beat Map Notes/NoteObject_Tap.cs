@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI.Extensions;
 
 public class NoteObject_Tap : NoteObject
 {
     private MeshRenderer _mesh;
+    private Coroutine disableTask;
 
     private void Awake()
     {
@@ -30,9 +30,9 @@ public class NoteObject_Tap : NoteObject
     {
         transform.position += speed * -transform.forward * Time.deltaTime;
 
-        if (SurpassEndPos)
+        if (SurpassEndPos && disableTask == null)
         {
-            DisableNote(0.096f);
+            DisableNote(0.25f);
         }
     }
 
@@ -50,6 +50,18 @@ public class NoteObject_Tap : NoteObject
 
         visualEnabled = false;
         _mesh.enabled = false;
+    }
+
+    public override void DisableNote(float delay)
+    {
+        if (gameObject.activeInHierarchy)
+            disableTask = StartCoroutine(DisableNote_Delay(delay));
+    }
+
+    private IEnumerator DisableNote_Delay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)

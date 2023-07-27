@@ -51,6 +51,11 @@ public class BeatMap_Sequencer : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            Sequencer_PlaceNotes();
+        }
+
         for (int i = 0; i < rhythmNotes.Count; i++)
         {
             NoteObject note = rhythmNotes[i];
@@ -69,10 +74,10 @@ public class BeatMap_Sequencer : MonoBehaviour
                 }
                 else if (note.SurpassEndPos)
                 {
-                    if (note.visualEnabled)
-                        note.DisableVisual();
-                    else
-                        continue;
+                    //if (note.visualEnabled)
+                    //    note.DisableVisual();
+                    //else
+                    //    continue;
                 }
             }
             else if (note.type == NoteType.Hold)
