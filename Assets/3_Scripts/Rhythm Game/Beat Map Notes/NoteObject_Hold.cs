@@ -23,7 +23,7 @@ public class NoteObject_Hold : NoteObject
     [Header("Visual Effects")]
     [SerializeField] private VisualEffect _effect;
 
-    private int pos1, pos2;
+    private int pos1, pos2, col1, col2, col3;
     private MeshRenderer _startMesh, _endMesh;
 
     private void Awake()
@@ -33,7 +33,11 @@ public class NoteObject_Hold : NoteObject
 
         pos1 = Shader.PropertyToID("Pos1");
         pos2 = Shader.PropertyToID("Pos2");
-        
+        col1 = Shader.PropertyToID("Color1");
+        col2 = Shader.PropertyToID("Color2");
+        col3 = Shader.PropertyToID("Color3");
+
+
         _effect.Stop();
     }
 
@@ -44,6 +48,12 @@ public class NoteObject_Hold : NoteObject
 
         // Set the rotation of _col.gameObject to match the rotation of the notes
         _col.transform.rotation = Quaternion.LookRotation((lane.startPos.position - lane.endPos.position).normalized);
+
+        _effect.SetVector4(col1, secondaryColor);
+        _effect.SetVector4(col2, baseColor);
+        _effect.SetVector4(col3, baseColor);
+        _startMesh.material = lane.material;
+        _endMesh.material = lane.material;
 
         // Set the position of _col.gameObject to be in between the start and end notes
         _col.transform.position = (noteStartPos + noteEndPos) / 2f;

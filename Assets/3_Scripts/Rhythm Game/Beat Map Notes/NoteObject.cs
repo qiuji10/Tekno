@@ -14,7 +14,8 @@ public class NoteObject : MonoBehaviour
     public int tapPosition;
 
     [Header("Color Data")]
-    public Color baseColor;
+    [ColorUsage(false, true)] public Color baseColor;
+    [ColorUsage(false, true)] public Color secondaryColor;
     public Gradient rangeColor;
     
     public virtual bool SurpassStartPos => Vector3.Dot(transform.position - laneStartPos, transform.forward) < 0f;

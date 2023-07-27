@@ -13,7 +13,8 @@ public struct LaneData
 
     [Header("Color amd Materials")]
     public Material material;
-    public Color baseColor;
+    [ColorUsage(false, true)] public Color baseColor;
+    [ColorUsage(false, true)] public Color secondaryColor;
     public Gradient rangeColor;
 }
 
