@@ -24,16 +24,16 @@ public class CCTVLightRotation : MonoBehaviour
         switch (obj.genre)
         {
             case Genre.House:
-                eventID = "120_House_PlatformMove";
+                eventID = "120_House_CurvePayload";
                 break;
             case Genre.Techno:
-                eventID = "140_Techno_PlatformMove";
+                eventID = "140_Techno_CurvePayload";
                 break;
             case Genre.Electronic:
-                eventID = "160_Electro_PlatformMove";
+                eventID = "160_Electro_CurvePayload";
                 break;
             default:
-                eventID = "140_Techno_PlatformMove";
+                eventID = "140_Techno_CurvePayload";
                 break;
         }
 
