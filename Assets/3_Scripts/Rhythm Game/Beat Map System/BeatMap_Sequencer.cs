@@ -6,7 +6,8 @@ using UnityEngine;
 public class BeatMap_Sequencer : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private BeatMap beatmap;
+    [SerializeField] private BeatMap easyBeatmap;
+    [SerializeField] private BeatMap hardBeatmap;
     [SerializeField] private AudioSource _audio;
     [SerializeField] private BeatMap_Instantiator generator;
 
@@ -32,7 +33,7 @@ public class BeatMap_Sequencer : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     [Button("Start Play")]
-    public void Sequencer_PlaceNotes()
+    public void Sequencer_PlaceNotes(BeatMap beatmap)
     {
         for (int i = 0; i < beatmap.notes.Count; i++)
         {
@@ -51,9 +52,27 @@ public class BeatMap_Sequencer : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            generator.DestroyPool();
+            Sequencer_PlaceNotes(easyBeatmap);
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            generator.DestroyPool();
+            Sequencer_PlaceNotes(hardBeatmap);
+        }
+
         for (int i = 0; i < rhythmNotes.Count; i++)
         {
             NoteObject note = rhythmNotes[i];
+
+            if (note == null)
+            {
+                rhythmNotes.Remove(note);
+                return;
+            }
 
             if (note.type == NoteType.Tap)
             {
@@ -63,10 +82,10 @@ public class BeatMap_Sequencer : MonoBehaviour
                 }
                 else if (note.SurpassEndPos)
                 {
-                    if (note.visualEnabled)
-                        note.DisableVisual();
-                    else
-                        continue;
+                    //if (note.visualEnabled)
+                    //    note.DisableVisual();
+                    //else
+                    //    continue;
                 }
             }
             else if (note.type == NoteType.Hold)

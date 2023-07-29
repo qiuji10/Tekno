@@ -203,15 +203,17 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void isActionDisable()
     {
-        disableAction = Physics.CheckSphere(transform.position, 0.5f, disableJump);
-
-        StanceManager.AllowPlayerSwitchStance = disableAction ? false : true;
-
-        if (disableAction)
+        if (!StanceManager.isChangingStance)
         {
-            _rb.drag = moveDrag;
+            disableAction = Physics.CheckSphere(transform.position, 0.5f, disableJump);
+
+            StanceManager.AllowPlayerSwitchStance = disableAction ? false : true;
+
+            if (disableAction)
+            {
+                _rb.drag = moveDrag;
+            }
         }
-        
 
     }
 

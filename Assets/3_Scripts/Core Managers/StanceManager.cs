@@ -13,8 +13,23 @@ public class StanceManager : MonoBehaviour
 {
     public static Track curTrack;
     public static event Action<Track> OnStanceChangeStart;
-    public static bool AllowPlayerSwitchStance;
-    public static float changeStanceTime = 2.333f;
+
+    private static bool allowPlayerSwitchStance;
+    public static bool isChangingStance;
+
+    public static bool AllowPlayerSwitchStance
+    {
+        get { return allowPlayerSwitchStance; }
+        set
+        {
+            if (allowPlayerSwitchStance != value)
+            {
+                allowPlayerSwitchStance = value;
+                Debug.Log("AllowPlayerSwitchStance changed: " + value);
+            }
+        }
+    }
+    public static float changeStanceTime = 2f;
 
     //[SerializeField] PlayableDirector director;
     //private CinemachineDollyCart cart;
@@ -114,6 +129,7 @@ public class StanceManager : MonoBehaviour
             //    director.Play();
             //}
 
+            isChangingStance = true;
             AllowPlayerSwitchStance = false;
             StartCoroutine(EnableInput(changeStanceTime));
             OnStanceChangeStart?.Invoke(tracks[index]);
@@ -179,6 +195,7 @@ public class StanceManager : MonoBehaviour
         yield return new WaitForSeconds(time);
         PlayerController.allowedInput = true;
         AllowPlayerSwitchStance = true;
+        isChangingStance = false;
         //if (director) director.enabled = false;
     }
 
