@@ -6,9 +6,16 @@ using UnityEngine;
 [System.Serializable]
 public struct LaneData
 {
+    [Header("References")]
     public Transform parentLane;
     public Transform startPos;
     public Transform endPos;
+
+    [Header("Color amd Materials")]
+    public Material material;
+    [ColorUsage(false, true)] public Color baseColor;
+    [ColorUsage(false, true)] public Color secondaryColor;
+    public Gradient rangeColor;
 }
 
 public class BeatMap_Instantiator : MonoBehaviour
@@ -37,6 +44,15 @@ public class BeatMap_Instantiator : MonoBehaviour
         holdNotesPool.Initialize(holdNotePrefab, 20);
     }
 
+    public void DestroyPool()
+    {
+        if (tapNotesPool != null && holdNotesPool != null)
+        {
+            tapNotesPool.DestroyAllPooledObjects();
+            holdNotesPool.DestroyAllPooledObjects();
+        }
+    }
+
     public void SpawnNote(NoteData noteData, float timeTakenToDistance)
     {
         NoteObject note = null;
@@ -58,6 +74,9 @@ public class BeatMap_Instantiator : MonoBehaviour
         }
 
         LaneData lane = GetLane(note.lane);
+
+        note.baseColor = lane.baseColor;
+        note.rangeColor = lane.rangeColor;
 
         float noteDistance = noteSpeed * noteData.tapPosition;
 
