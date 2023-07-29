@@ -44,6 +44,15 @@ public class BeatMap_Instantiator : MonoBehaviour
         holdNotesPool.Initialize(holdNotePrefab, 20);
     }
 
+    public void DestroyPool()
+    {
+        if (tapNotesPool != null && holdNotesPool != null)
+        {
+            tapNotesPool.DestroyAllPooledObjects();
+            holdNotesPool.DestroyAllPooledObjects();
+        }
+    }
+
     public void SpawnNote(NoteData noteData, float timeTakenToDistance)
     {
         NoteObject note = null;

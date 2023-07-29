@@ -6,7 +6,8 @@ using UnityEngine;
 public class BeatMap_Sequencer : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private BeatMap beatmap;
+    [SerializeField] private BeatMap easyBeatmap;
+    [SerializeField] private BeatMap hardBeatmap;
     [SerializeField] private AudioSource _audio;
     [SerializeField] private BeatMap_Instantiator generator;
 
@@ -32,7 +33,7 @@ public class BeatMap_Sequencer : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     [Button("Start Play")]
-    public void Sequencer_PlaceNotes()
+    public void Sequencer_PlaceNotes(BeatMap beatmap)
     {
         for (int i = 0; i < beatmap.notes.Count; i++)
         {
@@ -53,7 +54,14 @@ public class BeatMap_Sequencer : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            Sequencer_PlaceNotes();
+            generator.DestroyPool();
+            Sequencer_PlaceNotes(easyBeatmap);
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            generator.DestroyPool();
+            Sequencer_PlaceNotes(hardBeatmap);
         }
 
         for (int i = 0; i < rhythmNotes.Count; i++)

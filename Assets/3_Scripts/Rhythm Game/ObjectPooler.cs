@@ -7,7 +7,7 @@ public class ObjectPooler<T> where T : MonoBehaviour
     private T prefab;
     private int poolSize;
     private List<T> pooledObjects;
-    private GameObject parentObject;
+    public GameObject parentObject;
 
     public static ObjectPooler<T> Instance
     {
@@ -66,5 +66,10 @@ public class ObjectPooler<T> where T : MonoBehaviour
         obj.gameObject.SetActive(false);
         CreateParentObjectIfNeeded();
         obj.transform.SetParent(parentObject.transform);
+    }
+
+    public void DestroyAllPooledObjects()
+    {
+        pooledObjects.Clear();
     }
 }
