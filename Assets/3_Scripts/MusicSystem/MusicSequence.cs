@@ -47,6 +47,8 @@ public class MusicSequence : MonoBehaviour
     [Header("Reset Settings")]
     public bool resetOnSequenceComplete = true;
     public float resetDelay = 2.0f;
+    private bool[] objectModified;
+    private int modifiedObjectCount;
 
     private void OnEnable()
     {
@@ -68,6 +70,7 @@ public class MusicSequence : MonoBehaviour
         originalScales = new Vector3[sequence.Length];
         originalRotations = new Quaternion[sequence.Length];
         originalPositions = new Vector3[sequence.Length];
+        objectModified = new bool[sequence.Length];
 
         for (int i = 0; i < sequence.Length; i++)
         {
@@ -118,17 +121,29 @@ public class MusicSequence : MonoBehaviour
             currentBeat = intValueEvt;
 
             // Apply scaling if enabled
-            if (useScaling)
+            if (useScaling && !objectModified[currentBeat])
             {
                 Vector3 scale = originalScales[currentBeat];
                 scale.x *= scaleX ? scaleMod.x : 1.0f;
                 scale.y *= scaleY ? scaleMod.y : 1.0f;
                 scale.z *= scaleZ ? scaleMod.z : 1.0f;
                 sequence[currentBeat].transform.localScale = scale;
+
+                // Mark the object as modified
+                objectModified[currentBeat] = true;
+
+                // Increment the count of modified objects
+                modifiedObjectCount++;
+
+                // If all objects have been modified, start the reset coroutine
+                if (modifiedObjectCount == sequence.Length)
+                {
+                    StartCoroutine(ResetModifiedObjectsAfterDelay(resetDelay));
+                }
             }
 
             // Apply rotation if enabled
-            if (useRotation)
+            if (useRotation && !objectModified[currentBeat])
             {
                 Quaternion rotation = originalRotations[currentBeat];
                 float x = rotateX ? rotationMod.x : 0.0f;
@@ -136,23 +151,44 @@ public class MusicSequence : MonoBehaviour
                 float z = rotateZ ? rotationMod.z : 0.0f;
                 rotation *= Quaternion.Euler(x, y, z);
                 sequence[currentBeat].transform.localRotation = rotation;
+                // Mark the object as modified
+                objectModified[currentBeat] = true;
+
+                // Increment the count of modified objects
+                modifiedObjectCount++;
+
+                // If all objects have been modified, start the reset coroutine
+                if (modifiedObjectCount == sequence.Length)
+                {
+                    StartCoroutine(ResetModifiedObjectsAfterDelay(resetDelay));
+                }
             }
 
             // Apply movement if enabled
-            if (useMovement)
+            if (useMovement && !objectModified[currentBeat])
             {
-                Vector3 position = originalPositions[currentBeat];
-                position.x += moveX ? moveMod.x : 0.0f;
-                position.y += moveY ? moveMod.y : 0.0f;
-                position.z += moveZ ? moveMod.z : 0.0f;
-                sequence[currentBeat].transform.position = position;
+                Vector3 startPosition = originalPositions[currentBeat];
+                Vector3 targetPosition = sequence[currentBeat].transform.position;
+                targetPosition.x += moveX ? moveMod.x : 0.0f;
+                targetPosition.y += moveY ? moveMod.y : 0.0f;
+                targetPosition.z += moveZ ? moveMod.z : 0.0f;
+
+                StartCoroutine(MoveObjectSmoothly(sequence[currentBeat].transform, startPosition, targetPosition));
+
+                // Mark the object as modified
+                objectModified[currentBeat] = true;
+
+                // Increment the count of modified objects
+                modifiedObjectCount++;
+
+                // If all objects have been modified, start the reset coroutine
+                if (modifiedObjectCount == sequence.Length)
+                {
+                    StartCoroutine(ResetModifiedObjectsAfterDelay(resetDelay));
+                }
             }
 
-            // If resetOnSequenceComplete is enabled, start a coroutine to reset objects after a delay
-            if (resetOnSequenceComplete)
-            {
-                StartCoroutine(ResetObjectsAfterDelay(resetDelay));
-            }
+
         }
     }
 
@@ -189,18 +225,41 @@ public class MusicSequence : MonoBehaviour
         sequence[index].GetComponent<Renderer>().material = normalMat;
     }
 
-    private IEnumerator ResetObjectsAfterDelay(float delay)
+    private IEnumerator ResetModifiedObjectsAfterDelay(float delay)
     {
         // Wait for the specified delay
         yield return new WaitForSeconds(delay);
 
-        // Reset all objects in the sequence array to their original position, scale, and rotation
+        // Reset only the modified objects to their original position, scale, and rotation
         for (int i = 0; i < sequence.Length; i++)
         {
-            sequence[i].transform.localScale = originalScales[i];
-            sequence[i].transform.localRotation = originalRotations[i];
-            sequence[i].transform.position = originalPositions[i];
+            if (objectModified[i])
+            {
+                sequence[i].transform.localScale = originalScales[i];
+                sequence[i].transform.localRotation = originalRotations[i];
+                sequence[i].transform.position = originalPositions[i];
+                objectModified[i] = false; // Reset the modified flag
+            }
         }
+
+        // Reset the modifiedObjectCount to 0
+        modifiedObjectCount = 0;
+    }
+
+    private IEnumerator MoveObjectSmoothly(Transform objectToMove, Vector3 startPosition, Vector3 targetPosition)
+    {
+        float elapsedTime = 0f;
+        float duration = 0.1f; // Adjust this value to control the movement speed.
+
+        while (elapsedTime < duration)
+        {
+            objectToMove.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure the object reaches the exact target position
+        objectToMove.position = targetPosition;
     }
 
     private void OnDestroy()
