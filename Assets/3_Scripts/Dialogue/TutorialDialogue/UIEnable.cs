@@ -12,7 +12,11 @@ public class UIEnable : MonoBehaviour
     public GameObject healthUIReference, stanceManagerUIReference;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private GameObject player;
-    [SerializeField] private float triggerDelay;
+    [SerializeField] private float triggerDelay,enableDelay = 0.9f;
+
+    private bool healthCanvasEnabledRecently = false;
+    private bool stanceManagerCanvasEnabledRecently = false;
+
     private void Start()
     {
         healthUIReference = GameObject.Find("Health Spectrum Canvas");
@@ -31,21 +35,62 @@ public class UIEnable : MonoBehaviour
         interactKey.action.performed -= Interact;
     }
 
-
     private void Interact(InputAction.CallbackContext context)
     {
-        StartCoroutine(waitFor());
+        if (healthCanvas.activeSelf)
+        {
+            if (healthCanvasEnabledRecently)
+            {
+                DisableCanvas();
+            }
+        }
+
+        if (stanceManagerCanvas.activeSelf)
+        {
+            if (stanceManagerCanvasEnabledRecently)
+            {
+                DisableCanvas();
+            }
+        }
+    }
+
+    private IEnumerator EnableHealthCanvasWithDelay()
+    {
+        yield return new WaitForSeconds(enableDelay);
+        healthUIReference.GetComponent<Canvas>().enabled = true;
+        healthCanvas.GetComponent<Canvas>().enabled = true;
+
+        if (disablePlayerControl == false)
+        {
+            playerController.DisableAction();
+            disablePlayerControl = true; 
+            yield return new WaitForSeconds(triggerDelay);
+            healthCanvasEnabledRecently = true;
+        }
+       
+       
+    }
+
+    private IEnumerator EnableStanceManagerCanvasWithDelay()
+    {
+        yield return new WaitForSeconds(enableDelay);
+        stanceManagerUIReference.GetComponent<Canvas>().enabled = true;
+        stanceManagerCanvas.GetComponent<Canvas>().enabled = true;
+        if (disablePlayerControl == false)
+        {
+            playerController.DisableAction();
+            disablePlayerControl = true;
+            yield return new WaitForSeconds(triggerDelay);
+            stanceManagerCanvasEnabledRecently = true;
+        }
+       
     }
 
     public void EnableHealthUI()
     {
         if (healthUIReference != null)
         {
-            healthUIReference.GetComponent<Canvas>().enabled = true;
-            healthCanvas.GetComponent<Canvas>().enabled = true;
-            playerController.DisableAction();
-            disablePlayerControl = true;
-
+            StartCoroutine(EnableHealthCanvasWithDelay());
         }
         else
         {
@@ -53,14 +98,11 @@ public class UIEnable : MonoBehaviour
         }
     }
 
-    public void StanceManagerUI()
+    public void EnableStanceManagerUI()
     {
         if (stanceManagerUIReference != null)
         {
-            stanceManagerUIReference.GetComponent<Canvas>().enabled = true;
-            stanceManagerCanvas.GetComponent<Canvas>().enabled = true;
-            playerController.DisableAction();
-            disablePlayerControl = true;
+            StartCoroutine(EnableStanceManagerCanvasWithDelay());
         }
         else
         {
@@ -68,32 +110,16 @@ public class UIEnable : MonoBehaviour
         }
     }
 
-
-    public void DisableUICanvas()
+    public void DisableCanvas()
     {
         healthCanvas.GetComponent<Canvas>().enabled = false;
         stanceManagerCanvas.GetComponent<Canvas>().enabled = false;
-        if (disablePlayerControl == true)
+        if (disablePlayerControl)
         {
             playerController.EnableAction();
             disablePlayerControl = false;
         }
     }
 
-
-    private IEnumerator waitFor()
-    {
-        yield return new WaitForSeconds(triggerDelay);
-        if (healthCanvas.activeSelf)
-        {
-            DisableUICanvas();
-        }
-
-        if (stanceManagerCanvas.activeSelf)
-        {
-            DisableUICanvas();
-        }
-    }
-
-
+  
 }
