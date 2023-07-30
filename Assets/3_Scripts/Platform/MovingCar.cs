@@ -17,6 +17,8 @@ public class MovingCar : MonoBehaviour
 
     public MeshRenderer carRenderer;
 
+    public bool DisableRenderer = false;
+
     // Koreography Sync with Stance Manager
     private Track track;
     public static Track currentTrack;
@@ -96,9 +98,12 @@ public class MovingCar : MonoBehaviour
             currentWaypointIndex++;
             if (currentWaypointIndex >= waypoints.Length) { currentWaypointIndex = 0; }
 
-            if (currentWaypointIndex == 0) { carRenderer.enabled = false; }
-            else { carRenderer.enabled = true; }
-
+            if(DisableRenderer == true)
+            {
+                if (currentWaypointIndex == 0) { carRenderer.enabled = false; }
+                else { carRenderer.enabled = true; }
+            }
+            
             isMoving = true;
         }
     }
