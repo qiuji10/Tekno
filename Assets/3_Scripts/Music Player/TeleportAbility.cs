@@ -25,10 +25,11 @@ public class TeleportAbility : MonoBehaviour
     [SerializeField]private GameObject chargeSlider;
 
     [Header("Skill Check")]
+    [SerializeField] private List<GameObject> progressNode = new List<GameObject>();
     public Image[] targetGameObject;
     public Image handleImage;
+    public Image defaultBar;
     public Image barNormal;
-    public Image teleportBar;
     public Image barSuccess;
     public Image barFail;
     public int previousValue = 0;
@@ -39,6 +40,7 @@ public class TeleportAbility : MonoBehaviour
     private bool canTeleport = false;
     public float delayTime;
     private bool pauseCounter = false;
+    
 
     private void OnEnable()
     {
@@ -67,6 +69,7 @@ public class TeleportAbility : MonoBehaviour
 
     private void TempoManager_OnBeat()
     {
+        
         if (StanceManager.curTrack.genre != Genre.Electronic || motherNode == null)
         {
             return;
@@ -78,8 +81,6 @@ public class TeleportAbility : MonoBehaviour
         }
         
         Debug.Log(counter);
-
-        Debug.Log(targetGameObject.Length);
 
         if (counter == 0 || counter == 5)
         {
@@ -134,6 +135,7 @@ public class TeleportAbility : MonoBehaviour
                 Debug.Log("Success");
                 StartCoroutine(ChangeSprite());
                 StartCoroutine(ChangeTarget());
+                motherNode.InvokeOnSuccess(successPress - 1);
             }
             else if(successPress == -1 && counter != randIndex)
             {
@@ -161,7 +163,7 @@ public class TeleportAbility : MonoBehaviour
                 canTeleport = true;
                 Debug.Log("Here");
                 Teleport();
-
+                
             }
 
         }
@@ -172,14 +174,20 @@ public class TeleportAbility : MonoBehaviour
             chargeSlider.gameObject.SetActive(false);
         }
 
+        for(int i = 0; i < numOfNodes; i++)
+        {
+            progressNode[i].gameObject.SetActive(true);
+            progressNode[i].gameObject.GetComponent<Image>().color = Color.red;
+        }
+
+        for(int i  = 0; i != successPress; i++)
+        {
+            progressNode[i].gameObject.GetComponent<Image>().color = Color.green;
+        }
+
+
+
         previousValue = randIndex;
-    }
-
-
-    private void Update()
-    {
-
-
     }
 
     private void Teleport()
@@ -218,11 +226,13 @@ public class TeleportAbility : MonoBehaviour
                 TeleportToNextNode(teleportPoint);
                 yield return new WaitForSeconds(0.3f); // wait for the player to finish teleporting before teleporting again
                 rb.isKinematic = false;
-                
+
             }
             chargeSlider.gameObject.SetActive(false);
 
         }
+
+        
     }
 
     IEnumerator ChangeTarget()
@@ -240,20 +250,20 @@ public class TeleportAbility : MonoBehaviour
     {
         if (success)
         {
-            teleportBar.sprite = barSuccess.sprite;
-            teleportBar.color = Color.green;
+            barNormal.sprite = barSuccess.sprite;
+            barNormal.color = Color.green;
         }
         else
         {
-            teleportBar.sprite = barFail.sprite;
-            teleportBar.color = Color.red;
+            barNormal.sprite = barFail.sprite;
+            barNormal.color = Color.red;
             
         }
         yield return new WaitForSeconds(delayTime);
         counter = -1;
         pauseCounter = false;
-        teleportBar.sprite = barNormal.sprite;
-        teleportBar.color = Color.green;
+        barNormal.sprite = defaultBar.sprite;
+        barNormal.color = Color.green;
         handleImage.gameObject.SetActive(true);
     }
 
