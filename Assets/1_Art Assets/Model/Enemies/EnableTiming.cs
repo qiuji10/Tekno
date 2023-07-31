@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnableTiming : MonoBehaviour
 {
-    [SerializeField] List<GameObject> objects = new List<GameObject>();
+    public List<GameObject> objects = new List<GameObject>();
 
     private void Start()
     {

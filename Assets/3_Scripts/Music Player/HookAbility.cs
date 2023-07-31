@@ -40,7 +40,7 @@ public class HookAbility : MonoBehaviour
     {
         _playerController = GetComponent<PlayerController>();
         _rb = GetComponent<Rigidbody>();
-        hookViableVisual.fillAmount = 1 - successRatio;
+        //hookViableVisual.fillAmount = 1 - successRatio;
     }
 
     private void OnEnable()
