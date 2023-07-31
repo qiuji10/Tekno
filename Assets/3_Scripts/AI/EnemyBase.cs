@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using NodeCanvas.Framework;
+using NodeCanvas.Tasks.Conditions;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -34,6 +35,8 @@ public class EnemyBase : MonoBehaviour, IKnockable
     private bool isKnockng, isFree;
 
     private float danceTimer;
+
+    public bool IsFree => isFree;
 
     private void Awake()
     {

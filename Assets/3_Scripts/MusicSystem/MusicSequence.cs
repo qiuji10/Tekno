@@ -50,11 +50,6 @@ public class MusicSequence : MonoBehaviour
     private bool[] objectModified;
     private int modifiedObjectCount;
 
-    private void OnEnable()
-    {
-        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
-    }
-
     private void OnDisable()
     {
         StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
@@ -62,8 +57,9 @@ public class MusicSequence : MonoBehaviour
 
     private void Awake()
     {
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
         // Set the track field to the current track
-        StanceManager_OnStanceChange(StanceManager.curTrack);
+        //StanceManager_OnStanceChange(StanceManager.curTrack);
         track = currentTrack;
 
         // Initialize the arrays to store original properties
@@ -78,6 +74,11 @@ public class MusicSequence : MonoBehaviour
             originalRotations[i] = sequence[i].transform.localRotation;
             originalPositions[i] = sequence[i].transform.position;
         }
+    }
+
+    private void Start()
+    {
+        StanceManager_OnStanceChange(StanceManager.curTrack);
     }
 
     private void StanceManager_OnStanceChange(Track obj)

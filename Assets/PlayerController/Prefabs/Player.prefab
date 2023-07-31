@@ -2512,16 +2512,16 @@ MonoBehaviour:
   hookTime: 4.5
   successRatio: 0.9
   dotProduct: 0
-  launchAmount: 0
+  launchAmount: 40
   detectOffset: {x: 0, y: 0, z: 0}
   handPoint: {x: 0, y: 0, z: 0}
-  grabOffset: {x: 0, y: -8, z: 0}
+  grabOffset: {x: 0, y: -7, z: 0}
   orientation: {fileID: 6397968323150439672}
   hookSensor: {fileID: 205935431}
   lineRenderer: {fileID: 685273845079233185}
   hookAction: {fileID: 5166115351435478420, guid: 1870834d611a202418d6e474a9fb0619,
     type: 3}
-  hookSlider: {fileID: 0}
+  hookSlider: {fileID: 4225262830499643164}
   hookViableVisual: {fileID: 0}
   isHooking: 0
 --- !u!114 &4485110921945096258
@@ -2538,7 +2538,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportAction: {fileID: 7589435723925371507, guid: 1870834d611a202418d6e474a9fb0619,
     type: 3}
-  skillCheckAction: {fileID: 0}
+  skillCheckAction: {fileID: 7589435723925371507, guid: 1870834d611a202418d6e474a9fb0619,
+    type: 3}
   motherNode: {fileID: 0}
   teleportRange: 5
   electricVFX: {fileID: 7646408062528310940, guid: 318aeb31f58e53d43914185073a87c6c,
@@ -2549,24 +2550,30 @@ MonoBehaviour:
     type: 3}
   numOfNodes: 0
   successPress: -1
-  chargeSlider: {fileID: 0}
-  progressNode: []
+  chargeSlider: {fileID: 2709103130529513167}
+  progressNode:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 7337226117959356136}
   targetGameObject:
-  - {fileID: 7782546347290843125}
-  - {fileID: 26560664043833288}
-  - {fileID: 8551815624459822149}
-  - {fileID: 7422622767594222904}
-  - {fileID: 4266043339794112281}
   - {fileID: 6186451713615855257}
+  - {fileID: 4266043339794112281}
+  - {fileID: 7422622767594222904}
+  - {fileID: 8551815624459822149}
+  - {fileID: 26560664043833288}
+  - {fileID: 7782546347290843125}
   handleImage: {fileID: 5752756171380329850}
-  defaultBar: {fileID: 0}
+  defaultBar: {fileID: 410970354134840981}
   barNormal: {fileID: 2799830513130328634}
   barSuccess: {fileID: 8702971635279484958}
   barFail: {fileID: 2708841462394378492}
   previousValue: 0
   counter: 0
   randIndex: 0
-  delayTime: 0
+  delayTime: 1
 --- !u!114 &1333158407432279658
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -20,6 +20,7 @@ public class Amplifier_V2 : MonoBehaviour
 
     [Header("Hijack Succeeded")]
     [SerializeField] private List<EnemyBase> enemiesInControl;
+    [SerializeField] private List<BillboardCycle> billboardCycles;
     [SerializeField] private ParticleSystem particle;
     public UnityEvent OnHijackSucceed;
 
@@ -85,6 +86,23 @@ public class Amplifier_V2 : MonoBehaviour
         decalProjector = GetComponentInChildren<DecalProjector>();
         decalProjector.material = new Material(decalProjector.material);
         decalProjector.material.SetColor("_Color", Color.red);
+
+        enemiesInControl.Clear();
+
+        Collider[] collideData = Physics.OverlapSphere(transform.position, knockBackRange);
+
+        for (int i = 0; i < collideData.Length; i++)
+        {
+            if (collideData[i].TryGetComponent(out EnemyBase enemy))
+            {
+                enemiesInControl.Add(enemy);
+            }
+
+            if (collideData[i].TryGetComponent(out BillboardCycle billboardCycle))
+            {
+                billboardCycles.Add(billboardCycle);
+            }
+        }
     }
 
     private void OnEnable()
@@ -194,11 +212,32 @@ public class Amplifier_V2 : MonoBehaviour
                 amplifierSlider.Value = 1f;
             }
 
+            enemiesInControl.Clear();
+
+            Collider[] collideData = Physics.OverlapSphere(transform.position, knockBackRange);
+
+            for (int i = 0; i < collideData.Length; i++)
+            {
+                if (collideData[i].TryGetComponent(out EnemyBase enemy))
+                {
+                    if (!enemy.IsFree)
+                        enemiesInControl.Add(enemy);
+                }
+            }
+
             foreach (EnemyBase e in enemiesInControl)
             {
                 if (e != null && e.gameObject.activeInHierarchy)
                 {
                     e.FreeEnemy();
+                }
+            }
+
+            foreach (BillboardCycle billboard in billboardCycles)
+            {
+                if (billboard != null && billboard.gameObject.activeInHierarchy)
+                {
+                    billboard.isHijackedSuccessful = true;
                 }
             }
 
