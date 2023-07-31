@@ -382,7 +382,7 @@ public class Amplifier_V2 : MonoBehaviour
                 speaker.currentBeat++;
                 index++;
                 float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
-
+                timeToBeatCount = 0.1f;
                 //float timeToBeatCount = (60f / 140f);
                 //speaker.touchPoint = beatObjects[index].img.rectTransform.position;
                 //speaker.key = beatData[index].key;
