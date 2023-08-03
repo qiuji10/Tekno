@@ -1,3 +1,4 @@
+using Cinemachine;
 using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,9 +12,13 @@ public class BeatMap_Sequencer : MonoBehaviour
     [SerializeField] private AudioSource _audio;
     [SerializeField] private BeatMap_Instantiator generator;
 
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private CinemachineBasicMultiChannelPerlin noise;
+
     private void Awake()
     {
         generator.OnNoteSpawn += Generator_OnNoteSpawn;
+        noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
     private void OnDestroy()
@@ -28,11 +33,6 @@ public class BeatMap_Sequencer : MonoBehaviour
         rhythmNotes.Add(note);
     }
 
-    /// <summary>
-    /// Sequencer Main Logic-Runner
-    /// </summary>
-    /// <returns></returns>
-    [Button("Start Play")]
     public void Sequencer_PlaceNotes(BeatMap beatmap)
     {
         for (int i = 0; i < beatmap.notes.Count; i++)
@@ -99,6 +99,40 @@ public class BeatMap_Sequencer : MonoBehaviour
             
             note.Process();
         }
+
+        if (isSurpassing)
+        {
+            // Increment the hold time while the note is being held
+            holdTime += Time.deltaTime;
+
+            // Check if the hold time exceeds the threshold for camera shake
+            if (holdTime >= maxHoldTimeForShake)
+            {
+                if (virtualCamera != null)
+                {
+                    if (noise != null)
+                    {
+                        // Calculate the intensity of the shake based on hold time
+                        float intensity = Mathf.Clamp01(((holdTime - maxHoldTimeForShake) * shakeThresold) / (holdTime * shakeThresold)); // Adjust 0.5f as needed
+
+                        // Apply the intensity to the noise profile's amplitude
+                        noise.m_AmplitudeGain = intensity;
+                        noise.m_FrequencyGain = intensity;
+                    }
+                }
+            }
+        }
+        else
+        {
+            noise.m_AmplitudeGain = 0;
+            noise.m_FrequencyGain = 0;
+            holdTime = 0;
+        }
     }
+
+    public static bool isSurpassing;
+    [SerializeField] float shakeThresold = 0.5f;
+    private float holdTime = 0f;
+    public float maxHoldTimeForShake = 2f; // Adjust this value as needed
 }
 

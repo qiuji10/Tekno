@@ -9,6 +9,8 @@ public class BeatMap_Input : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private float timeWindow;
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioClip successClip;
 
     [Header("Action Reference")]
     [SerializeField] private InputActionReference leftAction;
@@ -18,13 +20,14 @@ public class BeatMap_Input : MonoBehaviour
 
     [Header("Lane Reference")]
     [SerializeField] private GameObject[] lane;
+    [SerializeField] private GameObject[] successBar;
     [SerializeField] private ParticleAttractorSpherical[] particles;
     [SerializeField] private RhythmGameMiniAmp[] amps;
 
     private Coroutine[] task = new Coroutine[4];
 
     public static Dictionary<Lane, NoteObject> inputData = new Dictionary<Lane, NoteObject>(4);
-    public static event Action<Lane> OnNoteSuccess, OnLongNoteEnd;
+    public static event Action<Lane> OnNoteSuccess, OnTapNoteEnd, OnLongNoteEnd;
 
     private void Awake()
     {
@@ -46,6 +49,7 @@ public class BeatMap_Input : MonoBehaviour
         cirAction.action.canceled += OnKeyUp;
 
         OnNoteSuccess += SuccessEffect;
+        OnTapNoteEnd += StopMiniAmpEffect;
         OnLongNoteEnd += StopMiniAmpEffect;
     }
 
@@ -64,6 +68,7 @@ public class BeatMap_Input : MonoBehaviour
         cirAction.action.canceled -= OnKeyUp;
 
         OnNoteSuccess -= SuccessEffect;
+        OnTapNoteEnd -= StopMiniAmpEffect;
         OnLongNoteEnd -= StopMiniAmpEffect;
     }
 
@@ -77,6 +82,11 @@ public class BeatMap_Input : MonoBehaviour
         OnLongNoteEnd?.Invoke(lane);
     }
 
+    public static void CallTapNoteEnd(Lane lane)
+    {
+        OnLongNoteEnd?.Invoke(lane);
+    }
+
     public void StopMiniAmpEffect(Lane lane)
     {
         amps[(int)lane].StopHitEffect();
@@ -85,6 +95,7 @@ public class BeatMap_Input : MonoBehaviour
     public void SuccessEffect(Lane lane)
     {
         particles[(int)lane].Play();
+        StartCoroutine(TapNoteSuccess((int)lane));
     }
 
     private void OnKeyUp(InputAction.CallbackContext context)
@@ -118,10 +129,12 @@ public class BeatMap_Input : MonoBehaviour
         {
             if ((note as NoteObject_Hold).percentage < 0.9)
             {
+                successBar[index].SetActive(false);
                 (note as NoteObject_Hold).ToggleCollider(true);
             }
             else
             {
+                successBar[index].SetActive(false);
                 (note as NoteObject_Hold).ToggleCollider(false);
             }
         }
@@ -151,7 +164,7 @@ public class BeatMap_Input : MonoBehaviour
             StopCoroutine(task[index]);
 
         task[index] = StartCoroutine(DetachInput(index));
-
+        
         NoteObject note = inputData[(Lane)index];
 
         if (note != null && note is NoteObject_Hold)
@@ -169,15 +182,16 @@ public class BeatMap_Input : MonoBehaviour
         GameObject gameObject = lane[index];
         
         gameObject.SetActive(true);
-
+        
         if (inputData[(Lane)index] != null)
         {
             if (inputData[(Lane)index] is NoteObject_Hold)
             {
                 Debug.Log("yo");
                 amps[index].StopHitEffect();
+                successBar[index].SetActive(true);
                 yield return new WaitUntil(() => inputData[(Lane)index] == null);
-
+                successBar[index].SetActive(false);
                 OnNoteSuccess?.Invoke((Lane)index);
                 gameObject.SetActive(false);
                 yield break;
@@ -226,16 +240,27 @@ public class BeatMap_Input : MonoBehaviour
             {
                 if (note != null && note is NoteObject_Hold)
                 {
+                    sfxSource.PlayOneShot(successClip);
                     Debug.Log("yoyo");
                     StopCoroutine(task[index]);
                     lane[index].SetActive(true);
                     (note as NoteObject_Hold).ToggleCollider(false);
                     amps[index].StopHitEffect();
+                    successBar[index].SetActive(true);
                     yield return new WaitUntil(() => inputData[(Lane)index] == null);
                     lane[index].SetActive(false);
+                    successBar[index].SetActive(false);
                     OnNoteSuccess?.Invoke((Lane)index);
                 }
             }
         }
+    }
+
+    private IEnumerator TapNoteSuccess(int index)
+    {
+        sfxSource.PlayOneShot(successClip);
+        successBar[index].SetActive(true);
+        yield return new WaitForSeconds(0.2f);
+        successBar[index].SetActive(false);
     }
 }
