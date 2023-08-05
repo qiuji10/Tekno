@@ -20,7 +20,7 @@ public class EventInvoker : MonoBehaviour
 
     [SerializeField] private bool triggerOnce;
     [SerializeField] private float triggerDelay;
-    [SerializeField] private bool disablePlayerControl = true;
+    [SerializeField] private bool playerControlDisable;
     private PlayerController player;
 
 
@@ -84,7 +84,7 @@ public class EventInvoker : MonoBehaviour
                 OnInteract?.Invoke();
                 StartCoroutine(DelayEvent());
 
-                if (disablePlayerControl)
+                if (playerControlDisable)
                 {
                     if (player == null)
                         other.TryGetComponent(out player);

@@ -86,7 +86,7 @@ public class MovingCar : MonoBehaviour
     {
         int intValueEvt = evt.GetIntValue();
 
-        if (carIndex == intValueEvt)
+        if (carIndex == currentWaypointIndex)
         {
             MoveToNextWaypoint();
         }
