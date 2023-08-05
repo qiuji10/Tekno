@@ -80,9 +80,11 @@ public class HookAbility : MonoBehaviour
         }
         else
         {
-            if (context.canceled) return;
+            //if (context.canceled) return;
 
             pendulum = hookSensor.GetNearestObject<Pendulum>();
+
+            Debug.Log(pendulum);
 
             throwBehindBurst = 0;
             throwForwardBurst = 0;

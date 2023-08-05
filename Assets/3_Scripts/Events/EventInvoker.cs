@@ -20,6 +20,9 @@ public class EventInvoker : MonoBehaviour
 
     [SerializeField] private bool triggerOnce;
     [SerializeField] private float triggerDelay;
+    [SerializeField] private bool playerControlDisable;
+    private PlayerController player;
+
 
     private bool inRange, triggerDisable;
     private Camera cam;
@@ -80,6 +83,14 @@ public class EventInvoker : MonoBehaviour
 
                 OnInteract?.Invoke();
                 StartCoroutine(DelayEvent());
+
+                if (playerControlDisable)
+                {
+                    if (player == null)
+                        other.TryGetComponent(out player);
+
+                    player.DisableAction();
+                }
             }
 
             inRange = true;

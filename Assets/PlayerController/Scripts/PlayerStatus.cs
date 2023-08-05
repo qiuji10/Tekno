@@ -146,7 +146,7 @@ public class PlayerStatus : MonoBehaviour
         MaterialModifier modifier = GetComponentInChildren<MaterialModifier>();
         modifier.ResetMaterial();
 
-        FindObjectOfType<GameSceneManager>().LoadScene("1_Lobby");
+        FindObjectOfType<GameSceneManager>().LoadScene("Base Scene (Elevator)");
     }
 
     IEnumerator GlitchyDamageEffect()

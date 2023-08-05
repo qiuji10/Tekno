@@ -17,6 +17,7 @@ public class Amplifier_V2 : MonoBehaviour
     [Header("Beat Settings")]
     [SerializeField] List<BeatSequence> beatSequence = new List<BeatSequence>();
     [SerializeField] BeatPoint beatPrefab;
+    [SerializeField] bool showGizmos;
 
     [Header("Hijack Succeeded")]
     [SerializeField] private List<EnemyBase> enemiesInControl;
@@ -194,6 +195,40 @@ public class Amplifier_V2 : MonoBehaviour
             InputSystem.PauseHaptics();
             StartCoroutine(EvaluateStatus());
         });
+    }
+
+    [Button]
+    public void DebugHijack()
+    {
+        enemiesInControl.Clear();
+
+        Collider[] collideData = Physics.OverlapSphere(transform.position, knockBackRange);
+
+        for (int i = 0; i < collideData.Length; i++)
+        {
+            if (collideData[i].TryGetComponent(out EnemyBase enemy))
+            {
+                if (!enemy.IsFree)
+                    enemiesInControl.Add(enemy);
+            }
+        }
+
+        foreach (EnemyBase e in enemiesInControl)
+        {
+            if (e != null && e.gameObject.activeInHierarchy)
+            {
+                e.FreeEnemy();
+            }
+        }
+
+        foreach (BillboardCycle billboard in billboardCycles)
+        {
+            if (billboard != null && billboard.gameObject.activeInHierarchy)
+            {
+                billboard.isHijackedSuccessful = true;
+            }
+        }
+
     }
 
     private IEnumerator EvaluateStatus()
@@ -536,8 +571,11 @@ public class Amplifier_V2 : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, knockBackRange);
+        if (showGizmos)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, knockBackRange);
+        }
     }
     #endregion
 }
