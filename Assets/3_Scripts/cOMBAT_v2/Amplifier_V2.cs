@@ -279,6 +279,7 @@ public class Amplifier_V2 : MonoBehaviour
             OnHijackSucceed?.Invoke();
             StartCoroutine(HackedDecal());
             StanceManager.AllowPlayerSwitchStance = true;
+            PlayerController.allowedInput = true;
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
@@ -304,6 +305,7 @@ public class Amplifier_V2 : MonoBehaviour
             }
 
             StanceManager.AllowPlayerSwitchStance = true;
+            PlayerController.allowedInput = true;
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
@@ -470,8 +472,6 @@ public class Amplifier_V2 : MonoBehaviour
     [Button]
     public void Resetter()
     {
-        PlayerController.allowedInput = true;
-        
         speaker.OnHitFailure -= Speaker_OnHitFailure;
         speaker.OnComboSuccess -= Speaker_OnComboSuccess;
 

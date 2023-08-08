@@ -16,6 +16,9 @@ public class IntroScreen : MonoBehaviour
 
     private void Awake()
     {
+        if (PlayerPrefs.HasKey("intro_cutscene") && PlayerPrefs.GetInt("intro_cutscene") == 1)
+            return;
+
         Collider[] overlapColliders = Physics.OverlapSphere(transform.position, 5);
 
         for (int i = 0; i < overlapColliders.Length; i++)
@@ -39,7 +42,11 @@ public class IntroScreen : MonoBehaviour
 
     private void EndIntro()
     {
+        PlayerPrefs.SetInt("intro_cutscene", 1);
+        PlayerPrefs.Save();
+
         OnAnyKeyDown?.Invoke();
+        playerData.controller.EnableAction();
         canvas.enabled = false;
         vcam.Priority = 0;
         gameObject.SetActive(false);
