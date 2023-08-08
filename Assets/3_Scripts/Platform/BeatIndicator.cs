@@ -33,8 +33,6 @@ public class BeatIndicator : MonoBehaviour
     private void Awake()
     {
         StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
-        // Set the track field to the current track
-        //StanceManager_OnStanceChange(StanceManager.curTrack);
         track = currentTrack;
     }
 
