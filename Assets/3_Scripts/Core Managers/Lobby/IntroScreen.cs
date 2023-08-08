@@ -32,6 +32,11 @@ public class IntroScreen : MonoBehaviour
         DisableSelf();
     }
 
+    private void Start()
+    {
+        FadeCanvas.Instance.FadeIn();
+    }
+
     private void Update()
     {
         if (Input.anyKeyDown && playerIn)

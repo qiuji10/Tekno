@@ -1,6 +1,7 @@
 using NodeCanvas.BehaviourTrees;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerStatus : MonoBehaviour 
 {
@@ -13,17 +14,20 @@ public class PlayerStatus : MonoBehaviour
 
     [Header("Death")]
     [SerializeField] private GameObject deathCanvas;
+    [SerializeField] private CameraSetter deathCamSetter;
 
     private int totalHealth;
     private bool isGlitchy, isDead;
     private CheckpointManager checkpointManager;
     private MaterialModifier matModifier;
     private SpectrumUI spectrum;
+    private Animator _anim;
 
     private void Awake()
     {
         totalHealth = health;
 
+        _anim = GetComponentInChildren<Animator>();
         checkpointManager = FindObjectOfType<CheckpointManager>();
         matModifier = GetComponentInChildren<MaterialModifier>();
         spectrum = FindObjectOfType<SpectrumUI>();
@@ -113,6 +117,8 @@ public class PlayerStatus : MonoBehaviour
             {
                 isDead = true;
 
+                GetComponent<Rigidbody>().velocity = Vector3.zero;
+
                 FindObjectOfType<StanceManager>().gameObject.SetActive(false);
                 FindObjectOfType<PauseMenu>().gameObject.SetActive(false);
 
@@ -121,11 +127,19 @@ public class PlayerStatus : MonoBehaviour
                 GetComponent<TeleportAbility>().enabled = false;
                 GetComponent<Attack>().enabled = false;
 
-                deathCanvas.SetActive(true);
+                StartCoroutine(DeathCutscene());
             }
 
             
         }
+    }
+
+    private IEnumerator DeathCutscene()
+    {
+        deathCamSetter.LoadCam();
+        _anim.SetTrigger("IsDeath");
+        yield return new WaitForSeconds(6f);
+        deathCanvas.SetActive(true);
     }
 
     public void BackLobby()
@@ -146,7 +160,11 @@ public class PlayerStatus : MonoBehaviour
         MaterialModifier modifier = GetComponentInChildren<MaterialModifier>();
         modifier.ResetMaterial();
 
-        FindObjectOfType<GameSceneManager>().LoadScene("Base Scene (Elevator)");
+        FadeCanvas.Instance.FadeOut();
+        yield return new WaitForSeconds(1f);
+
+        SceneManager.UnloadSceneAsync("3_Gameplay");
+        SceneManager.LoadScene("Base Scene (Elevator)");
     }
 
     IEnumerator GlitchyDamageEffect()
