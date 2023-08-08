@@ -39,18 +39,22 @@ public class BuildingColorChange : MonoBehaviour
         {
             case Genre.House:
                 eventID = "120_House_Billboards";
+                StartCoroutine(ColorChangeDelayHouse());
                 SetRandomMaterial(HouseMat);
                 break;
             case Genre.Techno:
                 eventID = "140_Techno_Billboards";
+                StartCoroutine(ColorChangeDelayTechno());
                 SetRandomMaterial(TechnoMat);
                 break;
             case Genre.Electronic:
                 eventID = "160_Electro_Billboards";
+                StartCoroutine(ColorChangeDelayElectro());
                 SetRandomMaterial(ElectroMat);
                 break;
             default:
                 eventID = "140_Techno_Billboards";
+                StartCoroutine(ColorChangeDelayTechno());
                 SetRandomMaterial(HouseMat);
                 break;
         }
@@ -72,8 +76,8 @@ public class BuildingColorChange : MonoBehaviour
 
     private void OnMusicEvent(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
     {
-        
-        
+
+
     }
 
     private void SetRandomMaterial(Material[] materials)
@@ -112,5 +116,29 @@ public class BuildingColorChange : MonoBehaviour
         {
             Koreographer.Instance.UnregisterForAllEvents(this);
         }
+    }
+
+    private IEnumerator ColorChangeDelayHouse()
+    {
+        yield return new WaitForSeconds(2.85f);
+
+        SetRandomMaterial(HouseMat);
+
+    }
+
+    private IEnumerator ColorChangeDelayTechno()
+    {
+        yield return new WaitForSeconds(2.85f);
+
+        SetRandomMaterial(TechnoMat);
+
+    }
+
+    private IEnumerator ColorChangeDelayElectro()
+    {
+        yield return new WaitForSeconds(2.85f);
+
+        SetRandomMaterial(ElectroMat);
+
     }
 }
