@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using SonicBloom.Koreo;
 using System.Collections;
 using System.Collections.Generic;
@@ -56,6 +57,12 @@ public class BillboardCycle : MonoBehaviour
     private void OnDisable()
     {
         StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
+    }
+
+    [Button]
+    private void SetHijackMaterial()
+    {
+        SetRandomMaterial(hijackedMaterials);
     }
 
     private void OnMusicEvent(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)

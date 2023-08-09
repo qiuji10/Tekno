@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,8 +9,12 @@ public class HookAbility : MonoBehaviour
 {
     [Header("Hook Settings")]
     [SerializeField] private float throwForwardBurst = 50f;
+    [SerializeField] private float throwBehindBurst = -50f;
     [SerializeField] private float hookTime = 7.4f;
     [SerializeField] private float successRatio = 0.8f;
+    [SerializeField] private float dotProduct;
+    [SerializeField] private float launchAmount;
+    
 
     [SerializeField] private Vector3 detectOffset;
     [SerializeField] private Vector3 handPoint;
@@ -24,9 +29,9 @@ public class HookAbility : MonoBehaviour
     [SerializeField] private Image hookViableVisual;
 
     private PlayerController _playerController;
-    //private ThirdPerCam _cam;
     private Rigidbody _rb;
     private Pendulum pendulum;
+    private float convertLerpRatio;
 
     public bool isHooking;
     private float timer;
@@ -35,8 +40,7 @@ public class HookAbility : MonoBehaviour
     {
         _playerController = GetComponent<PlayerController>();
         _rb = GetComponent<Rigidbody>();
-        //_cam = Camera.main.GetComponent<ThirdPerCam>();
-        hookViableVisual.fillAmount = 1 - successRatio;
+        //hookViableVisual.fillAmount = 1 - successRatio;
     }
 
     private void OnEnable()
@@ -53,7 +57,7 @@ public class HookAbility : MonoBehaviour
 
     private void Update()
     {
-        if (isHooking) 
+        if (isHooking)
         {
             HookMovement();
         }
@@ -61,21 +65,47 @@ public class HookAbility : MonoBehaviour
 
     private void Hook(InputAction.CallbackContext context)
     {
-        if (isHooking) 
+        
+        if (isHooking)
         {
-            if (timer / hookTime < successRatio)
+            //if (timer / hookTime < successRatio)
+            //    DisableHook(false);
+            //else
+            //    DisableHook(true);
+
+            if(context.canceled)
+            {
                 DisableHook(false);
-            else
-                DisableHook(true);
+            }
         }
         else
         {
-            if (context.canceled) return;
+            //if (context.canceled) return;
 
             pendulum = hookSensor.GetNearestObject<Pendulum>();
 
-            if (pendulum != null) 
+            Debug.Log(pendulum);
+
+            throwBehindBurst = 0;
+            throwForwardBurst = 0;
+
+            if (pendulum != null)
             {
+                Vector3 direction = orientation.transform.position - pendulum.transform.position;
+
+                Transform pendulumForward = pendulum.transform;
+
+                dotProduct = Vector3.Dot(direction.normalized, pendulumForward.position);
+
+                if (dotProduct >= 0f)
+                {
+                    pendulum.startSineRatio = -Mathf.Abs(pendulum.startSineRatio);
+                    
+                }
+                else
+                {
+                    pendulum.startSineRatio = Mathf.Abs(pendulum.startSineRatio);
+                }
                 hookSlider.gameObject.SetActive(true);
                 Transform playerTR = _playerController.transform;
 
@@ -91,8 +121,10 @@ public class HookAbility : MonoBehaviour
                 _playerController.Anim.SetTrigger("StartSwing");
                 //_playerController.enabled = false;
                 PlayerController.allowedInput = false;
-                hookSlider.value = timer = 0;
-                hookSlider.maxValue = hookTime;
+                //hookSlider.value = timer = 0;
+                convertLerpRatio = pendulum.lerpRatio;
+                //hookSlider.value = convertLerpRatio;
+                //hookSlider.maxValue = hookTime;
 
                 lineRenderer.positionCount = 2;
                 lineRenderer.SetPosition(0, pendulum.transform.position);
@@ -106,14 +138,22 @@ public class HookAbility : MonoBehaviour
     private void HookMovement()
     {
         handPoint = lineRenderer.transform.position;
-
-        timer += Time.deltaTime;
-        hookSlider.value = timer;
+        float ratio = pendulum.lerpRatio;
+        hookSlider.value = ratio;
 
         lineRenderer.SetPosition(1, handPoint);
 
-        if (timer > hookTime)
-            DisableHook(false);
+        if (pendulum.isForward)
+        {
+            throwBehindBurst = 0;
+            throwForwardBurst += launchAmount * Time.deltaTime;
+        }
+        else
+        {
+            throwForwardBurst = 0;
+            throwBehindBurst -= launchAmount * Time.deltaTime;
+        }
+
     }
 
     private void DisableHook(bool enableForce)
@@ -124,9 +164,17 @@ public class HookAbility : MonoBehaviour
 
         _rb.isKinematic = false;
 
-        if (enableForce)
+        if (!enableForce)
         {
-            _rb.AddForce(pendulum.transform.forward * throwForwardBurst, ForceMode.Impulse);
+            if(pendulum.isForward)
+            {
+                _rb.AddForce(pendulum.transform.forward * throwForwardBurst, ForceMode.Impulse);
+            }
+            else
+            {
+                _rb.AddForce(pendulum.transform.forward * throwBehindBurst, ForceMode.Impulse);
+            }
+            
         }
 
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -142,7 +190,7 @@ public class HookAbility : MonoBehaviour
         lineRenderer.positionCount = 0;
 
         pendulum.isUsingHook = false;
-        pendulum.ResetPendulum();
+        pendulum.ResetPendulum(pendulum.startSineRatio);
         pendulum = null;
     }
 }

@@ -22,7 +22,7 @@ public class BeatIndicator : MonoBehaviour
 
     private void OnEnable()
     {
-        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+        
     }
 
     private void OnDisable()
@@ -32,9 +32,13 @@ public class BeatIndicator : MonoBehaviour
 
     private void Awake()
     {
-        // Set the track field to the current track
-        StanceManager_OnStanceChange(StanceManager.curTrack);
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
         track = currentTrack;
+    }
+
+    private void Start()
+    {
+        StanceManager_OnStanceChange(StanceManager.curTrack);
     }
 
     private void StanceManager_OnStanceChange(Track obj)

@@ -25,11 +25,6 @@ public class MovingCar : MonoBehaviour
 
     private Vector3[] originalPositions;
 
-    private void OnEnable()
-    {
-        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
-    }
-
     private void OnDisable()
     {
         StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
@@ -66,8 +61,14 @@ public class MovingCar : MonoBehaviour
             originalPositions[i] = waypoints[i].position;
         }
 
-        StanceManager_OnStanceChange(StanceManager.curTrack);
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+        
         track = currentTrack;
+    }
+
+    private void Start()
+    {
+        StanceManager_OnStanceChange(StanceManager.curTrack);
     }
 
     private void Update()
@@ -85,7 +86,7 @@ public class MovingCar : MonoBehaviour
     {
         int intValueEvt = evt.GetIntValue();
 
-        if (carIndex == intValueEvt)
+        if (carIndex == currentWaypointIndex)
         {
             MoveToNextWaypoint();
         }

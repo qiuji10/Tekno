@@ -5,9 +5,14 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using NaughtyAttributes;
 
+public enum SaveState { None, PlayerPrefs }
+
 public class DialogueTrigger : MonoBehaviour
 {
     [Header("Basic Settings")]
+    [SerializeField, ShowIf("IS_PLAYER_PREFS")] private string dialogueName;
+    [SerializeField] private SaveState saveState = SaveState.None;
+    [SerializeField] private bool markAsPlayerPrefs;
     [SerializeField] private bool triggerOnce;
     [SerializeField] private bool disablePlayerControl = true;
 
@@ -42,8 +47,16 @@ public class DialogueTrigger : MonoBehaviour
         DialogueManager.OnDialogueEnd -= DialogueManager_OnDialogueEnd;
     }
 
+    private bool CheckPlayerPrefs()
+    {
+        return PlayerPrefs.HasKey(dialogueName) && PlayerPrefs.GetInt(dialogueName) == 1;
+    }
+
     private void Interact(InputAction.CallbackContext context)
     {
+        if (CheckPlayerPrefs())
+            return;
+
         if (StanceManager.curTrack.genre != genre && genre != Genre.All) return;
 
         if (!triggerDisable && eventType == EventInvokeType.Stay && inRange)
@@ -55,11 +68,20 @@ public class DialogueTrigger : MonoBehaviour
             }
 
             OnInteract?.Invoke();
+
+            if (saveState == SaveState.PlayerPrefs)
+            {
+                PlayerPrefs.SetInt(dialogueName, 1);
+                PlayerPrefs.Save();
+            }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (CheckPlayerPrefs())
+            return;
+
         if (StanceManager.curTrack.genre != genre && genre != Genre.All) return;
 
         if (!triggerDisable && !inRange && other.CompareTag("Player"))
@@ -75,6 +97,12 @@ public class DialogueTrigger : MonoBehaviour
                 }
                 
                 OnInteract?.Invoke();
+
+                if (saveState == SaveState.PlayerPrefs)
+                {
+                    PlayerPrefs.SetInt(dialogueName, 1);
+                    PlayerPrefs.Save();
+                }
 
                 if (disablePlayerControl)
                 {
@@ -124,4 +152,5 @@ public class DialogueTrigger : MonoBehaviour
 
     private bool IS_ENTER() { return eventType == EventInvokeType.Enter; }
     private bool IS_STAY() { return eventType == EventInvokeType.Stay; }
+    private bool IS_PLAYER_PREFS() { return saveState == SaveState.PlayerPrefs; }
 }

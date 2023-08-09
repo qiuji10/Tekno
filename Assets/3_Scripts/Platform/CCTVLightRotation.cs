@@ -14,11 +14,6 @@ public class CCTVLightRotation : MonoBehaviour
     private Track track;
     public static Track currentTrack;
 
-    private void OnEnable()
-    {
-        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
-    }
-
     private void StanceManager_OnStanceChange(Track obj)
     {
         switch (obj.genre)
@@ -49,8 +44,14 @@ public class CCTVLightRotation : MonoBehaviour
 
     private void Awake()
     {
-        StanceManager_OnStanceChange(StanceManager.curTrack);
+        //StanceManager_OnStanceChange(StanceManager.curTrack);
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
         track = currentTrack;
+    }
+
+    private void Start()
+    {
+        StanceManager_OnStanceChange(StanceManager.curTrack);
     }
 
     private void OnMusicEvent(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)

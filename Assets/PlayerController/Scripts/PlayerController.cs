@@ -179,7 +179,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         if (Input.GetKeyDown(KeyCode.L))
         {
             transform.rotation = Quaternion.Euler(Vector3.zero);
-            transform.localScale = Vector3.one;
+            transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
         }
 
         Rotation();
@@ -327,7 +327,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void Jump(InputAction.CallbackContext context)
     {
-        if (!allowedAction || !allowedInput) return;
+        if (!allowedInput || !allowedAction) return;
 
 
         if (isGround && !isJumping && !disableAction)

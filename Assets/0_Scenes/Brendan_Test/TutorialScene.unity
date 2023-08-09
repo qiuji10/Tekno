@@ -1681,6 +1681,7 @@ MonoBehaviour:
   - {fileID: 1216505907}
   - {fileID: 325459339}
   - {fileID: 290422956}
+  events: []
 --- !u!1 &125539946
 GameObject:
   m_ObjectHideFlags: 0
@@ -5523,6 +5524,7 @@ MonoBehaviour:
       m_Calls: []
   triggerOnce: 0
   triggerDelay: 0
+  playerControlDisable: 0
 --- !u!4 &423387213
 Transform:
   m_ObjectHideFlags: 0
@@ -7814,6 +7816,7 @@ MonoBehaviour:
         m_CallState: 2
   triggerOnce: 1
   triggerDelay: 0
+  playerControlDisable: 0
 --- !u!65 &566782115
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11771,6 +11774,7 @@ MonoBehaviour:
       m_Calls: []
   triggerOnce: 0
   triggerDelay: 0
+  playerControlDisable: 0
 --- !u!135 &822404942
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -23978,8 +23982,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1662758770}
-  - component: {fileID: 1662758769}
   - component: {fileID: 1662758768}
+  - component: {fileID: 1662758772}
+  - component: {fileID: 1662758771}
   m_Layer: 0
   m_Name: Dialoguetrigger (1)
   m_TagString: Untagged
@@ -24000,43 +24005,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1662758769
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1662758767}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af5119e4a631dea488e64d37e22505eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggerOnce: 1
-  disablePlayerControl: 1
-  prompt: {fileID: 0}
-  interactKey: {fileID: -1799827654979083525, guid: 1870834d611a202418d6e474a9fb0619,
-    type: 3}
-  eventType: 0
-  genre: 2
-  OnInteract:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 44351236}
-        m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
-        m_MethodName: StartDialogue
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Stage2 mid
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnInteractEnd:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &1662758770
 Transform:
   m_ObjectHideFlags: 0
@@ -24052,6 +24020,62 @@ Transform:
   m_Father: {fileID: 341298685}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1662758771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662758767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 637bef70de314c041acdd5ed3f7eda5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactKey: {fileID: -3586359921819425980, guid: 1870834d611a202418d6e474a9fb0619,
+    type: 3}
+  eventType: 0
+  genre: 2
+  prompt: {fileID: 0}
+  OnInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 44351236}
+        m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+        m_MethodName: StartDialogue
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Stage2 mid
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnInteractDelay:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExit:
+    m_PersistentCalls:
+      m_Calls: []
+  triggerOnce: 1
+  triggerDelay: 1
+  playerControlDisable: 1
+--- !u!114 &1662758772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662758767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc7da508460a3484ba8eb50fe41b60ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1664352439
 GameObject:
   m_ObjectHideFlags: 0
@@ -24789,6 +24813,7 @@ MonoBehaviour:
       m_Calls: []
   triggerOnce: 0
   triggerDelay: 0
+  playerControlDisable: 0
 --- !u!1 &1703311353
 GameObject:
   m_ObjectHideFlags: 0
