@@ -1,6 +1,8 @@
 using NaughtyAttributes;
 using NodeCanvas.Framework;
+using NodeCanvas.Tasks.Conditions;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -35,6 +37,8 @@ public class EnemyBase : MonoBehaviour, IKnockable
 
     private float danceTimer;
 
+    public bool IsFree => isFree;
+
     private void Awake()
     {
         danceTimer = 5f;
@@ -44,6 +48,8 @@ public class EnemyBase : MonoBehaviour, IKnockable
         _owner = GetComponent<GraphOwner>();
         _anim = GetComponentInChildren<Animator>();
         _camTR = Camera.main.transform;
+
+        AssignWaypoints();
 
         ignoreLayer = ~(1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Player"));
 
@@ -57,6 +63,24 @@ public class EnemyBase : MonoBehaviour, IKnockable
         _anim.SetFloat("IdleBlendTree", Random.Range(0f, 1f));
 
         isKnockng = false;
+
+    }
+
+    [Button]
+    private void AssignWaypoints()
+    {
+        GraphOwner owner = GetComponent<GraphOwner>();
+        IBlackboard blackboard = owner.blackboard;
+
+        Transform waypointParent = transform.parent.parent.GetChild(0);
+        List<GameObject> waypoints = new List<GameObject>();
+
+        for (int i = 0; i < waypointParent.childCount; i++)
+        {
+            waypoints.Add(waypointParent.GetChild(i).gameObject);
+        }
+
+        blackboard.SetVariableValue("WaypointNode", waypoints);
     }
 
     private void LateUpdate()

@@ -17,9 +17,11 @@ public class Amplifier_V2 : MonoBehaviour
     [Header("Beat Settings")]
     [SerializeField] List<BeatSequence> beatSequence = new List<BeatSequence>();
     [SerializeField] BeatPoint beatPrefab;
+    [SerializeField] bool showGizmos;
 
     [Header("Hijack Succeeded")]
     [SerializeField] private List<EnemyBase> enemiesInControl;
+    [SerializeField] private List<BillboardCycle> billboardCycles;
     [SerializeField] private ParticleSystem particle;
     public UnityEvent OnHijackSucceed;
 
@@ -85,6 +87,23 @@ public class Amplifier_V2 : MonoBehaviour
         decalProjector = GetComponentInChildren<DecalProjector>();
         decalProjector.material = new Material(decalProjector.material);
         decalProjector.material.SetColor("_Color", Color.red);
+
+        enemiesInControl.Clear();
+
+        Collider[] collideData = Physics.OverlapSphere(transform.position, knockBackRange);
+
+        for (int i = 0; i < collideData.Length; i++)
+        {
+            if (collideData[i].TryGetComponent(out EnemyBase enemy))
+            {
+                enemiesInControl.Add(enemy);
+            }
+
+            if (collideData[i].TryGetComponent(out BillboardCycle billboardCycle))
+            {
+                billboardCycles.Add(billboardCycle);
+            }
+        }
     }
 
     private void OnEnable()
@@ -178,6 +197,40 @@ public class Amplifier_V2 : MonoBehaviour
         });
     }
 
+    [Button]
+    public void DebugHijack()
+    {
+        enemiesInControl.Clear();
+
+        Collider[] collideData = Physics.OverlapSphere(transform.position, knockBackRange);
+
+        for (int i = 0; i < collideData.Length; i++)
+        {
+            if (collideData[i].TryGetComponent(out EnemyBase enemy))
+            {
+                if (!enemy.IsFree)
+                    enemiesInControl.Add(enemy);
+            }
+        }
+
+        foreach (EnemyBase e in enemiesInControl)
+        {
+            if (e != null && e.gameObject.activeInHierarchy)
+            {
+                e.FreeEnemy();
+            }
+        }
+
+        foreach (BillboardCycle billboard in billboardCycles)
+        {
+            if (billboard != null && billboard.gameObject.activeInHierarchy)
+            {
+                billboard.isHijackedSuccessful = true;
+            }
+        }
+
+    }
+
     private IEnumerator EvaluateStatus()
     {
         if (amplifierHealth <= 0)
@@ -194,6 +247,19 @@ public class Amplifier_V2 : MonoBehaviour
                 amplifierSlider.Value = 1f;
             }
 
+            enemiesInControl.Clear();
+
+            Collider[] collideData = Physics.OverlapSphere(transform.position, knockBackRange);
+
+            for (int i = 0; i < collideData.Length; i++)
+            {
+                if (collideData[i].TryGetComponent(out EnemyBase enemy))
+                {
+                    if (!enemy.IsFree)
+                        enemiesInControl.Add(enemy);
+                }
+            }
+
             foreach (EnemyBase e in enemiesInControl)
             {
                 if (e != null && e.gameObject.activeInHierarchy)
@@ -202,9 +268,18 @@ public class Amplifier_V2 : MonoBehaviour
                 }
             }
 
+            foreach (BillboardCycle billboard in billboardCycles)
+            {
+                if (billboard != null && billboard.gameObject.activeInHierarchy)
+                {
+                    billboard.isHijackedSuccessful = true;
+                }
+            }
+
             OnHijackSucceed?.Invoke();
             StartCoroutine(HackedDecal());
             StanceManager.AllowPlayerSwitchStance = true;
+            PlayerController.allowedInput = true;
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
@@ -230,6 +305,7 @@ public class Amplifier_V2 : MonoBehaviour
             }
 
             StanceManager.AllowPlayerSwitchStance = true;
+            PlayerController.allowedInput = true;
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
@@ -342,9 +418,9 @@ public class Amplifier_V2 : MonoBehaviour
                 speaker.startTrace = true;
                 speaker.currentBeat++;
                 index++;
-                //float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
-
-                float timeToBeatCount = (60f / 140f);
+                float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
+                timeToBeatCount = 0.1f;
+                //float timeToBeatCount = (60f / 140f);
                 //speaker.touchPoint = beatObjects[index].img.rectTransform.position;
                 //speaker.key = beatData[index].key;
                 //speaker.beatPoint = beatObjects[index];
@@ -396,8 +472,6 @@ public class Amplifier_V2 : MonoBehaviour
     [Button]
     public void Resetter()
     {
-        PlayerController.allowedInput = true;
-        
         speaker.OnHitFailure -= Speaker_OnHitFailure;
         speaker.OnComboSuccess -= Speaker_OnComboSuccess;
 
@@ -497,8 +571,11 @@ public class Amplifier_V2 : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, knockBackRange);
+        if (showGizmos)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, knockBackRange);
+        }
     }
     #endregion
 }

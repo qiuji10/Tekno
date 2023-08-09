@@ -51,7 +51,7 @@ public class MusicSync : MonoBehaviour
 
     private void OnEnable()
     {
-        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+        
     }
 
     private void OnDisable()
@@ -63,12 +63,18 @@ public class MusicSync : MonoBehaviour
     private void Awake()
     {
         // Set the track field to the current track
-        StanceManager_OnStanceChange(StanceManager.curTrack);
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+        
         track = currentTrack;
         // Save the original scale and rotation for resetting later
         originalScale = transform.localScale;
         originalRotation = transform.localRotation;
         originalPosition = transform.position;
+    }
+
+    private void Start()
+    {
+        StanceManager_OnStanceChange(StanceManager.curTrack);
     }
 
     private void StanceManager_OnStanceChange(Track obj)
@@ -99,7 +105,7 @@ public class MusicSync : MonoBehaviour
         int intValueEvt = evt.GetIntValue();
 
         // Check if the intValueEvt is within the valid range of the sequence array
-        if (intValueEvt >= 0 && intValueEvt < sequence.Length)
+        if (sequence != null && intValueEvt >= 0 && intValueEvt < sequence.Length)
         {
             // Reset the previous beat's material
             if (currentBeat >= 0 && currentBeat < sequence.Length)

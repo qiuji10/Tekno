@@ -10,6 +10,7 @@ public class NoteObject_Tap : NoteObject
     private ParticleSystem particle;
     private Light pointLight;
 
+    [SerializeField] AudioData sfx;
     private void Awake()
     {
         _mesh = GetComponent<MeshRenderer>();
@@ -78,6 +79,7 @@ public class NoteObject_Tap : NoteObject
     private IEnumerator DisableNote_Delay(float delay)
     {
         yield return new WaitForSeconds(delay);
+        BeatMap_Input.CallTapNoteEnd(lane);
         gameObject.SetActive(false);
     }
 

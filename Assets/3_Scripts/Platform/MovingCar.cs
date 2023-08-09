@@ -17,16 +17,13 @@ public class MovingCar : MonoBehaviour
 
     public MeshRenderer carRenderer;
 
+    public bool DisableRenderer = false;
+
     // Koreography Sync with Stance Manager
     private Track track;
     public static Track currentTrack;
 
     private Vector3[] originalPositions;
-
-    private void OnEnable()
-    {
-        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
-    }
 
     private void OnDisable()
     {
@@ -64,8 +61,14 @@ public class MovingCar : MonoBehaviour
             originalPositions[i] = waypoints[i].position;
         }
 
-        StanceManager_OnStanceChange(StanceManager.curTrack);
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+        
         track = currentTrack;
+    }
+
+    private void Start()
+    {
+        StanceManager_OnStanceChange(StanceManager.curTrack);
     }
 
     private void Update()
@@ -83,7 +86,7 @@ public class MovingCar : MonoBehaviour
     {
         int intValueEvt = evt.GetIntValue();
 
-        if (carIndex == intValueEvt)
+        if (carIndex == currentWaypointIndex)
         {
             MoveToNextWaypoint();
         }
@@ -96,9 +99,12 @@ public class MovingCar : MonoBehaviour
             currentWaypointIndex++;
             if (currentWaypointIndex >= waypoints.Length) { currentWaypointIndex = 0; }
 
-            if (currentWaypointIndex == 0) { carRenderer.enabled = false; }
-            else { carRenderer.enabled = true; }
-
+            if(DisableRenderer == true)
+            {
+                if (currentWaypointIndex == 0) { carRenderer.enabled = false; }
+                else { carRenderer.enabled = true; }
+            }
+            
             isMoving = true;
         }
     }

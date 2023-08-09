@@ -94,36 +94,51 @@ public class NoteObject_Hold : NoteObject
         if (SurpassStartPos && !FirstNoteSurpassEndPos)
         {
             ToggleNoteMesh(1, true);
+
+            SetVfxPosition(1, noteStart.position);
         }
 
         if (SecondNoteSurpassStartPos && !SurpassEndPos)
         {
             ToggleNoteMesh(2, true);
+            SetVfxPosition(2, noteEnd.position);
         }
 
         if (FirstNoteSurpassEndPos && !SurpassEndPos)
         {
+            BeatMap_Sequencer.isSurpassing = true;
             BeatMap_Input.inputData[lane] = this;
 
             ToggleNoteMesh(1, false);
             
             if (_col.gameObject.activeInHierarchy)
             {
-                
-                SetVfxPosition(1, noteStart.position);
+                SetVfxPosition(1, laneEndPos + new Vector3(0,0,-6));
             }
             else
             {
                 SetVfxPosition(1, laneEndPos);
             }
+
+            if (!SecondNoteSurpassStartPos)
+            {
+                SetVfxPosition(2, laneStartPos);
+            }
+            else
+            {
+                SetVfxPosition(2, noteEnd.position);
+            }
+
+            //shake screen
         }
-        else if (SurpassStartPos && !SurpassEndPos)
+        else if (SurpassStartPos && !SurpassEndPos && !SecondNoteSurpassStartPos)
         {
             ToggleVFX(true);
             SetVfxPosition(2, laneStartPos);
         }
         else if (SurpassEndPos)
         {
+            BeatMap_Sequencer.isSurpassing = false;
             BeatMap_Input.inputData[lane] = null;
             BeatMap_Input.CallLongNoteEnd(lane);
             DisableVisual(true);
