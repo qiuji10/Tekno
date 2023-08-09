@@ -240,7 +240,6 @@ public class BeatMap_Input : MonoBehaviour
             {
                 if (note != null && note is NoteObject_Hold)
                 {
-                    sfxSource.PlayOneShot(successClip);
                     Debug.Log("yoyo");
                     StopCoroutine(task[index]);
                     lane[index].SetActive(true);
@@ -258,7 +257,6 @@ public class BeatMap_Input : MonoBehaviour
 
     private IEnumerator TapNoteSuccess(int index)
     {
-        sfxSource.PlayOneShot(successClip);
         successBar[index].SetActive(true);
         yield return new WaitForSeconds(0.2f);
         successBar[index].SetActive(false);

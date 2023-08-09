@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.EventSystems;
+using NodeCanvas.BehaviourTrees;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -19,7 +21,12 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject objToBeSelected;
    
     private DepthOfField dofComponent;
+    private PlayerController playerController;
 
+    private void Awake()
+    {
+        playerController = FindObjectOfType<PlayerController>();
+    }
 
     private void OnEnable()
     {
@@ -57,6 +64,7 @@ public class PauseMenu : MonoBehaviour
         canvas.enabled = true;
         if (dofComponent) dofComponent.focalLength.value = 50f;
         isPause = true;
+        playerController.DisableAction();
         EventSystem.current.SetSelectedGameObject(objToBeSelected);
         Time.timeScale = 0;
     }
@@ -67,6 +75,7 @@ public class PauseMenu : MonoBehaviour
         canvas.enabled = false;
         if (dofComponent) dofComponent.focalLength.value = 1.0f;
         isPause = false;
+        playerController.EnableAction();
         EventSystem.current.SetSelectedGameObject(null);
         Time.timeScale = 1;
     }
@@ -79,17 +88,22 @@ public class PauseMenu : MonoBehaviour
 
     private IEnumerator BackToLobby_Coroutine()
     {
-        MaterialModifier modifier = FindObjectOfType<MaterialModifier>();
-        modifier.ResetMaterial();
+        BehaviourTreeOwner[] enemies = FindObjectsOfType<BehaviourTreeOwner>();
 
-        NonDestructible[] nonDestructibles = FindObjectsOfType<NonDestructible>();
-
-        foreach (NonDestructible item in nonDestructibles)
+        foreach (BehaviourTreeOwner item in enemies)
         {
-            Destroy(item.gameObject);
+            item.gameObject.SetActive(false);
             yield return null;
         }
 
-        FindObjectOfType<GameSceneManager>().LoadScene("1_Lobby");
+        MaterialModifier modifier = FindObjectOfType<MaterialModifier>();
+        modifier.ResetMaterial();
+
+        if (FadeCanvas.Instance)
+            FadeCanvas.Instance.FadeOut();
+        yield return new WaitForSeconds(1f);
+
+        SceneManager.UnloadSceneAsync("3_Gameplay");
+        SceneManager.LoadScene("Base Scene (Elevator)");
     }
 }

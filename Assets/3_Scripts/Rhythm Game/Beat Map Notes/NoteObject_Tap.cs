@@ -87,7 +87,6 @@ public class NoteObject_Tap : NoteObject
     {
         if (other.CompareTag("BeatPoint"))
         {
-            AudioManager.instance.PlaySFX(sfx, 0);
             Debug.Log("HI");
             StopAllCoroutines();
             particle.transform.parent = null;
