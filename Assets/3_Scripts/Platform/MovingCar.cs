@@ -130,11 +130,16 @@ public class MovingCar : MonoBehaviour
     {
         for (int i = 0; i < waypoints.Length; i++)
         {
-            waypoints[i].position = originalPositions[i];
+            if (waypoints[i] != null)
+            {
+                waypoints[i].position = originalPositions[i];
+            }
         }
 
         currentWaypointIndex = 0;
-        carRenderer.enabled = true;
+
+        if (carRenderer != null)
+            carRenderer.enabled = true;
     }
 
     private void OnDestroy()

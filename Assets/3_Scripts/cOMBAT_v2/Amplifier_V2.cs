@@ -369,7 +369,7 @@ public class Amplifier_V2 : MonoBehaviour
                     case KeyInput.Cross:    beatPoint.img.sprite = SpriteData.Instance.cross;       beatPoint.img.color = HexColor("#7EABE1");    break;
                     case KeyInput.Square:   beatPoint.img.sprite = SpriteData.Instance.square;      beatPoint.img.color = HexColor("#CE8ED6");    break;
                     case KeyInput.Triangle: beatPoint.img.sprite = SpriteData.Instance.triangle;    beatPoint.img.color = HexColor("#4ADB7B");    break;
-                    case KeyInput.None:     beatPoint.img.sprite = SpriteData.Instance.skip;        beatPoint.img.color = Color.grey;             break;
+                    case KeyInput.None:     beatPoint.img.sprite = SpriteData.Instance.skip;        beatPoint.img.color = Color.white;             break;
                 }
 
                 beatObjects.Add(beatPoint);

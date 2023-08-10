@@ -20,16 +20,6 @@ public class BeatIndicator : MonoBehaviour
     public Material technoMaterial;
     public Material electronicMaterial;
 
-    private void OnEnable()
-    {
-        
-    }
-
-    private void OnDisable()
-    {
-        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
-    }
-
     private void Awake()
     {
         StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
@@ -106,14 +96,20 @@ public class BeatIndicator : MonoBehaviour
         // Change the material of the object at the specified index in the sequence array
         if (material != null)
         {
-            sequence[index].GetComponent<Renderer>().material = material;
+            if (sequence.Length > 0 && sequence[index] != null)
+            {
+                sequence[index].GetComponent<Renderer>().material = normalMat;
+            }
         }
     }
 
     private void ResetMaterial(int index)
     {
         // Reset the material of the object at the specified index in the sequence array
-        sequence[index].GetComponent<Renderer>().material = normalMat;
+        if (sequence.Length > 0 && sequence[index] != null)
+        {
+            sequence[index].GetComponent<Renderer>().material = normalMat;
+        }
     }
 
     private void OnDestroy()
@@ -122,5 +118,7 @@ public class BeatIndicator : MonoBehaviour
         {
             Koreographer.Instance.UnregisterForAllEvents(this);
         }
+
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 }
