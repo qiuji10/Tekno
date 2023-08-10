@@ -233,6 +233,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1177476895}
     m_Modifications:
+    - target: {fileID: 439896596027439124, guid: c1e870b41c324f8408e36c239ef64e24,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4977427669460451232, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
       propertyPath: m_Name
@@ -266,7 +271,7 @@ PrefabInstance:
     - target: {fileID: 4977427669460451233, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -25.86
+      value: -25.35
       objectReference: {fileID: 0}
     - target: {fileID: 4977427669460451233, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
@@ -326,7 +331,7 @@ PrefabInstance:
     - target: {fileID: 4977427669540224511, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -35.13
+      value: -36.11
       objectReference: {fileID: 0}
     - target: {fileID: 4977427669540224511, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
@@ -351,6 +356,16 @@ PrefabInstance:
     - target: {fileID: 4977427669540224511, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
       propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977427670916494168, guid: c1e870b41c324f8408e36c239ef64e24,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977427670916494168, guid: c1e870b41c324f8408e36c239ef64e24,
+        type: 3}
+      propertyPath: m_LocalPosition.z
       value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4977427670916494169, guid: c1e870b41c324f8408e36c239ef64e24,
@@ -381,7 +396,12 @@ PrefabInstance:
     - target: {fileID: 4977427671153279026, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977427671153279026, guid: c1e870b41c324f8408e36c239ef64e24,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1e870b41c324f8408e36c239ef64e24, type: 3}
@@ -996,19 +1016,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 464868722}
         m_TargetAssemblyTypeName: UIEnable, Assembly-CSharp
-        m_MethodName: StanceManagerUI
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1387844923}
-        m_TargetAssemblyTypeName: GameobjectSetActive, Assembly-CSharp
-        m_MethodName: Dissolve
+        m_MethodName: EnableStanceManagerUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6112,7 +6120,8 @@ MonoBehaviour:
   stanceManagerUIReference: {fileID: 0}
   playerController: {fileID: 0}
   player: {fileID: 0}
-  triggerDelay: 7
+  triggerDelay: 3
+  enableDelay: 0.9
 --- !u!1 &470039620
 GameObject:
   m_ObjectHideFlags: 0
@@ -6140,7 +6149,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 470039620}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -431.8, y: 308.96606, z: -3983}
+  m_LocalPosition: {x: -409.6, y: 308.96606, z: -3983}
   m_LocalScale: {x: 63.766388, y: 8.592151, z: 65.97744}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6648,7 +6657,7 @@ Transform:
   m_GameObject: {fileID: 494883727}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -98.92, y: -25.86, z: 633.36}
-  m_LocalScale: {x: 8.384304, y: 1.2504644, z: 8.7439995}
+  m_LocalScale: {x: 6.830022, y: 1.2504644, z: 6.4193196}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1177476895}
@@ -13974,7 +13983,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: 'This Is your health it tells you how much you have left in the tank once
-    the bar reaches zero, that''s it the end of the story.
+    the bar reaches zero, that''s it,the end of the story.
 
 '
   m_isRightToLeft: 0
@@ -17165,7 +17174,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1175971526}
   m_LocalRotation: {x: -0, y: 0.01546242, z: -0, w: -0.9998805}
-  m_LocalPosition: {x: -651.3, y: 326.1, z: -3983.3}
+  m_LocalPosition: {x: -618, y: 326.1, z: -3982.2}
   m_LocalScale: {x: 11.71775, y: 13.303418, z: 12.434782}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19447,7 +19456,7 @@ PrefabInstance:
     - target: {fileID: 439896596027439124, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4977427669460451232, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
@@ -19477,12 +19486,12 @@ PrefabInstance:
     - target: {fileID: 4977427669460451233, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -69.38
+      value: -69.35
       objectReference: {fileID: 0}
     - target: {fileID: 4977427669460451233, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -25.67
+      value: -25.539
       objectReference: {fileID: 0}
     - target: {fileID: 4977427669460451233, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
@@ -19542,7 +19551,7 @@ PrefabInstance:
     - target: {fileID: 4977427669540224511, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.09
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4977427669540224511, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
@@ -19577,12 +19586,17 @@ PrefabInstance:
     - target: {fileID: 4977427670916494168, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.09
+      value: 2.06
       objectReference: {fileID: 0}
     - target: {fileID: 4977427670916494168, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.201
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977427670916494168, guid: c1e870b41c324f8408e36c239ef64e24,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4977427670916494169, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
@@ -19632,7 +19646,12 @@ PrefabInstance:
     - target: {fileID: 4977427671153279026, guid: c1e870b41c324f8408e36c239ef64e24,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.47
+      value: -23.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977427671153279026, guid: c1e870b41c324f8408e36c239ef64e24,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1e870b41c324f8408e36c239ef64e24, type: 3}
@@ -19985,7 +20004,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1387844922
 Transform:
   m_ObjectHideFlags: 0
@@ -20793,18 +20812,6 @@ MonoBehaviour:
   OnInteractEnd:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 464868722}
-        m_TargetAssemblyTypeName: UIEnable, Assembly-CSharp
-        m_MethodName: EnableHealthUI
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 464868722}
         m_TargetAssemblyTypeName: UIEnable, Assembly-CSharp
         m_MethodName: EnableHealthUI
@@ -22378,7 +22385,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1532137649}
   m_LocalRotation: {x: -0, y: -0.71255577, z: -0, w: 0.7016155}
-  m_LocalPosition: {x: -651.4, y: 322.28506, z: -3977}
+  m_LocalPosition: {x: -618.6, y: 322.28506, z: -3976.5}
   m_LocalScale: {x: 63.20864, y: 8.677042, z: 29.903795}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25933,17 +25940,17 @@ PrefabInstance:
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 5
+      value: 12.9105
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 5
+      value: 12.9105
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 5
+      value: 12.9105
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
@@ -25953,7 +25960,7 @@ PrefabInstance:
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 506.1
+      value: 508.6
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
@@ -25963,37 +25970,37 @@ PrefabInstance:
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7153438
+      value: 0.6894403
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: -0.00067588064
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.6987727
+      value: 0.7242349
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0.012466549
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -1.088
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -88.657
+      value: 92.811
       objectReference: {fileID: 0}
     - target: {fileID: 1676857278679770201, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 0.929
       objectReference: {fileID: 0}
     - target: {fileID: 3416866321354405144, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
@@ -29536,7 +29543,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1996966746}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -660.5, y: 314.10193, z: -3982.8}
+  m_LocalPosition: {x: -633.7, y: 314.10193, z: -3982.8}
   m_LocalScale: {x: 97.1, y: 6.0135455, z: 131.82315}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -30098,8 +30105,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'This is your Music player, It''ll help you keep track of the music you
-    are currently listening to and will allow you to different switch tracks.
+  m_text: 'This is your Music player, it''ll help you keep track of the music you
+    are currently listening to and will allow you to switch tracks.
+
 
 
 '
@@ -51453,7 +51461,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4977427670596993582}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -346.6002, y: 308.85, z: -3982.879}
+  m_LocalPosition: {x: -324.8, y: 308.85, z: -3982.9}
   m_LocalScale: {x: 8.275288, y: 8.275288, z: 8.275288}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -51646,7 +51654,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4977427671302448897}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.75, y: 0.201, z: -0.12}
+  m_LocalPosition: {x: -10.03, y: 0.201, z: -0.12}
   m_LocalScale: {x: 9.14147, y: 1.2504644, z: 9.726339}
   m_ConstrainProportionsScale: 0
   m_Children:

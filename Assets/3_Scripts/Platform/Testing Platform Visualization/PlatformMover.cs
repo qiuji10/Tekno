@@ -16,9 +16,9 @@ public class PlatformMover : MonoBehaviour
 
     private void Awake()
     {
-        _mesh = GetComponent<MeshRenderer>();
+        //_mesh = GetComponent<MeshRenderer>();
 
-        materials = _mesh.materials;
+       // materials = _mesh.materials;
 
         TempoManager.OnBeat += TempoManager_OnBeat;
     }

@@ -104,11 +104,13 @@ public class DialogueTrigger : MonoBehaviour
                     PlayerPrefs.Save();
                 }
 
+                //if (player == null)
+                //   other.TryGetComponent(out player);
+                player = other.GetComponent<PlayerController>();
+
+
                 if (disablePlayerControl)
                 {
-                    if (player == null)
-                        other.TryGetComponent(out player);
-                    
                     player.DisableAction();
                 }
             }
