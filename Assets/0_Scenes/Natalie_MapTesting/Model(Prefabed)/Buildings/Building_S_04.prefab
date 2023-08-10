@@ -16,7 +16,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &691895972277214857
 Transform:
@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: 1260203713327765886}
   - component: {fileID: 3934408641395256756}
   - component: {fileID: 5397721780881320910}
+  - component: {fileID: 3758335231485081200}
   m_Layer: 0
   m_Name: Building_S_04
   m_TagString: Untagged
@@ -143,7 +144,7 @@ Transform:
   m_GameObject: {fileID: 3285709769150090337}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -267.9932, y: -803.8703, z: -190.13354}
-  m_LocalScale: {x: 1.0750003, y: 1.075, z: 1.0750003}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 691895972277214857}
@@ -217,6 +218,32 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8842057970597278064, guid: 6a507e9db05c0a84f867c380e66228f9, type: 3}
+--- !u!205 &3758335231485081200
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3285709769150090337}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0.00010681152, y: 7.555148, z: -0.00010728836}
+  m_Size: 15.110302
+  m_FadeMode: 1
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.6
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 3934408641395256756}
+  - screenRelativeHeight: 0.19874407
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 3934408641395256756}
+  - screenRelativeHeight: 0.1
+    fadeTransitionWidth: 0
+    renderers: []
+  m_Enabled: 1
 --- !u!1 &5454112297784343103
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,7 +260,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7384046454253433939
 Transform:
