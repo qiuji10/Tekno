@@ -25,6 +25,11 @@ public class MovingCar : MonoBehaviour
 
     private Vector3[] originalPositions;
 
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+    }
+
     private void OnDisable()
     {
         StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
