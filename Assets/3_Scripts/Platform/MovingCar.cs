@@ -25,6 +25,11 @@ public class MovingCar : MonoBehaviour
 
     private Vector3[] originalPositions;
 
+    private void OnEnable()
+    {
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+    }
+
     private void OnDisable()
     {
         StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
@@ -86,7 +91,7 @@ public class MovingCar : MonoBehaviour
     {
         int intValueEvt = evt.GetIntValue();
 
-        if (carIndex == currentWaypointIndex)
+        if (carIndex == intValueEvt)
         {
             MoveToNextWaypoint();
         }

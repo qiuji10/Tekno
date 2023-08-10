@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using System;
 
 public class NoteObject_Hold : NoteObject
 {
@@ -23,8 +24,11 @@ public class NoteObject_Hold : NoteObject
     [Header("Visual Effects")]
     [SerializeField] private VisualEffect _effect;
 
+    private bool emittedSurpassStart;
     private int pos1, pos2, col1, col2, col3;
     private MeshRenderer _startMesh, _endMesh;
+
+    public static event Action<Lane> OnFullySurpassStart;
 
     private void Awake()
     {
@@ -98,6 +102,15 @@ public class NoteObject_Hold : NoteObject
             SetVfxPosition(1, noteStart.position);
         }
 
+        if (SecondNoteSurpassStartPos)
+        {
+            if (!emittedSurpassStart)
+            {
+                emittedSurpassStart = false;
+                OnFullySurpassStart?.Invoke(lane);
+            }
+        }
+
         if (SecondNoteSurpassStartPos && !SurpassEndPos)
         {
             ToggleNoteMesh(2, true);
@@ -128,8 +141,6 @@ public class NoteObject_Hold : NoteObject
             {
                 SetVfxPosition(2, noteEnd.position);
             }
-
-            //shake screen
         }
         else if (SurpassStartPos && !SurpassEndPos && !SecondNoteSurpassStartPos)
         {

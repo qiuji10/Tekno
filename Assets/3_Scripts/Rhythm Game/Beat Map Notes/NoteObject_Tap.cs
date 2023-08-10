@@ -87,7 +87,6 @@ public class NoteObject_Tap : NoteObject
     {
         if (other.CompareTag("BeatPoint"))
         {
-            Debug.Log("HI");
             StopAllCoroutines();
             particle.transform.parent = null;
             particle.Stop();

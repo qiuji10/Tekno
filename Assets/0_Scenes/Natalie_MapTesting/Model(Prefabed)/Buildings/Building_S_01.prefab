@@ -16,7 +16,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5410934653925965366
 Transform:
@@ -45,7 +45,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.7568628, g: 0.21176472, b: 0.8431373, a: 1}
-  m_Intensity: 26.4
+  m_Intensity: 83.3
   m_Range: 25.17
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: 805517914239171286}
   - component: {fileID: 3227164551038406172}
   - component: {fileID: -441200992341203469}
+  - component: {fileID: 7556186543061882693}
   m_Layer: 0
   m_Name: Building_S_01
   m_TagString: Untagged
@@ -143,7 +144,7 @@ Transform:
   m_GameObject: {fileID: 4019970090682232777}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -266.5243, y: -850.1178, z: -200.50415}
-  m_LocalScale: {x: 0.9000004, y: 0.9, z: 0.9000004}
+  m_LocalScale: {x: 0.9000005, y: 0.90000004, z: 0.9000005}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5410934653925965366}
@@ -216,3 +217,29 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -744241918527649606, guid: 300bae235ee9f7345a93931c836312eb, type: 3}
+--- !u!205 &7556186543061882693
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4019970090682232777}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: -0.9732629, y: 5.2043138, z: -0.00020885468}
+  m_Size: 12.429268
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.6
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 3227164551038406172}
+  - screenRelativeHeight: 0.20208701
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 3227164551038406172}
+  - screenRelativeHeight: 0.1
+    fadeTransitionWidth: 0
+    renderers: []
+  m_Enabled: 1

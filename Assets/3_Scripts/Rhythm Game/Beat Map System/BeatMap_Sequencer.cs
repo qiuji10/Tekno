@@ -17,6 +17,7 @@ public class BeatMap_Sequencer : MonoBehaviour
 
     private void Awake()
     {
+        isSurpassing = false;
         generator.OnNoteSpawn += Generator_OnNoteSpawn;
         noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }

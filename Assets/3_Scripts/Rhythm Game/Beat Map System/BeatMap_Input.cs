@@ -187,7 +187,6 @@ public class BeatMap_Input : MonoBehaviour
         {
             if (inputData[(Lane)index] is NoteObject_Hold)
             {
-                Debug.Log("yo");
                 amps[index].StopHitEffect();
                 successBar[index].SetActive(true);
                 yield return new WaitUntil(() => inputData[(Lane)index] == null);
@@ -240,7 +239,6 @@ public class BeatMap_Input : MonoBehaviour
             {
                 if (note != null && note is NoteObject_Hold)
                 {
-                    Debug.Log("yoyo");
                     StopCoroutine(task[index]);
                     lane[index].SetActive(true);
                     (note as NoteObject_Hold).ToggleCollider(false);
