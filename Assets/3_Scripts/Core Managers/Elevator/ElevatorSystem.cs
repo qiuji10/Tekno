@@ -3,12 +3,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public enum ElevatorDestination { Tutorial, Lobby, Gameplay}
 
 public class ElevatorSystem : MonoBehaviour
 {
     [SerializeField] private float totalTimeToDestination = 7f;
+
+    [Header("Option Refrences")]
+    [SerializeField] private Button goToCityButton;
+    [SerializeField] private Button tutorialButton;
 
     [Header("Trigger References")]
     [SerializeField] private Collider goToDestinationTrigger;
@@ -46,6 +52,16 @@ public class ElevatorSystem : MonoBehaviour
         CloseDoor();
     }
 
+    private void Start()
+    {
+        MainMenu.NewGameSelected += UpdateOption;
+    }
+
+    private void OnDestroy()
+    {
+        MainMenu.NewGameSelected -= UpdateOption;
+    }
+
     public void SetDestination(string destination)
     {
         this.destination = (ElevatorDestination)Enum.Parse(typeof(ElevatorDestination), destination);
@@ -59,6 +75,23 @@ public class ElevatorSystem : MonoBehaviour
     public void OpenDoor()
     {
         elevatorAnim.SetTrigger(openDoor);
+    }
+
+    public void UpdateOption()
+    {
+        goToCityButton.interactable = false;
+    }
+
+    public void SelectButton()
+    {
+        if (goToCityButton.IsInteractable())
+        {
+            EventSystem.current.SetSelectedGameObject(goToCityButton.gameObject);
+        }
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(tutorialButton.gameObject);
+        }
     }
 
     [Button]

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ public class MainMenu : MonoBehaviour
 {
     public GameObject continueButton;
     public GameObject newGameButton;
+
+    public static event Action NewGameSelected;
 
     private void Awake()
     {
@@ -20,6 +23,8 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.Save();
 
         ValidateStatus(true);
+
+        NewGameSelected?.Invoke();
     }
 
     public void ValidateStatus(bool selectButton)
