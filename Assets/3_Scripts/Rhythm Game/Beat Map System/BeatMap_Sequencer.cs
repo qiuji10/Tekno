@@ -7,8 +7,10 @@ using UnityEngine;
 public class BeatMap_Sequencer : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private BeatMap easyBeatmap;
+    [SerializeField] private BeatMap mediumBeatmap;
+    [SerializeField] private AudioClip mediumAudioClip;
     [SerializeField] private BeatMap hardBeatmap;
+    [SerializeField] private AudioClip hardAudioClip;
     [SerializeField] private AudioSource _audio;
     [SerializeField] private BeatMap_Instantiator generator;
 
@@ -55,12 +57,14 @@ public class BeatMap_Sequencer : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
+            _audio.clip = mediumAudioClip;
             generator.DestroyPool();
-            Sequencer_PlaceNotes(easyBeatmap);
+            Sequencer_PlaceNotes(mediumBeatmap);
         }
 
         if (Input.GetKeyDown(KeyCode.O))
         {
+            _audio.clip = hardAudioClip;
             generator.DestroyPool();
             Sequencer_PlaceNotes(hardBeatmap);
         }

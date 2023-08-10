@@ -2734,7 +2734,6 @@ GameObject:
   - component: {fileID: 4485110921945096258}
   - component: {fileID: 1333158407432279658}
   - component: {fileID: 3416496687562838420}
-  - component: {fileID: 3029847615921666444}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -2845,6 +2844,7 @@ MonoBehaviour:
   yellowHead: {fileID: 21300000, guid: ebb049953b1dd33419603e39d30c9ad0, type: 3}
   greenHead: {fileID: 21300000, guid: 02ef44c08d9a493478113c6ee4fc73ab, type: 3}
   deathCanvas: {fileID: 1042497063}
+  deathCamSetter: {fileID: 0}
 --- !u!114 &7437696688320295547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2874,8 +2874,6 @@ MonoBehaviour:
   groundedRadius: 0.2
   groundedOffset: -0.11
   isGround: 1
-  navMeshAgent: {fileID: 3029847615921666444}
-  currentMovementMode: 0
   animMoveSpeed: 0.9
   acceleration: 20
   deceleration: 5
@@ -2997,28 +2995,6 @@ MonoBehaviour:
   slidingSpeed: 30
   jumpAction: {fileID: -5402125171716273264, guid: 1870834d611a202418d6e474a9fb0619,
     type: 3}
---- !u!195 &3029847615921666444
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6397968323028654099}
-  m_Enabled: 0
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 300
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0.05
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &6397968323150439673
 GameObject:
   m_ObjectHideFlags: 0

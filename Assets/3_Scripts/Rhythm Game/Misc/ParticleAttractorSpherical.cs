@@ -6,7 +6,8 @@ public class ParticleAttractorSpherical : MonoBehaviour
 {
     ParticleSystem ps;
     ParticleSystem.Particle[] m_Particles;
-    public Transform[] targets;
+    public BossHealth[] targets;
+    public Vector3 offset = new Vector3 (0, 2.71f, 0);
     public float speed = 5f;
     int numParticlesAlive, random;
     void Start()
@@ -20,7 +21,7 @@ public class ParticleAttractorSpherical : MonoBehaviour
         float step = speed * Time.deltaTime;
         for (int i = 0; i < numParticlesAlive; i++)
         {
-            m_Particles[i].position = Vector3.SlerpUnclamped(m_Particles[i].position, targets[random].position, step);
+            m_Particles[i].position = Vector3.SlerpUnclamped(m_Particles[i].position, targets[random].transform.position + offset, step);
         }
         ps.SetParticles(m_Particles, numParticlesAlive);
     }
@@ -32,11 +33,20 @@ public class ParticleAttractorSpherical : MonoBehaviour
         ps.Play();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnParticleSystemStopped()
     {
-        if (collision.transform.CompareTag("Boss"))
-        {
+        
+    }
 
+    private void OnParticleCollision(GameObject other)
+    {
+        if (other.transform == targets[0])
+        {
+            targets[0].PlayHit();
+        }
+        else if (other.transform == targets[1])
+        {
+            targets[1].PlayHit();
         }
     }
 }

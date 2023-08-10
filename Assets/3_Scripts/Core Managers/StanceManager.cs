@@ -25,7 +25,6 @@ public class StanceManager : MonoBehaviour
             if (allowPlayerSwitchStance != value)
             {
                 allowPlayerSwitchStance = value;
-                Debug.Log("AllowPlayerSwitchStance changed: " + value);
             }
         }
     }
@@ -212,5 +211,9 @@ public class StanceManager : MonoBehaviour
         Destroy(particleSystem.gameObject);
     }
 
+    private void SetVolume(float volume)
+    {
+        stanceAudio.volume = volume;
+    }
 
 }
