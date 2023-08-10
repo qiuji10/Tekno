@@ -8,7 +8,7 @@ public class RhythmGameMiniAmp : MonoBehaviour
 
     private void OnTriggerStay(Collider col)
     {
-        if (col.CompareTag("Note"))
+        if (col.CompareTag("Note") || col.CompareTag("LongNote"))
         {
             hitParticle.Play();
         }
@@ -16,7 +16,7 @@ public class RhythmGameMiniAmp : MonoBehaviour
 
     private void OnTriggerExit(Collider col)
     {
-        if (col.CompareTag("Note"))
+        if (col.CompareTag("Note") || col.CompareTag("LongNote"))
         {
             hitParticle.Stop();
         }
