@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Playables;
+using UnityEngine.UI;
 
 public enum Genre { House, Techno, Electronic, All }
 
@@ -13,11 +13,25 @@ public class StanceManager : MonoBehaviour
 {
     public static Track curTrack;
     public static event Action<Track> OnStanceChangeStart;
-    public static bool AllowPlayerSwitchStance;
-    public static float changeStanceTime = 2.333f;
 
-    [SerializeField] PlayableDirector director;
-    private CinemachineDollyCart cart;
+    private static bool allowPlayerSwitchStance;
+    public static bool isChangingStance;
+
+    public static bool AllowPlayerSwitchStance
+    {
+        get { return allowPlayerSwitchStance; }
+        set
+        {
+            if (allowPlayerSwitchStance != value)
+            {
+                allowPlayerSwitchStance = value;
+            }
+        }
+    }
+    public static float changeStanceTime = 2f;
+
+    //[SerializeField] PlayableDirector director;
+    //private CinemachineDollyCart cart;
 
     [Header("Audio References")]
     [SerializeField] private SimpleMusicPlayer musicPlayer;
@@ -27,6 +41,10 @@ public class StanceManager : MonoBehaviour
 
     [Header("UI Reference")]
     [SerializeField] TMPro.TMP_Text songNameText;
+    [SerializeField] private Image r1_up_img;
+    [SerializeField] private Image r1_down_img;
+    [SerializeField] private Image r2_up_img;
+    [SerializeField] private Image r2_down_img;
 
     [Header("Ability References")]
     [SerializeField] private HookAbility hookAbility;
@@ -36,29 +54,36 @@ public class StanceManager : MonoBehaviour
     [SerializeField] private InputActionReference skipTrackAction;
     [SerializeField] private InputActionReference rewindTrackAction;
 
+    [Header("VFX")]
+    [SerializeField] private GameObject[] shockwaveVFX;
+    [SerializeField] private Transform spawnPos;
+    public static float particleSystemTime = 1.2f;
+
     private bool firstTimeIgnored;
 
     private void OnEnable()
     {
         skipTrackAction.action.performed += SkipTrack;
         rewindTrackAction.action.performed += RewindTrack;
+
+        DialogueManager.OnDialogueStart += DisableSwitchStance;
+        DialogueManager.OnDialogueEnd += EnableSwitchStance;
     }
 
     private void OnDisable()
     {
         skipTrackAction.action.performed -= SkipTrack;
         rewindTrackAction.action.performed -= RewindTrack;
+
+        DialogueManager.OnDialogueStart -= DisableSwitchStance;
+        DialogueManager.OnDialogueEnd -= EnableSwitchStance;
     }
 
     private void Awake()
     {
         AllowPlayerSwitchStance = true;
-        cart = director.GetComponent<CinemachineDollyCart>();
+        //cart = director.GetComponent<CinemachineDollyCart>();
         musicPlayer = GetComponent<SimpleMusicPlayer>();
-    }
-
-    private void Start()
-    {
         trackIndex = 1;
         PlayTrack(trackIndex);
     }
@@ -95,14 +120,15 @@ public class StanceManager : MonoBehaviour
         }
         else
         {
-            if (director)
-            {
-                cart.m_Position = 0;
-                director.time = 0;
-                director.enabled = true;
-                director.Play();
-            }
+            //if (director)
+            //{
+            //    cart.m_Position = 0;
+            //    director.time = 0;
+            //    director.enabled = true;
+            //    director.Play();
+            //}
 
+            isChangingStance = true;
             AllowPlayerSwitchStance = false;
             StartCoroutine(EnableInput(changeStanceTime));
             OnStanceChangeStart?.Invoke(tracks[index]);
@@ -113,22 +139,40 @@ public class StanceManager : MonoBehaviour
         switch (curTrack.genre)
         {
             case Genre.House:
+
+                r1_up_img.color = r1_down_img.color = Color.green;
+                r2_up_img.color = r2_down_img.color = Color.cyan;
+
                 songNameText.color = Color.yellow;
                 songNameText.text = "House - Aggression";
                 hookAbility.enabled = true;
                 teleportAbility.enabled = false;
+                StartCoroutine(StanceShockwave(shockwaveVFX[0], spawnPos));
+
                 break;
             case Genre.Techno:
+
+                r1_up_img.color = r1_down_img.color = Color.yellow;
+                r2_up_img.color = r2_down_img.color = Color.green;
+
                 songNameText.color = Color.cyan;
                 songNameText.text = "Techno - Treck No.1";
                 hookAbility.enabled = false;
                 teleportAbility.enabled = false;
+                StartCoroutine(StanceShockwave(shockwaveVFX[1], spawnPos));
+
                 break;
             case Genre.Electronic:
+
+                r1_up_img.color = r1_down_img.color = Color.cyan;
+                r2_up_img.color = r2_down_img.color = Color.yellow;
+
                 songNameText.color = Color.green;
                 songNameText.text = "Electro - Ready";
                 hookAbility.enabled = false;
                 teleportAbility.enabled = true;
+                StartCoroutine(StanceShockwave(shockwaveVFX[2], spawnPos));
+
                 break;
         }
     }
@@ -145,11 +189,31 @@ public class StanceManager : MonoBehaviour
 
     private IEnumerator EnableInput(float time)
     {
+        AllowPlayerSwitchStance = false;
         PlayerController.allowedInput = false;
         yield return new WaitForSeconds(time);
         PlayerController.allowedInput = true;
         AllowPlayerSwitchStance = true;
-        if (director) director.enabled = false;
+        isChangingStance = false;
+        //if (director) director.enabled = false;
+    }
+
+    private IEnumerator StanceShockwave(GameObject shockwaveSystem, Transform spawnPoint)
+    {
+        yield return new WaitForSeconds(1.65f);
+
+        ParticleSystem particleSystem = Instantiate(shockwaveSystem, spawnPoint.position, spawnPoint.rotation).GetComponent<ParticleSystem>();
+        particleSystem.Play();
+
+        yield return new WaitForSeconds(particleSystemTime);
+
+        particleSystem.Stop();
+        Destroy(particleSystem.gameObject);
+    }
+
+    private void SetVolume(float volume)
+    {
+        stanceAudio.volume = volume;
     }
 
 }

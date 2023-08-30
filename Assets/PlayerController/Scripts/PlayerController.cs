@@ -23,7 +23,45 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     [SerializeField] private float jumpForce = 23f;
     [SerializeField] private float fallMultiplier = 10f;
     [SerializeField] private float lowJumpMultiplier = 4f;
+    [SerializeField] private LayerMask disableJump;
     private bool isJumping;
+    public bool disableAction = false;
+
+    public float defaultJumpForce
+    {
+        get => jumpForce;
+        set => jumpForce = value;
+    }
+
+    public float defaultAirSpeed
+    {
+        get => airSpeed;
+        set => airSpeed = value;
+    }
+
+    public float defaultMoveSpeed
+    {
+        get => moveSpeed;
+        set => moveSpeed = value;
+    }
+
+    public float defaultMoveDrag
+    {
+        get => moveDrag;
+        set => moveDrag = value;
+    }
+
+    public float defaultFallMultiplier
+    {
+        get => fallMultiplier;
+        set => fallMultiplier = value;
+    }
+
+    public float defaultLowJumpMultiplier
+    {
+        get => lowJumpMultiplier;
+        set => lowJumpMultiplier = value;
+    }
 
     [Header("Ground")]
     [SerializeField] private LayerMask groundLayer;
@@ -82,27 +120,52 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void StanceManager_OnStanceChange(Track track)
     {
+        
         _anim.SetTrigger(switchStance);
         _rb.isKinematic = true;
         StartCoroutine(EnableRB());
         switch (track.genre)
         {
             case Genre.House:
-                moveSpeed = cacheSpeed = 10.8f;
-                animMoveSpeed = 0.7f;
+                //moveSpeed = cacheSpeed = 10.8f;
+                //animMoveSpeed = 0.7f;
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.yellow * 0.5f);
                 break;
             case Genre.Techno:
-                moveSpeed = cacheSpeed = 10.9f;
-                animMoveSpeed = 0.7875f;
+                //moveSpeed = cacheSpeed = 10.9f;
+               // animMoveSpeed = 0.7875f;
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.cyan * 0.5f);
                 break;
             case Genre.Electronic:
-                moveSpeed = cacheSpeed = 11;
-                animMoveSpeed = 0.9f;
+               // moveSpeed = cacheSpeed = 11;
+              //  animMoveSpeed = 0.9f;
                 if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.green * 0.5f);
                 break;
         }
+
+    }
+
+    public void DisableAction()
+    {
+        allowedInput = false;
+        Anim.enabled = false;
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+
+        StanceManager.AllowPlayerSwitchStance = false;
+    }
+
+    public void EnableAction()
+    {
+        allowedInput = true;
+        Anim.enabled = true;
+
+        Anim.Play("Tekno Idle");
+
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+
+        StanceManager.AllowPlayerSwitchStance = true;
     }
 
     private IEnumerator EnableRB()
@@ -113,8 +176,15 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            transform.rotation = Quaternion.Euler(Vector3.zero);
+            transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+        }
+
         Rotation();
         IsGround();
+        isActionDisable();
     }
 
     private void FixedUpdate()
@@ -131,12 +201,29 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         Movement();
     }
 
+    private void isActionDisable()
+    {
+        if (!StanceManager.isChangingStance)
+        {
+            disableAction = Physics.CheckSphere(transform.position, 0.5f, disableJump);
+
+            StanceManager.AllowPlayerSwitchStance = disableAction ? false : true;
+
+            if (disableAction)
+            {
+                _rb.drag = moveDrag;
+            }
+        }
+
+    }
+
     private void IsGround()
     {
         //isGround = Physics.Raycast(transform.position, Vector3.down, transform.localScale.y * 0.5f + 0.2f, groundLayer);
 
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - groundedOffset, transform.position.z);
         isGround = Physics.CheckSphere(spherePosition, groundedRadius, groundLayer, QueryTriggerInteraction.Ignore);
+
 
         if (isGround)
         {
@@ -145,6 +232,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
                 isJumping = false;
                 _anim.ResetTrigger(jump);
                 _anim.SetTrigger(jumpGrounded);
+                _rb.velocity = Vector3.zero;
             }
             _rb.drag = moveDrag;
         }
@@ -239,15 +327,17 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void Jump(InputAction.CallbackContext context)
     {
-        if (!allowedAction || !allowedInput) return;
+        if (!allowedInput || !allowedAction) return;
 
-        if (isGround && !isJumping)
+
+        if (isGround && !isJumping && !disableAction)
         {
             StartCoroutine(SetJump());
             _anim.ResetTrigger(jumpGrounded);
             _anim.SetTrigger(jump);
             _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
             _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            Debug.Log("Current jump force: " + jumpForce);
         }
     }
 

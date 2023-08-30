@@ -17,13 +17,16 @@ public class Amplifier_V2 : MonoBehaviour
     [Header("Beat Settings")]
     [SerializeField] List<BeatSequence> beatSequence = new List<BeatSequence>();
     [SerializeField] BeatPoint beatPrefab;
+    [SerializeField] bool showGizmos;
 
     [Header("Hijack Succeeded")]
     [SerializeField] private List<EnemyBase> enemiesInControl;
+    [SerializeField] private List<BillboardCycle> billboardCycles;
     [SerializeField] private ParticleSystem particle;
     public UnityEvent OnHijackSucceed;
 
     [Header("Hijack Failed")]
+    [SerializeField] private ParticleSystem controlledVFX;
     [SerializeField] private float knockBackRange = 10;
     [SerializeField] private float knockBackPower = 75;
 
@@ -84,6 +87,23 @@ public class Amplifier_V2 : MonoBehaviour
         decalProjector = GetComponentInChildren<DecalProjector>();
         decalProjector.material = new Material(decalProjector.material);
         decalProjector.material.SetColor("_Color", Color.red);
+
+        enemiesInControl.Clear();
+
+        Collider[] collideData = Physics.OverlapSphere(transform.position, knockBackRange);
+
+        for (int i = 0; i < collideData.Length; i++)
+        {
+            if (collideData[i].TryGetComponent(out EnemyBase enemy))
+            {
+                enemiesInControl.Add(enemy);
+            }
+
+            if (collideData[i].TryGetComponent(out BillboardCycle billboardCycle))
+            {
+                billboardCycles.Add(billboardCycle);
+            }
+        }
     }
 
     private void OnEnable()
@@ -177,6 +197,40 @@ public class Amplifier_V2 : MonoBehaviour
         });
     }
 
+    [Button]
+    public void DebugHijack()
+    {
+        enemiesInControl.Clear();
+
+        Collider[] collideData = Physics.OverlapSphere(transform.position, knockBackRange);
+
+        for (int i = 0; i < collideData.Length; i++)
+        {
+            if (collideData[i].TryGetComponent(out EnemyBase enemy))
+            {
+                if (!enemy.IsFree)
+                    enemiesInControl.Add(enemy);
+            }
+        }
+
+        foreach (EnemyBase e in enemiesInControl)
+        {
+            if (e != null && e.gameObject.activeInHierarchy)
+            {
+                e.FreeEnemy();
+            }
+        }
+
+        foreach (BillboardCycle billboard in billboardCycles)
+        {
+            if (billboard != null && billboard.gameObject.activeInHierarchy)
+            {
+                billboard.isHijackedSuccessful = true;
+            }
+        }
+
+    }
+
     private IEnumerator EvaluateStatus()
     {
         if (amplifierHealth <= 0)
@@ -193,6 +247,19 @@ public class Amplifier_V2 : MonoBehaviour
                 amplifierSlider.Value = 1f;
             }
 
+            enemiesInControl.Clear();
+
+            Collider[] collideData = Physics.OverlapSphere(transform.position, knockBackRange);
+
+            for (int i = 0; i < collideData.Length; i++)
+            {
+                if (collideData[i].TryGetComponent(out EnemyBase enemy))
+                {
+                    if (!enemy.IsFree)
+                        enemiesInControl.Add(enemy);
+                }
+            }
+
             foreach (EnemyBase e in enemiesInControl)
             {
                 if (e != null && e.gameObject.activeInHierarchy)
@@ -201,16 +268,29 @@ public class Amplifier_V2 : MonoBehaviour
                 }
             }
 
+            foreach (BillboardCycle billboard in billboardCycles)
+            {
+                if (billboard != null && billboard.gameObject.activeInHierarchy)
+                {
+                    billboard.isHijackedSuccessful = true;
+                }
+            }
+
             OnHijackSucceed?.Invoke();
             StartCoroutine(HackedDecal());
             StanceManager.AllowPlayerSwitchStance = true;
+            PlayerController.allowedInput = true;
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
             speakerHealth = 3;
 
+            PauseMenu.canPause = true;
             yield return new WaitForSeconds(0.75f);
-            eventInvoker.enabled = true;
+
+            enabled = false;
+
+            //eventInvoker.enabled = true;
         }
         else if (speakerHealth <= 0)
         {
@@ -225,6 +305,7 @@ public class Amplifier_V2 : MonoBehaviour
             }
 
             StanceManager.AllowPlayerSwitchStance = true;
+            PlayerController.allowedInput = true;
             canvas.gameObject.SetActive(false);
             Resetter();
             amplifierHealth = 3;
@@ -243,6 +324,7 @@ public class Amplifier_V2 : MonoBehaviour
                 }
             }
 
+            PauseMenu.canPause = true;
             yield return new WaitForSeconds(0.75f);
             eventInvoker.enabled = true;
         }
@@ -250,6 +332,7 @@ public class Amplifier_V2 : MonoBehaviour
         {
             yield return new WaitForSeconds(0.75f);
             Resetter();
+            PauseMenu.canPause = false;
             yield return null;
             StartPlay();
         }
@@ -257,6 +340,8 @@ public class Amplifier_V2 : MonoBehaviour
 
     private void TempoManager_OnBeat()
     {
+        //controlledVFX.Play();
+
         if (!startGame) return;
 
         if (isSpawning)
@@ -284,7 +369,7 @@ public class Amplifier_V2 : MonoBehaviour
                     case KeyInput.Cross:    beatPoint.img.sprite = SpriteData.Instance.cross;       beatPoint.img.color = HexColor("#7EABE1");    break;
                     case KeyInput.Square:   beatPoint.img.sprite = SpriteData.Instance.square;      beatPoint.img.color = HexColor("#CE8ED6");    break;
                     case KeyInput.Triangle: beatPoint.img.sprite = SpriteData.Instance.triangle;    beatPoint.img.color = HexColor("#4ADB7B");    break;
-                    case KeyInput.None:     beatPoint.img.sprite = SpriteData.Instance.skip;        beatPoint.img.color = Color.grey;             break;
+                    case KeyInput.None:     beatPoint.img.sprite = SpriteData.Instance.skip;        beatPoint.img.color = Color.white;             break;
                 }
 
                 beatObjects.Add(beatPoint);
@@ -334,8 +419,23 @@ public class Amplifier_V2 : MonoBehaviour
                 speaker.currentBeat++;
                 index++;
                 float timeToBeatCount = TempoManager.GetTimeToBeatCount(beatData[index].beat);
+                timeToBeatCount = 0.1f;
+                //float timeToBeatCount = (60f / 140f);
+                //speaker.touchPoint = beatObjects[index].img.rectTransform.position;
+                //speaker.key = beatData[index].key;
+                //speaker.beatPoint = beatObjects[index];
+
+                speaker.beatPoint = beatObjects[index];
+
+                if (index > 0)
+                {
+                    speaker.prevTouchPoint = beatObjects[index - 1].img.rectTransform.position;
+                }
+
                 speaker.touchPoint = beatObjects[index].img.rectTransform.position;
                 speaker.key = beatData[index].key;
+
+                StartCoroutine(delayBeatSwitch());
 
                 int indexCount = index;
 
@@ -356,7 +456,9 @@ public class Amplifier_V2 : MonoBehaviour
                 }
                 
                 //speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutCirc();
-                speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, 0.1f);
+                speaker.speakerMovement = speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount).setEaseOutExpo();
+
+                //StartCoroutine(delayMoveSpeaker());
 
             }
             else if (index == beatData.Count - 1)
@@ -370,8 +472,6 @@ public class Amplifier_V2 : MonoBehaviour
     [Button]
     public void Resetter()
     {
-        PlayerController.allowedInput = true;
-        
         speaker.OnHitFailure -= Speaker_OnHitFailure;
         speaker.OnComboSuccess -= Speaker_OnComboSuccess;
 
@@ -396,6 +496,25 @@ public class Amplifier_V2 : MonoBehaviour
         speaker.failed = false;
 
         //canvas.gameObject.SetActive(false);
+    }
+
+    private IEnumerator delayMoveSpeaker()
+    {
+        float timeToBeatCount = (60f / 140f) * 0.5f;
+
+        yield return new WaitForSeconds(timeToBeatCount);
+
+        speakerImg.rectTransform.LeanMoveLocal(beatData[index].position, timeToBeatCount);
+
+        speaker.startTrace = true;
+    }
+
+    private IEnumerator delayBeatSwitch()
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        speaker.key = beatData[index].key;
+
     }
 
     #region Utility
@@ -452,8 +571,11 @@ public class Amplifier_V2 : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, knockBackRange);
+        if (showGizmos)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, knockBackRange);
+        }
     }
     #endregion
 }

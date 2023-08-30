@@ -59,6 +59,6 @@ public class BeatPoint : MonoBehaviour
             {
                 bgSlider.Value = value;
             }
-        });
+        }).setEaseOutExpo();
     }
 }

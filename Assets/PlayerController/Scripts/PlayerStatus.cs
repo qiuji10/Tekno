@@ -1,10 +1,7 @@
-using NaughtyAttributes;
+using NodeCanvas.BehaviourTrees;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.SceneManagement;
 
 public class PlayerStatus : MonoBehaviour 
 {
@@ -15,17 +12,22 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] private Sprite yellowHead;
     [SerializeField] private Sprite greenHead;
 
+    [Header("Death")]
+    [SerializeField] private GameObject deathCanvas;
+    [SerializeField] private CameraSetter deathCamSetter;
+
     private int totalHealth;
-    private bool isGlitchy;
+    private bool isGlitchy, isDead;
     private CheckpointManager checkpointManager;
     private MaterialModifier matModifier;
-    private Animator _anim;
     private SpectrumUI spectrum;
+    private Animator _anim;
 
     private void Awake()
     {
         totalHealth = health;
 
+        _anim = GetComponentInChildren<Animator>();
         checkpointManager = FindObjectOfType<CheckpointManager>();
         matModifier = GetComponentInChildren<MaterialModifier>();
         spectrum = FindObjectOfType<SpectrumUI>();
@@ -111,31 +113,68 @@ public class PlayerStatus : MonoBehaviour
             }
 
 
-            MaterialModifier modifier = GetComponentInChildren<MaterialModifier>();
-            modifier.ResetMaterial();
-            BackToLobby();
+            if (!isDead)
+            {
+                isDead = true;
 
+                GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+                FindObjectOfType<StanceManager>().gameObject.SetActive(false);
+                FindObjectOfType<PauseMenu>().gameObject.SetActive(false);
+
+                GetComponent<PlayerController>().enabled = false;
+                GetComponent<HookAbility>().enabled = false;
+                GetComponent<TeleportAbility>().enabled = false;
+                GetComponent<Attack>().enabled = false;
+
+                StartCoroutine(DeathCutscene());
+            }
+
+            
         }
     }
 
-    public void BackToLobby()
+    private IEnumerator DeathCutscene()
     {
-        NonDestructible[] nonDestructibles = FindObjectsOfType<NonDestructible>();
+        deathCamSetter.LoadCam();
+        _anim.SetTrigger("IsDeath");
+        yield return new WaitForSeconds(6f);
+        deathCanvas.SetActive(true);
+    }
 
-        foreach (NonDestructible item in nonDestructibles)
+    public void BackLobby()
+    {
+        StartCoroutine(BackToLobby());
+    }
+
+    private IEnumerator BackToLobby()
+    {
+        BehaviourTreeOwner[] enemies = FindObjectsOfType<BehaviourTreeOwner>();
+
+        foreach (BehaviourTreeOwner item in enemies)
         {
-            Destroy(item.gameObject);
+            item.gameObject.SetActive(false);
+            yield return null;
         }
 
-        FindObjectOfType<GameSceneManager>().LoadScene("1_Lobby");
+        MaterialModifier modifier = GetComponentInChildren<MaterialModifier>();
+        modifier.ResetMaterial();
+
+        FadeCanvas.Instance.FadeOut();
+        yield return new WaitForSeconds(1f);
+
+        SceneManager.UnloadSceneAsync("3_Gameplay");
+        SceneManager.LoadScene("Base Scene (Elevator)");
     }
 
     IEnumerator GlitchyDamageEffect()
     {
         isGlitchy = true;
         matModifier.GlitchyEffectOn();
+        yield return null;
         yield return new WaitForSeconds(1f);
         matModifier.GlitchyEffectOff();
+        yield return null;
         isGlitchy = false;
     }
 }

@@ -1,6 +1,8 @@
 using NaughtyAttributes;
 using NodeCanvas.Framework;
+using NodeCanvas.Tasks.Conditions;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -35,6 +37,8 @@ public class EnemyBase : MonoBehaviour, IKnockable
 
     private float danceTimer;
 
+    public bool IsFree => isFree;
+
     private void Awake()
     {
         danceTimer = 5f;
@@ -44,6 +48,8 @@ public class EnemyBase : MonoBehaviour, IKnockable
         _owner = GetComponent<GraphOwner>();
         _anim = GetComponentInChildren<Animator>();
         _camTR = Camera.main.transform;
+
+        AssignWaypoints();
 
         ignoreLayer = ~(1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Player"));
 
@@ -57,36 +63,29 @@ public class EnemyBase : MonoBehaviour, IKnockable
         _anim.SetFloat("IdleBlendTree", Random.Range(0f, 1f));
 
         isKnockng = false;
+
     }
 
-    private void Update()
+    [Button]
+    private void AssignWaypoints()
     {
-        Vector3 currentFacing = transform.forward;
-        float currentAngularVelocity = Vector3.Angle(currentFacing, lastFacing) / Time.deltaTime; //degrees per second
-        lastFacing = currentFacing;
+        GraphOwner owner = GetComponent<GraphOwner>();
+        IBlackboard blackboard = owner.blackboard;
 
-        if (_agent.velocity != Vector3.zero)
+        Transform waypointParent = transform.parent.parent.GetChild(0);
+        List<GameObject> waypoints = new List<GameObject>();
+
+        for (int i = 0; i < waypointParent.childCount; i++)
         {
-            float currentWeight = _anim.GetLayerWeight(1);
-            _anim.SetLayerWeight(1, Mathf.SmoothDamp(currentWeight, walkingSpeed, ref velocity, 0.1f));
-        }
-        else if (currentAngularVelocity > 1f)
-        {
-            _anim.SetLayerWeight(1, 0.5f);
-        }
-        else
-        {
-            float currentWeight = _anim.GetLayerWeight(1);
-            _anim.SetLayerWeight(1, Mathf.SmoothDamp(currentWeight, 0, ref velocity, 0.1f));
+            waypoints.Add(waypointParent.GetChild(i).gameObject);
         }
 
-        if (_camTR)
-            warningPrompt.rotation = Quaternion.LookRotation(warningPrompt.position - _camTR.position);
+        blackboard.SetVariableValue("WaypointNode", waypoints);
     }
 
     private void LateUpdate()
     {
-        if (danceTimer > 0)
+        if (danceTimer >= 0)
         {
             danceTimer -= Time.deltaTime;
         }
@@ -96,6 +95,9 @@ public class EnemyBase : MonoBehaviour, IKnockable
             _anim.SetFloat("DanceBlendTree", Random.Range(0f, 1f));
             danceTimer = Random.Range(1f, 10f);
         }
+
+        if (_camTR)
+            warningPrompt.rotation = Quaternion.LookRotation(warningPrompt.position - _camTR.position);
     }
 
     private void FixedUpdate()
