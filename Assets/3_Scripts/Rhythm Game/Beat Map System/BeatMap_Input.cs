@@ -4,10 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 public class BeatMap_Input : MonoBehaviour
 {
     [Header("Settings")]
+    private int successCount = 0; // Tracks the number of successful notes
+    [SerializeField] private bool delay;
+    [SerializeField] private float inputDelayMilliseconds = 100; // Default input delay of 100 ms
     [SerializeField] private float timeWindow;
     [SerializeField] private AudioSource sfxSource;
     [SerializeField] private AudioClip successClip;
@@ -96,6 +100,20 @@ public class BeatMap_Input : MonoBehaviour
     {
         particles[(int)lane].Play();
         StartCoroutine(TapNoteSuccess((int)lane));
+        successCount++; // Increment the success count
+    }
+
+    private void OnGUI()
+    {
+        GUI.Label(new Rect(10, 10, 200, 30), "Success Count: " + successCount);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            successCount = 0;
+        }
     }
 
     private void OnKeyUp(InputAction.CallbackContext context)
@@ -179,6 +197,15 @@ public class BeatMap_Input : MonoBehaviour
 
     private IEnumerator DetachInput(int index)
     {
+        float prevTime = Time.time;
+
+        float windowTime = 0.096f;
+
+        if (delay)
+        {
+            yield return new WaitForSeconds(inputDelayMilliseconds / 1000); // Wait for the input delay
+        }
+
         GameObject gameObject = lane[index];
         
         gameObject.SetActive(true);
@@ -207,6 +234,11 @@ public class BeatMap_Input : MonoBehaviour
         float prevTime = Time.time;
 
         float windowTime = 0.096f;
+
+        if (delay)
+        {
+            yield return new WaitForSeconds(inputDelayMilliseconds / 1000); // Wait for the input delay
+        }
 
         yield return new WaitUntil(() => Time.time > prevTime + windowTime || inputData[(Lane)index] != null);
 

@@ -16,7 +16,8 @@ Material:
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -87,9 +88,10 @@ Material:
     - _Blend: 0
     - _BottomLine: 1
     - _BumpScale: 1
+    - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Cull: 2
+    - _Cull: 0
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
@@ -113,18 +115,20 @@ Material:
     - _Surface: 0
     - _TopLine: 1
     - _WorkflowMode: 1
+    - _ZTest: 4
     - _ZWrite: 1
+    - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Base_Color: {r: 0, g: 0, b: 0, a: 1}
-    - _Bottom_Color: {r: 0.086240634, g: 0.09061124, b: 0.9622642, a: 1}
+    - _Base_Color: {r: 3.740148, g: 4.112729, b: 22.324013, a: 1}
+    - _Bottom_Color: {r: 0, g: 0.003921569, b: 0.5, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Fresnel_Color: {r: 0, g: 0.3909618, b: 5.3403134, a: 1}
     - _Hologram_Tiling: {r: 64, g: 64, b: 0, a: 0}
     - _Main_Color: {r: 0.6885583, g: 0.051687345, b: 0.73051465, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _TopColor: {r: 7.1297374, g: 0, b: 5.655488, a: 1}
+    - _TopColor: {r: 0, g: 0.49507424, b: 0.794615, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &1284290968888356492
 MonoBehaviour:
