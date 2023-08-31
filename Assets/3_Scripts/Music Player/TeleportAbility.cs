@@ -53,12 +53,6 @@ public class TeleportAbility : MonoBehaviour
         LeanTween.reset();
     }
 
-    private void OnDestroy()
-    {
-        TempoManager.OnBeat -= TempoManager_OnBeat;
-        motherNode = null;
-    }
-
     private void OnDisable()
     {
         skillCheckAction.action.performed -= SkillCheck;
@@ -113,13 +107,12 @@ public class TeleportAbility : MonoBehaviour
 
     private void SkillCheck(InputAction.CallbackContext context)
     {
-        motherNode = tpSensor.GetNearestObject<MotherNode>();
-
-
         if (StanceManager.curTrack.genre != Genre.Electronic)
         {
             return;
         }
+
+        motherNode = tpSensor.GetNearestObject<MotherNode>();
 
         if (motherNode != null)
         {
@@ -182,17 +175,15 @@ public class TeleportAbility : MonoBehaviour
 
         for(int i  = 0; i != successPress; i++)
         {
-            progressNode[i].gameObject.GetComponent<Image>().color = Color.green;
+            if (progressNode[i] != null)
+                progressNode[i].gameObject.GetComponent<Image>().color = Color.green;
         }
-
-
 
         previousValue = randIndex;
     }
 
     private void Teleport()
     {
-        
         motherNode = tpSensor.GetNearestObject<MotherNode>();
 
         rb.isKinematic = false;
