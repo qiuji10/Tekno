@@ -104,10 +104,16 @@ public class MovingCar : MonoBehaviour
             currentWaypointIndex++;
             if (currentWaypointIndex >= waypoints.Length) { currentWaypointIndex = 0; }
 
-            if(DisableRenderer == true)
+            if(carRenderer != null && DisableRenderer == true)
             {
-                if (currentWaypointIndex == 0) { carRenderer.enabled = false; }
-                else { carRenderer.enabled = true; }
+                if (currentWaypointIndex == 0)
+                {
+                    carRenderer.enabled = false;
+                }
+                else
+                {
+                    carRenderer.enabled = true;
+                }
             }
             
             isMoving = true;

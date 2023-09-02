@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using NodeCanvas.BehaviourTrees;
 using System.Collections;
 using UnityEngine;
@@ -71,6 +72,12 @@ public class PlayerStatus : MonoBehaviour
                 }
             }
         }
+    }
+
+    [Button]
+    public void TestDamage()
+    {
+        Damage(5, false);
     }
 
 
