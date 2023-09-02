@@ -34,11 +34,12 @@ public class MaterialModifier : MonoBehaviour
         ColorUtility.TryParseHtmlString(baseString, out Color baseColor);
         ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
         m_Materials[1].SetColor("_BaseColor", baseColor);
-        m_Materials[1].SetColor("_Emission", emissionColor);
+        m_Materials[1].SetColor("_Color", baseColor);
+        m_Materials[1].SetColor("_EmissionColor", emissionColor);
         m_Materials[2].SetColor("_TextureColor", blueHDR);
         m_Materials[2].SetTexture("_Texture", blueTexture);
 
-        //StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }
 
     private void StanceManager_OnStanceChange(Track track)
@@ -65,12 +66,13 @@ public class MaterialModifier : MonoBehaviour
         ColorUtility.TryParseHtmlString(baseString, out Color baseColor);
         ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
         m_Materials[1].SetColor("_BaseColor", baseColor);
-        m_Materials[1].SetColor("_Emission", emissionColor);
+        m_Materials[1].SetColor("_Color", baseColor);
+        m_Materials[1].SetColor("_EmissionColor", emissionColor);
     }
 
     private void OnDisable()
     {
-        //StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 
     public void StopCoroutines()

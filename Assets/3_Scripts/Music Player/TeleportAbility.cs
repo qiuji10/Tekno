@@ -173,7 +173,7 @@ public class TeleportAbility : MonoBehaviour
             progressNode[i].gameObject.GetComponent<Image>().color = Color.red;
         }
 
-        for(int i  = 0; i != successPress; i++)
+        for(int i  = 0; i < successPress; i++)
         {
             if (progressNode[i] != null)
                 progressNode[i].gameObject.GetComponent<Image>().color = Color.green;
