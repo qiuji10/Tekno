@@ -105,14 +105,14 @@ public class DialogueTrigger : MonoBehaviour
                 }
 
                 //if (player == null)
-                //   other.TryGetComponent(out player);
-                player = other.GetComponent<PlayerController>();
-
-
-                if (disablePlayerControl)
-                {
-                    player.DisableAction();
-                }
+                ////   other.TryGetComponent(out player);
+                //player = other.GetComponent<PlayerController>();
+                
+                
+                //if (player && disablePlayerControl)
+                //{
+                //    player.DisableAction();
+                //}
             }
 
             inRange = true;
@@ -145,10 +145,10 @@ public class DialogueTrigger : MonoBehaviour
         {
             OnInteractEnd?.Invoke();
 
-            if (disablePlayerControl)
-            {
-                player.EnableAction();
-            }
+            //if (disablePlayerControl)
+            //{
+            //    player.EnableAction();
+            //}
         }
     }
 

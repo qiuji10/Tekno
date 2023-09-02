@@ -111,6 +111,8 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(string dialogueName)
     {
+        OnDialogueStart?.Invoke();
+
         IsRunning = true;
 
         DialogueData dialogueData = GetDialogue(dialogueName);

@@ -103,6 +103,25 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         jumpGrounded = Animator.StringToHash("JumpGrounded");
         movement = Animator.StringToHash("Movement");
         switchStance = Animator.StringToHash("SwitchStance");
+
+        DialogueManager.OnDialogueStart += DialogueManager_OnDialogueStart;
+        DialogueManager.OnDialogueEnd += DialogueManager_OnDialogueEnd;
+    }
+
+    private void OnDestroy()
+    {
+        DialogueManager.OnDialogueStart -= DialogueManager_OnDialogueStart;
+        DialogueManager.OnDialogueEnd -= DialogueManager_OnDialogueEnd;
+    }
+
+    private void DialogueManager_OnDialogueEnd()
+    {
+        EnableAction();
+    }
+
+    private void DialogueManager_OnDialogueStart()
+    {
+        DisableAction();
     }
 
     private void OnEnable()
@@ -147,6 +166,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     public void DisableAction()
     {
+        Debug.Log("action disablr ");
         allowedInput = false;
         Anim.enabled = false;
         _rb.velocity = Vector3.zero;
@@ -157,6 +177,8 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     public void EnableAction()
     {
+        Debug.Log("action ena ");
+
         allowedInput = true;
         Anim.enabled = true;
 
