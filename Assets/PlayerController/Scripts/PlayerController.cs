@@ -172,6 +172,8 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         _rb.angularVelocity = Vector3.zero;
 
         StanceManager.AllowPlayerSwitchStance = false;
+
+        Debug.Log("DISABLE ACTION");
     }
 
     public void EnableAction()
@@ -185,6 +187,8 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         _rb.angularVelocity = Vector3.zero;
 
         StanceManager.AllowPlayerSwitchStance = true;
+
+        Debug.Log("ENABLE ACTION");
     }
 
     private IEnumerator EnableRB()
@@ -226,7 +230,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         {
             disableAction = Physics.CheckSphere(transform.position, 0.5f, disableJump);
 
-            StanceManager.AllowPlayerSwitchStance = disableAction ? false : true;
+            //StanceManager.AllowPlayerSwitchStance = disableAction ? false : true;
 
             if (disableAction)
             {

@@ -103,7 +103,9 @@ public class PauseMenu : MonoBehaviour
             FadeCanvas.Instance.FadeOut();
         yield return new WaitForSeconds(1f);
 
-        SceneManager.UnloadSceneAsync("3_Gameplay");
+        string curScene = SceneManager.GetActiveScene().name;
+
+        SceneManager.UnloadSceneAsync(curScene);
         SceneManager.LoadScene("Base Scene (Elevator)");
     }
 }

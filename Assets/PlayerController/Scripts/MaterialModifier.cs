@@ -30,15 +30,14 @@ public class MaterialModifier : MonoBehaviour
 
     private void OnEnable()
     {
-        //string baseString = "#0042FF";
-        //string emissionString = "#0054FF";
-        //ColorUtility.TryParseHtmlString(baseString, out Color baseColor);
-        //ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
-        //m_Materials[1].SetColor("_BaseColor", baseColor);
-        //m_Materials[1].SetColor("_Color", baseColor);
-        //m_Materials[1].SetColor("_EmissionColor", emissionColor);
-        //m_Materials[2].SetColor("_TextureColor", blueHDR);
-        //m_Materials[2].SetTexture("_Texture", blueTexture);
+        string baseString = "#0042FF";
+        string emissionString = "#0054FF";
+        ColorUtility.TryParseHtmlString(baseString, out Color baseColor);
+        ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
+        m_Materials[1].SetColor("_BaseColor", baseColor);
+        m_Materials[1].SetColor("_Emission", emissionColor);
+        m_Materials[2].SetColor("_TextureColor", blueHDR);
+        m_Materials[2].SetTexture("_Texture", blueTexture);
 
         //StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }

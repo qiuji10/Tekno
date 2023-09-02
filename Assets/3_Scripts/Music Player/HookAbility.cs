@@ -110,7 +110,7 @@ public class HookAbility : MonoBehaviour
                 Transform playerTR = _playerController.transform;
 
                 playerTR.SetParent(pendulum.transform);
-                playerTR.localPosition = grabOffset;
+                playerTR.localPosition = pendulum.transform.GetChild(0).localPosition;
                 playerTR.localEulerAngles = Vector3.zero;
                 playerTR.GetChild(0).localEulerAngles = Vector3.zero;
 
