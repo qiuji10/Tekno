@@ -52,7 +52,7 @@ public class PlatformMove : MonoBehaviour, IPlatform
         }
 
         // Set the current track
-        currentTrack = obj;
+        //currentTrack = obj;
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
     }
 
@@ -61,10 +61,10 @@ public class PlatformMove : MonoBehaviour, IPlatform
         StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 
-    private void Awake()
+    private void Start()
     {
         StanceManager_OnStanceChange(StanceManager.curTrack);
-        track = currentTrack;
+        //track = currentTrack;
     }
 
     private void Update()

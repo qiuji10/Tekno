@@ -17,9 +17,10 @@ public class MaterialModifier : MonoBehaviour
     [SerializeField] private float glitchFadeOut = 0.25f;
 
     [Header("Shirt")]
-    [SerializeField, ColorUsage(true, true)] private Color blueHDR;
-    [SerializeField, ColorUsage(true, true)] private Color yellowHDR;
-    [SerializeField, ColorUsage(true, true)] private Color greenHDR;
+    [SerializeField, ColorUsage(false, true)] private Color blueHDR;
+    [SerializeField, ColorUsage(false, true)] private Color yellowHDR;
+    [SerializeField, ColorUsage(false, true)] private Color greenHDR;
+    [SerializeField, ColorUsage(false, true)] private Color redHDR;
 
     [SerializeField] private Texture2D blueTexture;
     [SerializeField] private Texture2D yellowTexture;
@@ -29,17 +30,17 @@ public class MaterialModifier : MonoBehaviour
 
     private void OnEnable()
     {
-        string baseString = "#0042FF";
-        string emissionString = "#0054FF";
-        ColorUtility.TryParseHtmlString(baseString, out Color baseColor);
-        ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
-        m_Materials[1].SetColor("_BaseColor", baseColor);
-        m_Materials[1].SetColor("_Color", baseColor);
-        m_Materials[1].SetColor("_EmissionColor", emissionColor);
-        m_Materials[2].SetColor("_TextureColor", blueHDR);
-        m_Materials[2].SetTexture("_Texture", blueTexture);
+        //string baseString = "#0042FF";
+        //string emissionString = "#0054FF";
+        //ColorUtility.TryParseHtmlString(baseString, out Color baseColor);
+        //ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
+        //m_Materials[1].SetColor("_BaseColor", baseColor);
+        //m_Materials[1].SetColor("_Color", baseColor);
+        //m_Materials[1].SetColor("_EmissionColor", emissionColor);
+        //m_Materials[2].SetColor("_TextureColor", blueHDR);
+        //m_Materials[2].SetTexture("_Texture", blueTexture);
 
-        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+        //StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
     }
 
     private void StanceManager_OnStanceChange(Track track)
@@ -66,13 +67,12 @@ public class MaterialModifier : MonoBehaviour
         ColorUtility.TryParseHtmlString(baseString, out Color baseColor);
         ColorUtility.TryParseHtmlString(emissionString, out Color emissionColor);
         m_Materials[1].SetColor("_BaseColor", baseColor);
-        m_Materials[1].SetColor("_Color", baseColor);
         m_Materials[1].SetColor("_EmissionColor", emissionColor);
     }
 
     private void OnDisable()
     {
-        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
+       // StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 
     public void StopCoroutines()
@@ -92,6 +92,18 @@ public class MaterialModifier : MonoBehaviour
     {
         StartCoroutine(ShaderFader("_GlitchPower", glitchFadeOut, 0f, false));
         StartCoroutine(VolumeFader(glitchVolume, glitchFadeOut, 0f, false));
+    }
+
+    public void DeathMaterial()
+    {
+        m_Materials[0].SetColor("_Emission", redHDR);
+        m_Materials[1].SetColor("_Emission", redHDR);
+        m_Materials[2].SetColor("_Emission", redHDR);
+
+        string property = "_GlitchPower";
+        m_Materials[0].SetFloat(property, 1);
+        m_Materials[1].SetFloat(property, 1);
+        m_Materials[2].SetFloat(property, 1);
     }
 
     public void ResetMaterial()

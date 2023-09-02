@@ -166,7 +166,6 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     public void DisableAction()
     {
-        Debug.Log("action disablr ");
         allowedInput = false;
         Anim.enabled = false;
         _rb.velocity = Vector3.zero;
@@ -177,8 +176,6 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     public void EnableAction()
     {
-        Debug.Log("action ena ");
-
         allowedInput = true;
         Anim.enabled = true;
 
@@ -359,7 +356,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
             _anim.SetTrigger(jump);
             _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
             _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-            Debug.Log("Current jump force: " + jumpForce);
+            //Debug.Log("Current jump force: " + jumpForce);
         }
     }
 
