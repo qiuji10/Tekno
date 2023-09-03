@@ -98,7 +98,7 @@ public class BeatIndicator : MonoBehaviour
         {
             if (sequence.Length > 0 && sequence[index] != null)
             {
-                sequence[index].GetComponent<Renderer>().material = normalMat;
+                sequence[index].GetComponent<Renderer>().material = material;
             }
         }
     }
