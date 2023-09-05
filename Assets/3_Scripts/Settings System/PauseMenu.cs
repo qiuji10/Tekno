@@ -45,6 +45,9 @@ public class PauseMenu : MonoBehaviour
 
     private void Action_performed(InputAction.CallbackContext obj)
     {
+        if (DialogueManager.IsRunning)
+            return;
+
         if (isPause)
         {
             ResumeGame();

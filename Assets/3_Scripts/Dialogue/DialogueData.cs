@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -42,9 +43,35 @@ public class DialogueData : ScriptableObject
             characterSet.Add(characterName);
         }
 
-        string[] characters = new string[characterSet.Count];
-        characterSet.CopyTo(characters);
+        List<string> characters = new List<string>(characterSet);
+        characters.Sort(new CharacterPriorityComparer());
 
-        return characters;
+        return characters.ToArray();
+    }
+}
+
+public class CharacterPriorityComparer : IComparer<string>
+{
+    private Dictionary<string, int> priorityMap;
+
+    public CharacterPriorityComparer()
+    {
+        priorityMap = new Dictionary<string, int>
+        {
+            { "Tekno", 1 },
+            { "SP3-KER", 2 }
+        };
+    }
+
+    public int Compare(string x, string y)
+    {
+        int xPriority, yPriority;
+
+        if (priorityMap.TryGetValue(x, out xPriority) && priorityMap.TryGetValue(y, out yPriority))
+        {
+            return xPriority.CompareTo(yPriority);
+        }
+
+        return string.Compare(x, y, StringComparison.Ordinal);
     }
 }

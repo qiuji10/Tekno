@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
@@ -9,6 +10,8 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
+
+    [SerializeField] private CinemachineInputProvider camInput;
     public static bool allowedInput = true;
     public static bool allowedAction { get; set; } = true;
 
@@ -168,12 +171,11 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     {
         allowedInput = false;
         Anim.enabled = false;
+        camInput.enabled = false;
         _rb.velocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
 
         StanceManager.AllowPlayerSwitchStance = false;
-
-        Debug.Log("DISABLE ACTION");
     }
 
     public void EnableAction()
@@ -183,12 +185,11 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
         Anim.Play("Tekno Idle");
 
+        camInput.enabled = true;
         _rb.velocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
 
         StanceManager.AllowPlayerSwitchStance = true;
-
-        Debug.Log("ENABLE ACTION");
     }
 
     private IEnumerator EnableRB()
