@@ -19,6 +19,8 @@ public class FloatingSpeaker : MonoBehaviour
     private Vector3 targetPosition;
     private bool isOnBeat = false;
 
+    private Coroutine hideSpeakerTask;
+
     private void OnEnable()
     {
         TempoManager.OnBeat += TempoManager_OnBeat;
@@ -33,12 +35,15 @@ public class FloatingSpeaker : MonoBehaviour
 
     private void StanceManager_OnStanceChangeStart(Track obj)
     {
+        if (hideSpeakerTask != null)
+            StopCoroutine(hideSpeakerTask);
+
         foreach (var visual in speakerVisuals)
         {
             visual.enabled = false;
         }
 
-        StartCoroutine(EnableVisuals());
+        hideSpeakerTask = StartCoroutine(EnableVisuals());
     }
 
     private void TempoManager_OnBeat()
