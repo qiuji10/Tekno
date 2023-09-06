@@ -142,7 +142,6 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void StanceManager_OnStanceChange(Track track)
     {
-        
         _anim.SetTrigger(switchStance);
         _rb.isKinematic = true;
         StartCoroutine(EnableRB());
