@@ -72,6 +72,7 @@ public class DialogueManager : MonoBehaviour
 
     private bool dialogueIsOn;
     private int curCharacterIndex;
+    private string[] charactersNamelist;
 
     private Dialogue curDialogue;
     private Coroutine typingCoroutine, endCoroutine;
@@ -124,7 +125,7 @@ public class DialogueManager : MonoBehaviour
             dialogues.Enqueue(dialogue);
         }
 
-        string[] charactersNamelist = dialogueData.GetAllCharacter();
+        charactersNamelist = dialogueData.GetAllCharacter();
 
         for (int i = 0; i < charactersNamelist.Length; i++)
         {
@@ -317,7 +318,10 @@ public class DialogueManager : MonoBehaviour
         if (isIntro)
         {
             characters[0].gameObject.SetActive(true);
-            characters[1].gameObject.SetActive(true);
+
+            if (charactersNamelist.Length > 1)
+                characters[1].gameObject.SetActive(true);
+
             dialogueBoxRect.gameObject.SetActive(true);
         }
 
