@@ -313,16 +313,16 @@ public class Amplifier_V2 : MonoBehaviour
 
             particle.Play();
 
-            Collider[] collideData = Physics.OverlapSphere(transform.position, knockBackRange);
+            //Collider[] collideData = Physics.OverlapSphere(transform.position, knockBackRange);
 
-            for (int i = 0; i < collideData.Length; i++)
-            {
-                if (collideData[i].TryGetComponent(out IKnockable knockable))
-                {
-                    Vector3 direction = (collideData[i].transform.position - transform.position).normalized;
-                    knockable.Knock(new Vector3(direction.x, 0.5f, direction.z), knockBackPower);
-                }
-            }
+            //for (int i = 0; i < collideData.Length; i++)
+            //{
+            //    if (collideData[i].TryGetComponent(out IKnockable knockable))
+            //    {
+            //        Vector3 direction = (collideData[i].transform.position - transform.position).normalized;
+            //        knockable.Knock(new Vector3(direction.x, 0.5f, direction.z), knockBackPower);
+            //    }
+            //}
 
             PauseMenu.canPause = true;
             yield return new WaitForSeconds(0.75f);
