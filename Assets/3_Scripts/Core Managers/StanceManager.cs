@@ -24,6 +24,7 @@ public class StanceManager : MonoBehaviour
         {
             if (allowPlayerSwitchStance != value)
             {
+                //Debug.Log($"Stance Change {value}");
                 allowPlayerSwitchStance = value;
             }
         }

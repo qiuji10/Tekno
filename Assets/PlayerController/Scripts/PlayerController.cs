@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void Awake()
     {
-        allowedInput = allowedAction = true;
+        allowedInput = allowedAction = allowedJump = true;
 
         if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.cyan * 0.5f);
         _rb = GetComponent<Rigidbody>();
@@ -130,7 +130,6 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void OnEnable()
     {
-        allowedJump = true;
         cacheSpeed = moveSpeed;
         jumpAction.action.performed += Jump;
         StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
@@ -191,6 +190,21 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         _rb.angularVelocity = Vector3.zero;
 
         StanceManager.AllowPlayerSwitchStance = true;
+    }
+
+    public void EnableWithRestriction()
+    {
+        allowedInput = true;
+        Anim.enabled = true;
+
+        Anim.Play("Tekno Idle");
+
+        camInput.enabled = true;
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+
+        allowedJump = false;
+        StanceManager.AllowPlayerSwitchStance = false;
     }
 
     private IEnumerator EnableRB()
