@@ -69,9 +69,9 @@ GameObject:
   - component: {fileID: 8158341519912993229}
   - component: {fileID: 8158341519912993266}
   - component: {fileID: 8158341519912993267}
+  - component: {fileID: 8158341519912993264}
   - component: {fileID: 8158341519912993265}
   - component: {fileID: 5502605410175084932}
-  - component: {fileID: 4137962697592467701}
   m_Layer: 0
   m_Name: ShakeDropPlatform
   m_TagString: Untagged
@@ -145,6 +145,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8158341519912993264
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8158341519912993270}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9, y: 0.9, z: 0.55}
+  m_Center: {x: 0, y: 0, z: 0.26}
 --- !u!114 &8158341519912993265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,16 +190,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &4137962697592467701
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8158341519912993270}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 4.4385977, y: 0.86205345, z: 4.4385986}
-  m_Center: {x: 0, y: 0.4310278, z: 0.000007748604}
