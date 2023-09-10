@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     public static bool allowedInput = true;
     public static bool allowedAction { get; set; } = true;
 
+    public static bool allowedJump = true;
+
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 11;
     [SerializeField] private float airSpeed = 1.2f;
@@ -129,6 +131,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void OnEnable()
     {
+        allowedJump = true;
         cacheSpeed = moveSpeed;
         jumpAction.action.performed += Jump;
         StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
@@ -207,7 +210,6 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
         Rotation();
         IsGround();
-        isActionDisable();
     }
 
     private void FixedUpdate()
@@ -222,22 +224,6 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         JumpVelocitySmoother();
         SpeedLimiter();
         Movement();
-    }
-
-    private void isActionDisable()
-    {
-        if (!StanceManager.isChangingStance)
-        {
-            disableAction = Physics.CheckSphere(transform.position, 0.5f, disableJump);
-
-            //StanceManager.AllowPlayerSwitchStance = disableAction ? false : true;
-
-            if (disableAction)
-            {
-                _rb.drag = moveDrag;
-            }
-        }
-
     }
 
     private void IsGround()
@@ -350,7 +336,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void Jump(InputAction.CallbackContext context)
     {
-        if (!allowedInput || !allowedAction) return;
+        if (!allowedInput || !allowedAction || !allowedJump) return;
 
 
         if (isGround && !isJumping && !disableAction)
