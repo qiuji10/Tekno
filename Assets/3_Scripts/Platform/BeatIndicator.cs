@@ -8,26 +8,22 @@ public class BeatIndicator : MonoBehaviour
     [Header("Beat Settings")]
     [EventID]
     public string eventID;
-
+    public GameObject[] sequence;
+    private int currentBeat;
 
     // Koreography Sync with Stance Manager
     private Track track;
     public static Track currentTrack;
 
-    // You can set these materials in the Inspector
     public Material normalMat;
-    public Material houseMat;
-    public Material technoMat;
-    public Material electronicMat;
-
-    private int currentMaterialIndex = 2; // Start with index 2
-
-    private MeshRenderer meshRenderer;
+    public Material houseMaterial;
+    public Material technoMaterial;
+    public Material electronicMaterial;
 
     private void Awake()
     {
         StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
-        meshRenderer = GetComponent<MeshRenderer>();
+        track = currentTrack;
     }
 
     private void Start()
@@ -54,59 +50,66 @@ public class BeatIndicator : MonoBehaviour
         }
 
         // Set the current track
+        currentTrack = obj;
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
     }
 
     private void OnMusicEvent(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
     {
-        // Reset materials from index 2 to 5 to the normalMat.
-        ResetMaterials();
+        int intValueEvt = evt.GetIntValue();
 
-        // Change the material based on the current genre.
-        Material material = null;
+        // Check if the intValueEvt is within the valid range of the sequence array
+        if (intValueEvt >= 0 && intValueEvt < sequence.Length)
+        {
+            // Reset the previous beat's material
+            if (currentBeat >= 0 && currentBeat < sequence.Length)
+            {
+                ResetMaterial(currentBeat);
+            }
+
+            // Change the material of the current beat
+            ChangeMaterial(intValueEvt);
+            currentBeat = intValueEvt;
+        }
+    }
+
+    private void ChangeMaterial(int index)
+    {
+        // Determine the material based on the current genre
+        Material material;
         switch (currentTrack.genre)
         {
             case Genre.House:
-                material = houseMat;
+                material = houseMaterial;
                 break;
             case Genre.Techno:
-                material = technoMat;
+                material = technoMaterial;
                 break;
             case Genre.Electronic:
-                material = electronicMat;
+                material = electronicMaterial;
                 break;
             default:
-                material = normalMat;
+                material = null;
                 break;
         }
 
+        // Change the material of the object at the specified index in the sequence array
         if (material != null)
         {
-            // Change the material at the current index.
-            if (currentMaterialIndex >= 2 && currentMaterialIndex <= 5)
+            if (sequence.Length > 0 && sequence[index] != null)
             {
-                Material[] materials = meshRenderer.materials;
-                materials[currentMaterialIndex] = material;
-                meshRenderer.materials = materials;
-            }
-
-            // Increment the index, and loop back to 2 if it exceeds 5.
-            currentMaterialIndex++;
-            if (currentMaterialIndex > 5)
-            {
-                currentMaterialIndex = 2;
+                sequence[index].GetComponent<Renderer>().material = material;
             }
         }
     }
 
-    private void ResetMaterials()
+    private void ResetMaterial(int index)
     {
-        Material[] materials = meshRenderer.materials;
-        for (int i = 2; i <= 5; i++)
+        // Reset the material of the object at the specified index in the sequence array
+        if (sequence.Length > 0 && sequence[index] != null)
         {
-            materials[i] = normalMat;
+            sequence[index].GetComponent<Renderer>().material = normalMat;
         }
-        meshRenderer.materials = materials;
     }
 
     private void OnDestroy()

@@ -37,16 +37,16 @@ public class BillboardCycle : MonoBehaviour
         switch (obj.genre)
         {
             case Genre.House:
-                eventID = "120_House_Billboards";
+                eventID = "120_House_PlatformMove";
                 break;
             case Genre.Techno:
-                eventID = "140_Techno_Billboards";
+                eventID = "140_Techno_PlatformMove";
                 break;
             case Genre.Electronic:
-                eventID = "160_Electro_Billboards";
+                eventID = "160_Electro_PlatformMove";
                 break;
             default:
-                eventID = "140_Techno_Billboards";
+                eventID = "140_Techno_PlatformMove";
                 break;
         }
 
