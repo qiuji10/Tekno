@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     [SerializeField] private CinemachineInputProvider camInput;
     public static bool allowedInput = true;
     public static bool allowedAction { get; set; } = true;
+    public static bool allowedJump = true;
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 11;
@@ -93,7 +94,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void Awake()
     {
-        allowedInput = allowedAction = true;
+        allowedInput = allowedAction = allowedJump = true;
 
         if (DualShockGamepad.current != null) DualShockGamepad.current.SetLightBarColor(Color.cyan * 0.5f);
         _rb = GetComponent<Rigidbody>();
@@ -191,6 +192,21 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         StanceManager.AllowPlayerSwitchStance = true;
     }
 
+    public void EnableWithRestriction()
+    {
+        allowedInput = true;
+        Anim.enabled = true;
+
+        Anim.Play("Tekno Idle");
+
+        camInput.enabled = true;
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+
+        allowedJump = false;
+        StanceManager.AllowPlayerSwitchStance = false;
+    }
+
     private IEnumerator EnableRB()
     {
         yield return new WaitForSeconds(1.5f);
@@ -207,7 +223,6 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
         Rotation();
         IsGround();
-        isActionDisable();
     }
 
     private void FixedUpdate()
@@ -222,22 +237,6 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         JumpVelocitySmoother();
         SpeedLimiter();
         Movement();
-    }
-
-    private void isActionDisable()
-    {
-        if (!StanceManager.isChangingStance)
-        {
-            disableAction = Physics.CheckSphere(transform.position, 0.5f, disableJump);
-
-            //StanceManager.AllowPlayerSwitchStance = disableAction ? false : true;
-
-            if (disableAction)
-            {
-                _rb.drag = moveDrag;
-            }
-        }
-
     }
 
     private void IsGround()
@@ -350,7 +349,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void Jump(InputAction.CallbackContext context)
     {
-        if (!allowedInput || !allowedAction) return;
+        if (!allowedInput || !allowedAction || !allowedJump) return;
 
 
         if (isGround && !isJumping && !disableAction)

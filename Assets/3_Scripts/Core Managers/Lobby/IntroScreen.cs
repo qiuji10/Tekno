@@ -51,7 +51,7 @@ public class IntroScreen : MonoBehaviour
         PlayerPrefs.Save();
 
         OnAnyKeyDown?.Invoke();
-        playerData.controller.EnableAction();
+        playerData.controller.EnableWithRestriction();
         canvas.enabled = false;
         vcam.Priority = 0;
         gameObject.SetActive(false);
