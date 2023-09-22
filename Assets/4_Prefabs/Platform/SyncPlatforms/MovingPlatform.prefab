@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3858842092536034534}
-  - component: {fileID: 8216813102537011220}
   m_Layer: 0
   m_Name: BeatIndicator
   m_TagString: Untagged
@@ -36,28 +35,6 @@ Transform:
   m_Father: {fileID: 4977427670916494168}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8216813102537011220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 439896596027439124}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fa7e459ce2bbc24f9de71550b76569f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eventID: 
-  sequence:
-  - {fileID: 2119261214356372428}
-  - {fileID: 1187313575051641866}
-  - {fileID: 7560945321768806394}
-  - {fileID: 903736752335954986}
-  normalMat: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-  houseMaterial: {fileID: 2100000, guid: d8ed4a39462b69a4cb990cdf570a5a7c, type: 2}
-  technoMaterial: {fileID: 2100000, guid: ea10de2fcc8e1ce4da5e2ac4ba7edb50, type: 2}
-  electronicMaterial: {fileID: 2100000, guid: fc77df4e84c9c224fb35e1e5ce98c96e, type: 2}
 --- !u!1 &859127121115420710
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,6 +625,7 @@ GameObject:
   - component: {fileID: 4977427670916494175}
   - component: {fileID: 4977427670916494174}
   - component: {fileID: 4977427670916494169}
+  - component: {fileID: 1760869629691269231}
   m_Layer: 0
   m_Name: MovingPlatfrom
   m_TagString: Untagged
@@ -779,6 +757,25 @@ MonoBehaviour:
   - {fileID: 4977427669540224511}
   - {fileID: 4977427670453471592}
   - {fileID: 4977427669943970825}
+--- !u!114 &1760869629691269231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4977427670916494171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2aaebb764352a14fbaff811a13112e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventID: 
+  movingPlatform: {fileID: 4977427670916494171}
+  platformRenderer: {fileID: 4977427670916494172}
+  baseMat: {fileID: 2100000, guid: ffc6aba942c12da40a5d466ea37d67b2, type: 2}
+  houseMat: {fileID: 2100000, guid: d8ed4a39462b69a4cb990cdf570a5a7c, type: 2}
+  technoMat: {fileID: 2100000, guid: ea10de2fcc8e1ce4da5e2ac4ba7edb50, type: 2}
+  electroMat: {fileID: 2100000, guid: fc77df4e84c9c224fb35e1e5ce98c96e, type: 2}
 --- !u!1 &4977427671153279037
 GameObject:
   m_ObjectHideFlags: 0
