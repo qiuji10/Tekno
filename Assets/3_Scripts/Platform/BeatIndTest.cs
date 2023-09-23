@@ -8,9 +8,7 @@ public class BeatIndTest : MonoBehaviour
     [Header("Beat Settings")]
     [EventID]
     public string eventID;
-
-    [SerializeField] private GameObject movingPlatform;
-    [SerializeField] private MeshRenderer platformRenderer;
+    public MeshRenderer indicatorMesh; // Reference to the Mesh Renderer.
 
     private Track track;
     public static Track currentTrack;
@@ -21,19 +19,24 @@ public class BeatIndTest : MonoBehaviour
     [SerializeField] private Material technoMat;
     [SerializeField] private Material electroMat;
 
-    private int startIndex = 2;
-    private int endIndex = 5;
-    private int currentIndex;
+    private int currentMaterialIndex = 0;
 
     private void Awake()
     {
         StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
         track = currentTrack;
-        platformRenderer = movingPlatform.GetComponent<MeshRenderer>();
+    }
+
+    private void Start()
+    {
+        StanceManager_OnStanceChange(StanceManager.curTrack);
     }
 
     private void StanceManager_OnStanceChange(Track obj)
     {
+        // Set the current track
+        currentTrack = obj;
+
         switch (obj.genre)
         {
             case Genre.House:
@@ -50,8 +53,6 @@ public class BeatIndTest : MonoBehaviour
                 break;
         }
 
-        // Set the current track
-        currentTrack = obj;
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
     }
 
@@ -61,10 +62,62 @@ public class BeatIndTest : MonoBehaviour
         {
             int intValue = evt.GetIntValue();
 
+            // Check if the intValue is within a valid range
             if (intValue >= 0 && intValue <= 3)
             {
+                // Determine the new material index based on the integer value and player's stance.
+                int newMaterialIndex = intValue;
 
+                // Change the material.
+                ChangeMaterial(newMaterialIndex);
+
+                // Reset the previous material back to the base material.
+                ResetMaterial(currentMaterialIndex);
+
+                // Update the current material index.
+                currentMaterialIndex = newMaterialIndex - 1;
+                if (currentMaterialIndex == -1) { currentMaterialIndex = 3; }
             }
+        }
+    }
+
+    private void ChangeMaterial(int index)
+    {
+        // Determine the material based on the current genre
+        Material material;
+        switch (currentTrack.genre)
+        {
+            case Genre.House:
+                material = houseMat;
+                break;
+            case Genre.Techno:
+                material = technoMat;
+                break;
+            case Genre.Electronic:
+                material = electroMat;
+                break;
+            default:
+                material = baseMat;
+                break;
+        }
+
+        // Access the MeshRenderer's materials array and change the material at the specified index.
+        if (indicatorMesh != null)
+        {
+            Material[] materials = indicatorMesh.materials;
+            materials[index] = material;
+            indicatorMesh.materials = materials;
+        }
+    }
+
+    private void ResetMaterial(int index)
+    {
+        // Reset the material back to the base material.
+        if (indicatorMesh != null)
+        {
+            Material[] materials = indicatorMesh.materials;
+            materials[index] = baseMat;
+            indicatorMesh.materials = materials;
         }
     }
 
