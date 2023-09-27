@@ -17,6 +17,7 @@ public class TeleportAbility : MonoBehaviour
     [SerializeField] private Transform electricVFX;
     [SerializeField] private SensorDetection tpSensor;
     [SerializeField] private Rigidbody rb;
+    [SerializeField] private PlayerController pc;
 
     [Header("Charging values")]
     [SerializeField] private InputActionReference chargingAction;
@@ -44,6 +45,7 @@ public class TeleportAbility : MonoBehaviour
 
     private void OnEnable()
     {
+        pc = gameObject.GetComponent<PlayerController>();
         TempoManager.OnBeat += TempoManager_OnBeat;
         skillCheckAction.action.performed += SkillCheck;
         counter = -1;
@@ -109,13 +111,16 @@ public class TeleportAbility : MonoBehaviour
     {
         if (StanceManager.curTrack.genre != Genre.Electronic)
         {
+            pc.enabled = true;
             return;
         }
 
         motherNode = tpSensor.GetNearestObject<MotherNode>();
 
+        
         if (motherNode != null)
         {
+            pc.enabled = false;
             pauseCounter = false;
             chargeSlider.gameObject.SetActive(true);
             numOfNodes = motherNode.teleportPoints.Count;
@@ -192,7 +197,7 @@ public class TeleportAbility : MonoBehaviour
         {
             StartCoroutine(TeleportToNodes());
         }
-
+        pc.enabled = true;
         successPress = -1;
     }
 
@@ -218,6 +223,10 @@ public class TeleportAbility : MonoBehaviour
                 yield return new WaitForSeconds(0.3f); // wait for the player to finish teleporting before teleporting again
                 rb.isKinematic = false;
 
+            }
+            for (int i = 0; i < numOfNodes; i++)
+            {
+                progressNode[i].gameObject.SetActive(false);
             }
             chargeSlider.gameObject.SetActive(false);
 

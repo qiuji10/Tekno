@@ -11,11 +11,11 @@ public class PlatformDrop : MonoBehaviour, IPlatform
     public float shakeTimer = 0;
     public float dropDistance = 10;
     private float originalY;
-    private bool isDropping;
+    [SerializeField]private bool isDropping;
 
     public GameObject parental;
     private Rigidbody rb;
-    private Collider platformCollider;
+    [SerializeField]private Collider platformCollider;
     public Transform player { get; set; }
     public bool PlayerOnPlatform { get; set; }
 
@@ -30,8 +30,9 @@ public class PlatformDrop : MonoBehaviour, IPlatform
     void Update()
     {
       
- if (PlayerOnPlatform)
+        if (PlayerOnPlatform)
         {
+            isDropping = true;
             StartCoroutine(ShakeAndDropPlatform());
         }
       
@@ -41,46 +42,74 @@ public class PlatformDrop : MonoBehaviour, IPlatform
 
     public void DropPlatform()
     {
-            isDropping = true;
+        //isDropping = true;
+        if(isDropping)
+        {
             transform.position += new Vector3(0, -1, 0);
-            platformCollider.enabled = false;
-            PlayerOnPlatform = false;
-            parental.SetActive(false);
-            if (player != null)
-            {
-                player.parent = null;
-            }
+        }
         
+        platformCollider.enabled = false;
+        PlayerOnPlatform = false;
+        parental.SetActive(false);
+
+        if (player != null)
+        {
+            player.parent = null;
+        }
+
+
         if (isDropping && transform.position.y < originalY - 20)
         {
             if (shakeTimer != 0) shakeTimer = 0;
             isDropping = false;
         }
-        else if (!isDropping && transform.position.y == originalY)
-        {
 
-            isDropping = true;
-        }
 
-        if (transform.position.y >= originalY)
-        {
-            parental.SetActive(true);
-            isDropping = false;
-            platformCollider.enabled = true;
-            transform.position = new Vector3(transform.position.x, originalY, transform.position.z);
-            shakeTimer = 0;
-        }
+        //else if (!isDropping && transform.position.y == originalY)
+        //{
+
+        //    isDropping = true;
+        //}
+
+        //if (transform.position.y >= originalY)
+        //{
+        //    parental.SetActive(true);
+        //    isDropping = false;
+        //    platformCollider.enabled = true;
+        //    transform.position = new Vector3(transform.position.x, originalY, transform.position.z);
+        //    shakeTimer = 0;
+        //}
+
     }
+
+    void ResetPlatform()
+    {
+        parental.SetActive(true);
+        isDropping = false;
+        platformCollider.enabled = true;
+        transform.position = new Vector3(transform.position.x, originalY, transform.position.z);
+        shakeTimer = 0;
+        
+    }
+
 
 
     private IEnumerator ShakeAndDropPlatform() 
     {
-            // modify the y shake to 0 to prevent player cant jump
-            Vector3 randomOffset = Random.insideUnitSphere * 0.1f;
-            randomOffset.y = 0;
-            transform.position = transform.position + new Vector3(randomOffset.x, 0, randomOffset.z);
-           yield return new WaitForSeconds(shakeDuration);
-            DropPlatform();
+        // modify the y shake to 0 to prevent player cant jump
+        Vector3 randomOffset = Random.insideUnitSphere * 0.1f;
+        randomOffset.y = 0;
+        transform.position = transform.position + new Vector3(randomOffset.x, 0, randomOffset.z);
+        yield return new WaitForSeconds(shakeDuration);
+        DropPlatform();
+        StartCoroutine(Stuff());
+    }
+
+    private IEnumerator Stuff()
+    {
+        StopCoroutine(ShakeAndDropPlatform());  
+        yield return new WaitForSeconds(3);
+        ResetPlatform();
     }
 }
 
