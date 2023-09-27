@@ -27,6 +27,7 @@ public class Parenter : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log("player on Plarform");
             other.transform.SetParent(transform.parent); 
 
             if (platform != null)
