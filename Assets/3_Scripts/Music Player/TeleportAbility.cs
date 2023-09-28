@@ -18,6 +18,7 @@ public class TeleportAbility : MonoBehaviour
     [SerializeField] private SensorDetection tpSensor;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private PlayerController pc;
+    [SerializeField] private SkinnedMeshRenderer skin;
 
     [Header("Charging values")]
     [SerializeField] private InputActionReference chargingAction;
@@ -212,6 +213,7 @@ public class TeleportAbility : MonoBehaviour
 
     public IEnumerator TeleportToNodes()
     {
+        skin.enabled = false;
         foreach (Transform teleportPoint in motherNode.teleportPoints)
         {
             rb.isKinematic = true;
@@ -232,6 +234,7 @@ public class TeleportAbility : MonoBehaviour
 
         }
 
+        skin.enabled = true;
         
     }
 
