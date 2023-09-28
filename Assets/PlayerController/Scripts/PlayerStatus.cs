@@ -17,12 +17,17 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] private GameObject deathCanvas;
     [SerializeField] private CameraSetter deathCamSetter;
 
+    public bool isGlitchy, isDead;
     private int totalHealth;
-    private bool isGlitchy, isDead;
     private CheckpointManager checkpointManager;
     private MaterialModifier matModifier;
     private SpectrumUI spectrum;
     private Animator _anim;
+
+    PlayerController pc;
+    HookAbility hk;
+    TeleportAbility tp;
+    Attack at;
 
     private void Awake()
     {
@@ -32,6 +37,11 @@ public class PlayerStatus : MonoBehaviour
         checkpointManager = FindObjectOfType<CheckpointManager>();
         matModifier = GetComponentInChildren<MaterialModifier>();
         spectrum = FindObjectOfType<SpectrumUI>();
+
+        pc = GetComponent<PlayerController>();
+        hk = GetComponent<HookAbility>();
+        tp = GetComponent<TeleportAbility>();
+        at = GetComponent<Attack>();
     }
 
     private void OnEnable()
@@ -126,13 +136,24 @@ public class PlayerStatus : MonoBehaviour
 
                 GetComponent<Rigidbody>().velocity = Vector3.zero;
 
-                FindObjectOfType<StanceManager>().gameObject.SetActive(false);
-                FindObjectOfType<PauseMenu>().gameObject.SetActive(false);
+                StanceManager manager = FindObjectOfType<StanceManager>();
 
-                GetComponent<PlayerController>().enabled = false;
-                GetComponent<HookAbility>().enabled = false;
-                GetComponent<TeleportAbility>().enabled = false;
-                GetComponent<Attack>().enabled = false;
+                if (manager != null)
+                {
+                    manager.gameObject.SetActive(false);
+                }
+
+                PauseMenu menu = FindObjectOfType<PauseMenu>();
+
+                if (menu != null)
+                {
+                    menu.gameObject.SetActive(false);
+                }
+
+                pc.enabled = false;
+                hk.enabled = false;
+                tp.enabled = false;
+                at.enabled = false;
 
                 StartCoroutine(DeathCutscene());
             }
@@ -170,7 +191,7 @@ public class PlayerStatus : MonoBehaviour
         FadeCanvas.Instance.FadeOut();
         yield return new WaitForSeconds(1f);
 
-        SceneManager.UnloadSceneAsync("3_Gameplay");
+        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().name);
         SceneManager.LoadScene("Base Scene (Elevator)");
     }
 

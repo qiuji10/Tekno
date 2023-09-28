@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.6261791, g: 0.21403861, b: 0.900186, a: 1}
+  m_IndirectSpecularColor: {r: 0.38361737, g: 0.09372371, b: 0.8962814, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2745,7 +2745,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 404387732}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e9c043dbf4ad87478da1dfc14172cff, type: 3}
   m_Name: 
@@ -2757,7 +2757,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 404387732}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 14498a66a9c9eb04fb785e3348ec28c9, type: 3}
   m_Name: 
@@ -3344,15 +3344,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 766802703, guid: 4a1ef31b95c26be4fb302ddfc2fc340a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 130.5878
+      value: 87.06447
       objectReference: {fileID: 0}
     - target: {fileID: 766802703, guid: 4a1ef31b95c26be4fb302ddfc2fc340a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -88.59
+      value: -59.059998
       objectReference: {fileID: 0}
     - target: {fileID: 766802703, guid: 4a1ef31b95c26be4fb302ddfc2fc340a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 113.097046
+      value: 74.398056
       objectReference: {fileID: 0}
     - target: {fileID: 766802704, guid: 4a1ef31b95c26be4fb302ddfc2fc340a, type: 3}
       propertyPath: m_LookAt
@@ -3426,6 +3426,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stance Manager (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8301616063141171595, guid: 4a1ef31b95c26be4fb302ddfc2fc340a,
+        type: 3}
+      propertyPath: spawnPos
+      value: 
+      objectReference: {fileID: 1842533704}
     - target: {fileID: 8301616063141171595, guid: 4a1ef31b95c26be4fb302ddfc2fc340a,
         type: 3}
       propertyPath: hookAbility
@@ -4153,17 +4158,17 @@ PrefabInstance:
     - target: {fileID: 1543509886624612458, guid: 39a84149d5959ae42a3865cd0b095013,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.15225843
+      value: 0.15225841
       objectReference: {fileID: 0}
     - target: {fileID: 1543509886624612458, guid: 39a84149d5959ae42a3865cd0b095013,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 2.0711014e-17
+      value: 0.000000014727425
       objectReference: {fileID: 0}
     - target: {fileID: 1543509886624612458, guid: 39a84149d5959ae42a3865cd0b095013,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 4.8420665e-17
+      value: -0.0000000022688271
       objectReference: {fileID: 0}
     - target: {fileID: 2352903789742426414, guid: 39a84149d5959ae42a3865cd0b095013,
         type: 3}
@@ -11910,6 +11915,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1799183027}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1842533704 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8301616063141171592, guid: 4a1ef31b95c26be4fb302ddfc2fc340a,
+    type: 3}
+  m_PrefabInstance: {fileID: 506268297}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1852366530
 GameObject:
   m_ObjectHideFlags: 0
@@ -13891,6 +13902,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af5119e4a631dea488e64d37e22505eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogueName: 
+  saveState: 0
+  markAsPlayerPrefs: 0
   triggerOnce: 0
   disablePlayerControl: 1
   prompt: {fileID: 0}

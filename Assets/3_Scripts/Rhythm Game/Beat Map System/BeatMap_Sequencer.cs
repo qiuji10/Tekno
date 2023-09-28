@@ -24,6 +24,16 @@ public class BeatMap_Sequencer : MonoBehaviour
         noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
+    private IEnumerator Start()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        _audio.clip = mediumAudioClip;
+        generator.DestroyPool();
+        Sequencer_PlaceNotes(mediumBeatmap);
+    }
+
+
     private void OnDestroy()
     {
         generator.OnNoteSpawn -= Generator_OnNoteSpawn;
