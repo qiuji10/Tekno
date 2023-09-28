@@ -40,16 +40,16 @@ public class BeatIndTest : MonoBehaviour
         switch (obj.genre)
         {
             case Genre.House:
-                eventID = "120_House_MovingCar";
+                eventID = "120_House_IntPayload";
                 break;
             case Genre.Techno:
-                eventID = "140_Techno_MovingCar";
+                eventID = "140_Techno_IntPayload";
                 break;
             case Genre.Electronic:
-                eventID = "160_Electro_MovingCar";
+                eventID = "160_Electro_IntPayload";
                 break;
             default:
-                eventID = "140_Tekno_MovingCar";
+                eventID = "140_Tekno_IntPayload";
                 break;
         }
 
