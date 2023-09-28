@@ -103,18 +103,18 @@ public class BeatMap_Input : MonoBehaviour
         successCount++; // Increment the success count
     }
 
-    private void OnGUI()
-    {
-        GUI.Label(new Rect(10, 10, 200, 30), "Success Count: " + successCount);
-    }
+    //private void OnGUI()
+    //{
+    //    GUI.Label(new Rect(10, 10, 200, 30), "Success Count: " + successCount);
+    //}
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            successCount = 0;
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Alpha1))
+    //    {
+    //        successCount = 0;
+    //    }
+    //}
 
     private void OnKeyUp(InputAction.CallbackContext context)
     {

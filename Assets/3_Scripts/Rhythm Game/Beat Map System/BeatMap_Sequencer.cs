@@ -3,6 +3,7 @@ using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BeatMap_Sequencer : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class BeatMap_Sequencer : MonoBehaviour
 
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private CinemachineBasicMultiChannelPerlin noise;
+
+    [SerializeField] private UnityEvent OnRhythmGameEnd;
+
+    bool startedPlay;
 
     private void Awake()
     {
@@ -32,7 +37,6 @@ public class BeatMap_Sequencer : MonoBehaviour
         generator.DestroyPool();
         Sequencer_PlaceNotes(mediumBeatmap);
     }
-
 
     private void OnDestroy()
     {
@@ -61,23 +65,25 @@ public class BeatMap_Sequencer : MonoBehaviour
         }
 
         _audio.Play();
+
+        startedPlay = true;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            _audio.clip = mediumAudioClip;
-            generator.DestroyPool();
-            Sequencer_PlaceNotes(mediumBeatmap);
-        }
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    _audio.clip = mediumAudioClip;
+        //    generator.DestroyPool();
+        //    Sequencer_PlaceNotes(mediumBeatmap);
+        //}
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            _audio.clip = hardAudioClip;
-            generator.DestroyPool();
-            Sequencer_PlaceNotes(hardBeatmap);
-        }
+        //if (Input.GetKeyDown(KeyCode.O))
+        //{
+        //    _audio.clip = hardAudioClip;
+        //    generator.DestroyPool();
+        //    Sequencer_PlaceNotes(hardBeatmap);
+        //}
 
         for (int i = 0; i < rhythmNotes.Count; i++)
         {
@@ -142,6 +148,16 @@ public class BeatMap_Sequencer : MonoBehaviour
             noise.m_AmplitudeGain = 0;
             noise.m_FrequencyGain = 0;
             holdTime = 0;
+        }
+
+        if (startedPlay)
+        {
+            if (!_audio.isPlaying)
+            {
+                OnRhythmGameEnd?.Invoke();
+
+                startedPlay = false;
+            }
         }
     }
 
