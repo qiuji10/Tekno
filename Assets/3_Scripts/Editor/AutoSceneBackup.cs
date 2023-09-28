@@ -8,8 +8,9 @@ using UnityEngine.SceneManagement;
 [InitializeOnLoad]
 public class AutoSceneBackup : AssetPostprocessor
 {
-    private static string backupFolderPath = "Assets/SceneBackups";
-    private static string developerPath = "default";
+    private static string backupFolderPath;
+    private static string developerPath;
+    private static bool autoBackupEnabled; // Add this field
 
     static AutoSceneBackup()
     {
@@ -18,18 +19,24 @@ public class AutoSceneBackup : AssetPostprocessor
 
     private static void EditorSceneManager_sceneSaved(Scene scene)
     {
-        BackupScene();
+        LoadSettings();
+
+        if (autoBackupEnabled) // Check if auto backup is enabled
+        {
+            BackupScene();
+        }
     }
 
     private static void BackupScene()
     {
+        //string path = $"{backupFolderPath}/{developerPath}/";
+        string path = $"{Application.persistentDataPath}/{backupFolderPath}/{developerPath}/";
+
         string scenePath = EditorSceneManager.GetActiveScene().path;
         string sceneName = Path.GetFileNameWithoutExtension(scenePath);
         string timestamp = DateTime.Now.ToString("[yyyy-MM-dd] HH-mm-ss");
         string newBackupFileName = $"{sceneName}_backup {timestamp}.unity";
-        string newBackupPath = Path.Combine(backupFolderPath, newBackupFileName);
-
-        string path = $"{backupFolderPath}/{developerPath}/";
+        string newBackupPath = Path.Combine(path, newBackupFileName);
 
         // Ensure the backup directory exists, and if not, create it
         if (!Directory.Exists(path))
@@ -52,5 +59,19 @@ public class AutoSceneBackup : AssetPostprocessor
         File.Copy(scenePath, newBackupPath, true);
 
         AssetDatabase.Refresh();
+    }
+
+    private static void LoadSettings()
+    {
+        backupFolderPath = EditorPrefs.GetString("backup-folder-path", "Assets/SceneBackups");
+        developerPath = EditorPrefs.GetString("developer-path", "default");
+        autoBackupEnabled = EditorPrefs.GetBool("auto-backup-enabled", true); // Load auto backup toggle
+    }
+
+    private static void SaveSettings()
+    {
+        EditorPrefs.SetString("backup-folder-path", backupFolderPath);
+        EditorPrefs.SetString("developer-path", developerPath);
+        EditorPrefs.SetBool("auto-backup-enabled", autoBackupEnabled); // Save auto backup toggle
     }
 }
