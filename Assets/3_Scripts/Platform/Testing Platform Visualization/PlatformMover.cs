@@ -30,44 +30,44 @@ public class PlatformMover : MonoBehaviour
 
     private void TempoManager_OnBeat()
     {
-        if (test)
-        {
-            Material[] newMats = new Material[materials.Length];
+        //if (test)
+        //{
+        //    Material[] newMats = new Material[materials.Length];
 
-            if (TempoManager.beatCount == 1)
-            {
-                newMats[0] = materials[0];
-                newMats[1] = materials[1];
-                newMats[2] = defaultMaterial;
-                newMats[3] = defaultMaterial;
-                newMats[4] = defaultMaterial;
+        //    if (TempoManager.beatCount == 1)
+        //    {
+        //        newMats[0] = materials[0];
+        //        newMats[1] = materials[1];
+        //        newMats[2] = defaultMaterial;
+        //        newMats[3] = defaultMaterial;
+        //        newMats[4] = defaultMaterial;
 
-                _mesh.materials = newMats;
-            }
-            else if (TempoManager.beatCount == 2)
-            {
-                newMats[0] = materials[0];
-                newMats[1] = materials[1];
-                newMats[2] = materials[2];
-                newMats[3] = defaultMaterial;
-                newMats[4] = defaultMaterial;
-                _mesh.materials = newMats;
-            }
-            else if (TempoManager.beatCount == 3)
-            {
-                newMats[0] = materials[0];
-                newMats[1] = materials[1];
-                newMats[2] = materials[2];
-                newMats[3] = materials[3];
-                newMats[4] = defaultMaterial;
-                _mesh.materials = newMats;
-            }
-            else if (TempoManager.beatCount == 4)
-            {
-                newMats = materials;
-                _mesh.materials = newMats;
-            }
-        }
+        //        _mesh.materials = newMats;
+        //    }
+        //    else if (TempoManager.beatCount == 2)
+        //    {
+        //        newMats[0] = materials[0];
+        //        newMats[1] = materials[1];
+        //        newMats[2] = materials[2];
+        //        newMats[3] = defaultMaterial;
+        //        newMats[4] = defaultMaterial;
+        //        _mesh.materials = newMats;
+        //    }
+        //    else if (TempoManager.beatCount == 3)
+        //    {
+        //        newMats[0] = materials[0];
+        //        newMats[1] = materials[1];
+        //        newMats[2] = materials[2];
+        //        newMats[3] = materials[3];
+        //        newMats[4] = defaultMaterial;
+        //        _mesh.materials = newMats;
+        //    }
+        //    else if (TempoManager.beatCount == 4)
+        //    {
+        //        newMats = materials;
+        //        _mesh.materials = newMats;
+        //    }
+        //}
 
         if (TempoManager.beatCount == 4)
         {
