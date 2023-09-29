@@ -209,6 +209,27 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         StanceManager.AllowPlayerSwitchStance = false;
     }
 
+    public void EnableActionNormal()
+    {
+        allowedInput = true;
+        Anim.enabled = true;
+
+        camInput.enabled = true;
+
+        StanceManager.AllowPlayerSwitchStance = true;
+    }
+
+    public void EnableWithRestrictionNormal()
+    {
+        allowedInput = true;
+        Anim.enabled = true;
+
+        camInput.enabled = true;
+        allowedJump = false;
+        StanceManager.AllowPlayerSwitchStance = false;
+    }
+
+
     private IEnumerator EnableRB()
     {
         yield return new WaitForSeconds(1.5f);

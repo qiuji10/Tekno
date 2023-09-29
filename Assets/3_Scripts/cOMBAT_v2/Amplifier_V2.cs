@@ -164,6 +164,8 @@ public class Amplifier_V2 : MonoBehaviour
 
         if (Gamepad.current != null) Gamepad.current.SetMotorSpeeds(2f, 3f);
 
+        LeanTween.reset();
+
         speakerImg.sprite = MinigameData.Instance.speakerOff;
         CustomSlider slider = speakerSliders[speakerHealth];
         float timeToBeatCount = TempoManager.GetTimeToBeatCount(1);
@@ -184,6 +186,8 @@ public class Amplifier_V2 : MonoBehaviour
         amplifierHealthShake.Shake();
 
         if (Gamepad.current != null) Gamepad.current.SetMotorSpeeds(2f, 3f);
+
+        LeanTween.reset();
 
         speakerImg.sprite = MinigameData.Instance.speakerSuccess;
         CustomSlider slider = amplifierSliders[amplifierHealth];
