@@ -19,6 +19,7 @@ public class TeleportAbility : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private PlayerController pc;
     [SerializeField] private SkinnedMeshRenderer skin;
+    [SerializeField] private StanceManager allowStanceChange;
 
     [Header("Charging values")]
     [SerializeField] private InputActionReference chargingAction;
@@ -121,6 +122,7 @@ public class TeleportAbility : MonoBehaviour
         
         if (motherNode != null)
         {
+            StanceManager.AllowPlayerSwitchStance = false;
             pc.enabled = false;
             pauseCounter = false;
             chargeSlider.gameObject.SetActive(true);
@@ -154,11 +156,13 @@ public class TeleportAbility : MonoBehaviour
 
             if (numOfNodes == 0)
             {
+                StanceManager.AllowPlayerSwitchStance = true;
                 canTeleport = false;
                 return;
             }
             else if (successPress == numOfNodes)
             {
+                StanceManager.AllowPlayerSwitchStance = true;
                 canTeleport = true;
                 Debug.Log("Here");
                 Teleport();
@@ -168,6 +172,7 @@ public class TeleportAbility : MonoBehaviour
         }
         else
         {
+            StanceManager.AllowPlayerSwitchStance = true;
             pauseCounter = true;
             successPress = -1;
             chargeSlider.gameObject.SetActive(false);
