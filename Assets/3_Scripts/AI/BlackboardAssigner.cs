@@ -7,10 +7,12 @@ public class BlackboardAssigner : MonoBehaviour
 {
     GlobalBlackboard board;
 
-    private void Awake()
+    private IEnumerator Start()
     {
+        yield return new WaitForSeconds(3);
+
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        board = GetComponent<GlobalBlackboard>();
+        board = FindObjectOfType<GlobalBlackboard>();
         board.SetVariableValue("Player", player);
         board.SetVariableValue("PlayerTransform", player.transform);
     }
