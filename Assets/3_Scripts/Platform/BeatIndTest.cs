@@ -8,7 +8,7 @@ public class BeatIndTest : MonoBehaviour
     [Header("Beat Settings")]
     [EventID]
     public string eventID;
-    public MeshRenderer indicatorMesh; // Reference to the Mesh Renderer.
+    [SerializeField] MeshRenderer indicatorMesh; 
 
     private Track track;
     public static Track currentTrack;

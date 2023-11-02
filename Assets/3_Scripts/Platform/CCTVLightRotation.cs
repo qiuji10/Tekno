@@ -11,7 +11,6 @@ public class CCTVLightRotation : MonoBehaviour
     [SerializeField] private Transform lightTransform;
     [SerializeField] private float rotationSpeed;
 
-    private Track track;
     public static Track currentTrack;
 
     private void StanceManager_OnStanceChange(Track obj)
@@ -44,9 +43,7 @@ public class CCTVLightRotation : MonoBehaviour
 
     private void Awake()
     {
-        //StanceManager_OnStanceChange(StanceManager.curTrack);
         StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
-        track = currentTrack;
     }
 
     private void Start()
@@ -68,6 +65,7 @@ public class CCTVLightRotation : MonoBehaviour
 
     private void OnDestroy()
     {
+        //Destroy Reference to Koreographer for optimisation
         if (Koreographer.Instance != null)
         {
             Koreographer.Instance.UnregisterForAllEvents(this);

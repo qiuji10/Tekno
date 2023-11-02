@@ -8,7 +8,7 @@ public class BuildingColorChange : MonoBehaviour
 {
     [SerializeField]
     private int materialIndex = 0;
-    public Material[] genreMaterials;
+    [SerializeField] Material[] genreMaterials;
 
     private void Awake()
     {

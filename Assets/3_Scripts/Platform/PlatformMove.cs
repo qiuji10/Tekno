@@ -51,8 +51,6 @@ public class PlatformMove : MonoBehaviour, IPlatform
                 break;
         }
 
-        // Set the current track
-        //currentTrack = obj;
         Koreographer.Instance.RegisterForEventsWithTime(eventID, OnMusicEvent);
     }
 
@@ -64,7 +62,6 @@ public class PlatformMove : MonoBehaviour, IPlatform
     private void Start()
     {
         StanceManager_OnStanceChange(StanceManager.curTrack);
-        //track = currentTrack;
     }
 
     private void Update()
@@ -84,6 +81,7 @@ public class PlatformMove : MonoBehaviour, IPlatform
         if (!isMoving)
         {
             currentPoint++;
+            //Reset to 0 if exceed Index Array
             if (currentPoint >= points.Length)
             {
                 currentPoint = 0;
