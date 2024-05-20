@@ -58,35 +58,35 @@ public class Amplifier_V2 : MonoBehaviour
     #region Default Function
     private void Start()
     {
-        MinigameData data = MinigameData.Instance;
-        canvas = data.canvas;
-        sliderVisualParent = data.sliderVisualParent;
-        beatVisualParent = data.beatVisualParent;
-        countdownText = data.countdownText;
-        amplifierCoreImg = data.ampCoreImg;
-        speakerHealthBar = data.speakerHealthBar;
-        amplifierHealthBar = data.ampHealthBar;
-        speaker = data.speaker;
+        //MinigameData data = MinigameData.Instance;
+        //canvas = data.canvas;
+        //sliderVisualParent = data.sliderVisualParent;
+        //beatVisualParent = data.beatVisualParent;
+        //countdownText = data.countdownText;
+        //amplifierCoreImg = data.ampCoreImg;
+        //speakerHealthBar = data.speakerHealthBar;
+        //amplifierHealthBar = data.ampHealthBar;
+        //speaker = data.speaker;
 
         playerController = FindObjectOfType<PlayerController>();
         eventInvoker = GetComponent<EventInvoker>();
-        speakerImg = speaker.GetComponent<Image>();
+        //speakerImg = speaker.GetComponent<Image>();
 
-        speakerHealthShake = speakerHealthBar.GetComponent<UI_Shake>();
-        amplifierHealthShake = amplifierHealthBar.GetComponent<UI_Shake>();
+        //speakerHealthShake = speakerHealthBar.GetComponent<UI_Shake>();
+        //amplifierHealthShake = amplifierHealthBar.GetComponent<UI_Shake>();
 
-        speakerSliders = speakerHealthBar.GetComponentsInChildren<CustomSlider>().ToList();
-        amplifierSliders = amplifierHealthBar.GetComponentsInChildren<CustomSlider>().ToList();
+        //speakerSliders = speakerHealthBar.GetComponentsInChildren<CustomSlider>().ToList();
+        //amplifierSliders = amplifierHealthBar.GetComponentsInChildren<CustomSlider>().ToList();
 
-        countdownText.gameObject.SetActive(false);
+        //countdownText.gameObject.SetActive(false);
 
-        isSpawning = true;
+        //isSpawning = true;
 
-        speakerHealth = 3;
-        amplifierHealth = 3;
-        decalProjector = GetComponentInChildren<DecalProjector>();
-        decalProjector.material = new Material(decalProjector.material);
-        decalProjector.material.SetColor("_Color", Color.red);
+        //speakerHealth = 3;
+        //amplifierHealth = 3;
+        //decalProjector = GetComponentInChildren<DecalProjector>();
+        //decalProjector.material = new Material(decalProjector.material);
+        //decalProjector.material.SetColor("_Color", Color.red);
 
         enemiesInControl.Clear();
 
@@ -121,39 +121,42 @@ public class Amplifier_V2 : MonoBehaviour
     {
         if (StanceManager.curTrack.genre != Genre.Techno) return;
 
-        LeanTween.reset();
+        //LeanTween.reset();
 
         StanceManager.AllowPlayerSwitchStance = false;
+        PlayerController.allowedInput = false;
 
         eventInvoker.enabled = false;
 
-        //int rand = Random.Range(0, beatSequence.Count);
-        int rand = 3 - amplifierHealth;
-        beatData = beatSequence[rand].beatSettings;
+        Minigame minigame = FindObjectOfType<Minigame>();
+        minigame.StartGame(beatSequence);
 
-        int totalInputNeeded = 0;
+        ////int rand = Random.Range(0, beatSequence.Count);
+        //int rand = 3 - amplifierHealth;
+        //beatData = beatSequence[rand].beatSettings;
 
-        foreach (BeatData beat in beatData)
-        {
-            if (beat.key != KeyInput.None)
-                totalInputNeeded++;
-        }
+        //int totalInputNeeded = 0;
 
-        speaker.OnHitFailure += Speaker_OnHitFailure;
-        speaker.OnComboSuccess += Speaker_OnComboSuccess;
-        speaker.totalInputNeeded = totalInputNeeded;
-        speaker.successInput = 0;
-        speaker.totalBeat = beatData.Count;
-        speaker.currentBeat = 0;
-        speaker.touchPoint = beatData[index].position;
+        //foreach (BeatData beat in beatData)
+        //{
+        //    if (beat.key != KeyInput.None)
+        //        totalInputNeeded++;
+        //}
 
-        float timeToBeatCount = TempoManager.GetTimeToBeatCount(1);
-        speakerImg.rectTransform.LeanMoveLocal(new Vector2(-850, 0), timeToBeatCount);
-        amplifierCoreImg.rectTransform.LeanMoveLocal(beatData[beatData.Count - 1].position, timeToBeatCount);
+        //speaker.OnHitFailure += Speaker_OnHitFailure;
+        //speaker.OnComboSuccess += Speaker_OnComboSuccess;
+        //speaker.totalInputNeeded = totalInputNeeded;
+        //speaker.successInput = 0;
+        //speaker.totalBeat = beatData.Count;
+        //speaker.currentBeat = 0;
+        //speaker.touchPoint = beatData[index].position;
 
-        PlayerController.allowedInput = false;
-        startGame = true;
-        canvas.gameObject.SetActive(true);
+        //float timeToBeatCount = TempoManager.GetTimeToBeatCount(1);
+        //speakerImg.rectTransform.LeanMoveLocal(new Vector2(-850, 0), timeToBeatCount);
+        //amplifierCoreImg.rectTransform.LeanMoveLocal(beatData[beatData.Count - 1].position, timeToBeatCount);
+
+        //startGame = true;
+        //canvas.gameObject.SetActive(true);
     }
 
     private void Speaker_OnHitFailure()
