@@ -39,6 +39,11 @@ public class BeatPath : MonoBehaviour
         pathSlider.Lerp(from, to, time);
     }
 
+    public void Cancel()
+    {
+        pathSlider.StopLerp();
+    }
+
     private void UpdatePath()
     {
         if (rect != null && start != null && end != null)

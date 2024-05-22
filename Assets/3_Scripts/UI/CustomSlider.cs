@@ -37,14 +37,20 @@ public class CustomSlider : MonoBehaviour
             while (timer < time)
             {
                 timer += Time.deltaTime;
-                float easedT = EasingFunctions.EaseOutExpo(Mathf.Clamp01(timer / time));
-                //float easedT = timer / time;
+                //float easedT = EasingFunctions.EaseOutExpo(Mathf.Clamp01(timer / time));
+                float easedT = timer / time;
                 Value = Mathf.Lerp(from, to, easedT);
                 yield return null;
             }
 
             onComplete?.Invoke();
         }
+    }
+
+    public void StopLerp()
+    {
+        if (lerping != null)
+            StopCoroutine(lerping);
     }
 
     private void OnValidate()

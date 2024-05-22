@@ -19,10 +19,19 @@ public partial class Minigame
     }
 
     [System.Serializable]
+    public class InputData
+    {
+        public KeyInput key;
+        public float beatTime;
+        public bool pressed;
+    }
+
+    [System.Serializable]
     public class Input
     {
         public bool startTrace;
         public KeyInput key = KeyInput.None;
+        public KeyInput prevKey = KeyInput.None;
         public Vector2 hitPos;
         public Vector2 prevHitPos;
         public RectTransform area;
@@ -65,60 +74,98 @@ public partial class Minigame
             hitPos = prevHitPos = data[0].position;
             area = areaCoverage;
             this.mono = mono;
-            EnableUpdateCheck();
-        }
 
-        public void StartCheck(Vector2 newHitPos, KeyInput newKey)
-        {
-            //if (prevKey != KeyInput.None && startTrace)
-            //{
-            //    FalseInput("Timeout");
-            //    return;
-            //}
+            float curBeat = TempoManager._lastBeatTime;
+            float secondsPerBeat = 60f / TempoManager.staticBPM;
 
-            prevHitPos = hitPos;
-            hitPos = newHitPos;
+            inputs.Clear();
 
-            //key = newKey;
-            ChangeKey(newKey);
-            startTrace = true;
-        }
-
-        private void ChangeKey(KeyInput key)
-        {
-            mono.StartCoroutine(DelayChangeKey());
-
-            IEnumerator DelayChangeKey()
+            for (int i = 0; i < data.Count; i++)
             {
-                yield return new WaitForSeconds(0.2f);
-                this.key = key;
+                var inputData = new InputData()
+                {
+                    key = data[i].key,
+                    beatTime = curBeat + secondsPerBeat * i,
+                };
+
+                inputs.Add(inputData);
             }
+
+            //EnableUpdateCheck();
         }
 
-        public void EnableUpdateCheck()
-        {
-            if (coroutine != null)
-                mono.StopCoroutine(CheckOutOfRange());
+        [SerializeField] bool keyPressed;
+        [SerializeField] KeyInput pressedKey;
 
-            coroutine = mono.StartCoroutine(CheckOutOfRange());
-        }
+        [SerializeField] float gracePeriod = 0.35f;
+        [SerializeField] float earlyPeriod = 0.235f;
 
-        private IEnumerator CheckOutOfRange()
+        [SerializeField] List<InputData> inputs = new();
+
+        float secPerBeat => 60f / TempoManager.staticBPM;
+
+        int curBeat;
+
+        public void Process(int syncCurBeat)
         {
-            while (true)
+            if (curBeat < syncCurBeat)
+                curBeat = syncCurBeat;
+
+            if (!startTrace) return;
+
+            if (keyPressed)
             {
-                if (!startTrace) yield return null;
+                KeyInput curKey = inputs[curBeat].key;
+                float earlyTime = inputs[curBeat].beatTime + secPerBeat + secPerBeat - earlyPeriod;
 
-                if (!entered && InArea && key != KeyInput.None)
+                Debug.Log($"<color=yellow>TEST {curBeat} {Time.time} - {earlyTime}</color>");
+
+                bool haveKey = inputs[curBeat].key != KeyInput.None;
+                bool early = Time.time < earlyTime;
+
+
+                keyPressed = false;
+                inputs[curBeat].pressed = true;
+
+                if (early)
                 {
-                    entered = true;
-                }
-                else if (entered && !InPrevArea)
-                {
-                    FalseInput("<color=red>Out of Time</color>");
+                    FalseInput($"<color=yellow>Early {Time.time} - {earlyTime}</color>");
                 }
 
-                yield return null;
+                if (haveKey)
+                {
+                    if (pressedKey == curKey)
+                    {
+                        successInput++;
+
+                        if (successInput == totalInput)
+                        {
+                            startTrace = false;
+                            OnSuccess?.Invoke();
+                        }
+                    }
+                    else
+                    {
+                        FalseInput($"<color=red>Wrong Key Pressed {pressedKey} - {curKey}</color>");
+                    }
+                }
+                //else
+                //{
+                //    FalseInput($"<color=red>Wrong Key Pressed</color>");
+                //}
+            }
+            else
+            {
+                if (curBeat <= 0 || curBeat > inputs.Count + 1)
+                    return;
+
+                float lateTime = inputs[curBeat - 1].beatTime + gracePeriod;
+                bool timeout = Time.time > lateTime;
+                bool haveKey = inputs[curBeat - 1].key != KeyInput.None;
+                bool inputPressed = inputs[curBeat - 1].pressed;
+
+                if (haveKey && timeout && !inputPressed)
+                    FalseInput($"<color=red>Timeout {curBeat - 1} {Time.time} - {lateTime}</color>");
             }
         }
 
@@ -133,27 +180,31 @@ public partial class Minigame
             //    FalseInput("<color=red>Too Early</color>");
             //}
 
+            pressedKey = input;
+            keyPressed = true;
             entered = false;
-            startTrace = false;
 
-            if (input != key)
-            {
-                FalseInput("<color=red>Wrong Key Pressed</color>");
-                return;
-            }
 
-            if (InArea)
-            {
-                successInput++;
+            //if (input != key)
+            //{
+            //    FalseInput("<color=red>Wrong Key Pressed</color>");
+            //    return;
+            //}
 
-                if (successInput == totalInput)
-                    OnSuccess?.Invoke();
-            }
+            //if (InArea)
+            //{
+            //    successInput++;
+
+            //    if (successInput == totalInput)
+            //        OnSuccess?.Invoke();
+            //}
         }
 
         private void FalseInput(string msg)
         {
+            startTrace = false;
             OnFailure?.Invoke(msg);
+            Debug.Log(msg);
         }
     }
 }

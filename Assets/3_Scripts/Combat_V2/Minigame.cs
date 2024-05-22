@@ -38,8 +38,8 @@ public partial class Minigame : MonoBehaviour
     private List<GameObject> beatNotes = new();
     private List<BeatPath> beatPaths = new();
 
-    //public float beatTime => TempoManager.GetTimeToBeatCount(1);
-    public float beatTime => (140f / 60f) / 60f;
+    //public float beatTime => TempoManager.GetTimeToBeatCount(1) * 2.33f;
+    public float beatTime => 60f / 140f;
 
     private void Awake()
     {
@@ -54,6 +54,12 @@ public partial class Minigame : MonoBehaviour
     private void OnDisable()
     {
         TempoManager.OnBeat -= TempoManager_OnBeat;
+    }
+
+    private void Update()
+    {
+        if (input != null)
+            input.Process(beatCount);
     }
 
     public void StartGame(List<BeatSequence> data)
@@ -72,10 +78,6 @@ public partial class Minigame : MonoBehaviour
             beatDatas = data[level].beatSettings;
             level++;
 
-            input = new Input(inputReference);
-            input.Init(this, beatDatas, speaker);
-            input.OnFailure += OnFail;
-
             ResetMiniGame();
             SpawnNotes(level);
 
@@ -89,10 +91,6 @@ public partial class Minigame : MonoBehaviour
 
     private void InitSetup()
     {
-        input = new Input(inputReference);
-        input.Init(this, beatDatas, speaker);
-        input.OnFailure += OnFail;
-
         ResetMiniGame();
         SpawnNotes(level);
 
@@ -102,10 +100,18 @@ public partial class Minigame : MonoBehaviour
     private void OnFail(string msg)
     {
         state = State.Fail;
+        mover.Cancel(speaker);
 
+        int index = 0;
+
+        if (beatCount > 0)
+            index = beatCount - 1;
+
+        beatPaths[Mathf.Clamp(index, 0, beatPaths.Count - 1)].Cancel();
         beatCount = 0;
 
         visual.SetPromptText(msg);
+
 
         //InitSetup();
     }
@@ -132,7 +138,13 @@ public partial class Minigame : MonoBehaviour
         else if (state == State.Play)
         {
             if (beatCount <= -1)
+            {
+                input = new Input(inputReference);
+                input.Init(this, beatDatas, speaker);
+                input.OnFailure += OnFail;
+                input.startTrace = true;
                 visual.EnableCountdown(false);
+            }
 
             if (beatCount < beatNotes.Count && beatCount >= 0)
                 beatNotes[beatCount].gameObject.SetActive(true);
@@ -140,14 +152,17 @@ public partial class Minigame : MonoBehaviour
             if (beatCount < beatPaths.Count && beatCount >= 0)
                 beatPaths[beatCount].SetPathValue(0, 1, beatTime);
 
+            int b = beatCount;
+
             beatCount++;
+
+            Debug.Log($"prev {b}, after: {beatCount}");
 
             if (beatCount < beatDatas.Count)
             {
                 mover.MoveLocal(speaker, beatDatas[beatCount].position, beatTime);
-                input.StartCheck(beatDatas[beatCount].position, beatDatas[beatCount].key);
             }
-            else
+            else if (beatCount > beatDatas.Count)
             {
                 CheckLevel();
             }
@@ -180,19 +195,25 @@ public partial class Minigame : MonoBehaviour
     }
     #endregion
 
+    int countdown = 4;
+
     #region Spawn
     private void Countdown()
     {
-        int diff = beatNotes.Count - beatCount;
-
-        if (diff <= 4 && beatCount < beatNotes.Count)
+        if (beatCount == beatDatas.Count)
         {
-            int countdown = diff - 1;
-
-            if (countdown == 0)
-                visual.SetCountdownText("GO!");
-            else
-                visual.SetCountdownText($"{countdown}");
+            visual.SetCountdownText("GO!");
+            countdown = 4;
+        }
+        else if (beatCount > beatDatas.Count - countdown)
+        {
+            visual.EnableCountdown(true);
+            countdown--;
+            visual.SetCountdownText(countdown.ToString());
+        }
+        else
+        {
+            visual.EnableCountdown(false);
         }
     }
     #endregion
