@@ -122,7 +122,8 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
     private void DialogueManager_OnDialogueEnd()
     {
-        EnableAction();
+        Invoke("EnableAction", 1);
+        //EnableAction();
     }
 
     private void DialogueManager_OnDialogueStart()
@@ -172,8 +173,10 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     public void DisableAction()
     {
         allowedInput = false;
-        Anim.enabled = false;
-        camInput.enabled = false;
+       // Anim.enabled = false;
+        // camInput.enabled = false;
+        //Anim.Play("Tekno Idle");
+        Anim.SetBool("DialogueStart",true);
         _rb.velocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
 
@@ -181,16 +184,15 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     }
 
     public void EnableAction()
-    {
-        allowedInput = true;
-        Anim.enabled = true;
-
-        Anim.Play("Tekno Idle");
-
-        camInput.enabled = true;
+    {  
+        Anim.SetBool("DialogueStart", false);
+      
+        // Anim.enabled = true;
+        //Anim.Play("Tekno Idle");
+         //camInput.enabled = true;
         _rb.velocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
-
+        allowedInput = true;
         StanceManager.AllowPlayerSwitchStance = true;
     }
 
