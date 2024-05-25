@@ -11981,6 +11981,16 @@ MonoBehaviour:
   speakerOn: {fileID: 21300000, guid: 879e942cc79a331418f6edce2bef73ab, type: 3}
   speakerOff: {fileID: 21300000, guid: 6857aace61ff2e84e9bc5d12eaa7c43b, type: 3}
   speakerSuccess: {fileID: 21300000, guid: e3eb397ad9eb5b8418e743964c13bf9e, type: 3}
+  speakerStates:
+    _serializedList:
+    - Key: 0
+      Value: {fileID: 21300000, guid: 55b84ea40024b3f4281d063f4254ab14, type: 3}
+    - Key: 1
+      Value: {fileID: 21300000, guid: 879e942cc79a331418f6edce2bef73ab, type: 3}
+    - Key: 2
+      Value: {fileID: 21300000, guid: 6857aace61ff2e84e9bc5d12eaa7c43b, type: 3}
+    - Key: 3
+      Value: {fileID: 21300000, guid: e3eb397ad9eb5b8418e743964c13bf9e, type: 3}
   beatNotePrefab: {fileID: 8213362218012250820, guid: 08f4c6c456dde71429df795e3b299936,
     type: 3}
   beatPathPrefab: {fileID: 509590528040515778, guid: bb0d2f166cefecb49a1d98d1a33c92b8,
@@ -12027,9 +12037,15 @@ MonoBehaviour:
   input:
     startTrace: 0
     key: 0
+    prevKey: 0
     hitPos: {x: 0, y: 0}
     prevHitPos: {x: 0, y: 0}
     area: {fileID: 0}
+    keyPressed: 0
+    pressedKey: 0
+    gracePeriod: 0
+    earlyPeriod: 0
+    inputs: []
   speakerHealth: 0
   amplifierHealth: 0
   data: []

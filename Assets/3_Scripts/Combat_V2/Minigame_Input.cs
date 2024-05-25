@@ -9,6 +9,8 @@ using UnityEngine.InputSystem;
 
 public partial class Minigame
 {
+    public enum SpeakerStatus { Ready, On, Off, Success }
+
     [System.Serializable]
     public class InputReference
     {
@@ -36,18 +38,13 @@ public partial class Minigame
         public Vector2 prevHitPos;
         public RectTransform area;
 
-        public event Action OnSuccess;
-        public event Action<string> OnFailure;
+        public event Action OnComboSuccess;
+        public event Action OnBeatSuccess;
+        public event Action<string> OnBeatFailure;
 
-        private bool entered;
         private int totalInput, successInput;
 
         private InputReference inputRef;
-        private MonoBehaviour mono;
-        private Coroutine coroutine;
-
-        private bool InArea => RectTransformUtility.RectangleContainsScreenPoint(area, hitPos);
-        private bool InPrevArea => RectTransformUtility.RectangleContainsScreenPoint(area, prevHitPos);
 
         public Input(InputReference inputRef)
         {
@@ -67,13 +64,12 @@ public partial class Minigame
             inputRef.triangle.action.performed -= OnPressedKey;
         }
 
-        public void Init(MonoBehaviour mono, List<BeatData> data, RectTransform areaCoverage)
+        public void Init(List<BeatData> data, RectTransform areaCoverage)
         {
             successInput = 0;
             totalInput = data.Where(b => b.key != KeyInput.None).Count();
             hitPos = prevHitPos = data[0].position;
             area = areaCoverage;
-            this.mono = mono;
 
             float curBeat = TempoManager._lastBeatTime;
             float secondsPerBeat = 60f / TempoManager.staticBPM;
@@ -90,15 +86,13 @@ public partial class Minigame
 
                 inputs.Add(inputData);
             }
-
-            //EnableUpdateCheck();
         }
 
         [SerializeField] bool keyPressed;
         [SerializeField] KeyInput pressedKey;
 
-        [SerializeField] float gracePeriod = 0.35f;
-        [SerializeField] float earlyPeriod = 0.235f;
+        [SerializeField] float gracePeriod = 0.4f;
+        [SerializeField] float earlyPeriod = 0.15f;
 
         [SerializeField] List<InputData> inputs = new();
 
@@ -109,7 +103,7 @@ public partial class Minigame
         public void Process(int syncCurBeat)
         {
             if (curBeat < syncCurBeat)
-                curBeat = syncCurBeat;
+                curBeat = Mathf.Clamp(syncCurBeat, -1, inputs.Count);
 
             if (!startTrace) return;
 
@@ -117,49 +111,42 @@ public partial class Minigame
             {
                 KeyInput curKey = inputs[curBeat].key;
                 float earlyTime = inputs[curBeat].beatTime + secPerBeat + secPerBeat - earlyPeriod;
-
-                Debug.Log($"<color=yellow>TEST {curBeat} {Time.time} - {earlyTime}</color>");
-
-                bool haveKey = inputs[curBeat].key != KeyInput.None;
+                bool noKey = inputs[curBeat].key == KeyInput.None;
                 bool early = Time.time < earlyTime;
-
 
                 keyPressed = false;
                 inputs[curBeat].pressed = true;
 
+                if (noKey) return;
+
                 if (early)
                 {
                     FalseInput($"<color=yellow>Early {Time.time} - {earlyTime}</color>");
+                    return;
                 }
 
-                if (haveKey)
+                if (pressedKey == curKey)
                 {
-                    if (pressedKey == curKey)
-                    {
-                        successInput++;
+                    successInput++;
+                    OnBeatSuccess?.Invoke();
 
-                        if (successInput == totalInput)
-                        {
-                            startTrace = false;
-                            OnSuccess?.Invoke();
-                        }
-                    }
-                    else
+                    if (successInput == totalInput)
                     {
-                        FalseInput($"<color=red>Wrong Key Pressed {pressedKey} - {curKey}</color>");
+                        OnComboSuccess?.Invoke();
+                        startTrace = false;
                     }
                 }
-                //else
-                //{
-                //    FalseInput($"<color=red>Wrong Key Pressed</color>");
-                //}
+                else
+                {
+                    FalseInput($"<color=red>Wrong Key Pressed {pressedKey} - {curKey}</color>");
+                }
             }
             else
             {
                 if (curBeat <= 0 || curBeat > inputs.Count + 1)
                     return;
 
-                float lateTime = inputs[curBeat - 1].beatTime + gracePeriod;
+                float lateTime = inputs[curBeat - 1].beatTime + secPerBeat  + gracePeriod;
                 bool timeout = Time.time > lateTime;
                 bool haveKey = inputs[curBeat - 1].key != KeyInput.None;
                 bool inputPressed = inputs[curBeat - 1].pressed;
@@ -175,35 +162,14 @@ public partial class Minigame
 
             KeyInput input = (KeyInput)Enum.Parse(typeof(KeyInput), ctx.action.name, ignoreCase: true);
 
-            //if (!entered)
-            //{
-            //    FalseInput("<color=red>Too Early</color>");
-            //}
-
             pressedKey = input;
             keyPressed = true;
-            entered = false;
-
-
-            //if (input != key)
-            //{
-            //    FalseInput("<color=red>Wrong Key Pressed</color>");
-            //    return;
-            //}
-
-            //if (InArea)
-            //{
-            //    successInput++;
-
-            //    if (successInput == totalInput)
-            //        OnSuccess?.Invoke();
-            //}
         }
 
         private void FalseInput(string msg)
         {
             startTrace = false;
-            OnFailure?.Invoke(msg);
+            OnBeatFailure?.Invoke(msg);
             Debug.Log(msg);
         }
     }

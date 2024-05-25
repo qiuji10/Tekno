@@ -4,10 +4,11 @@ using TMPro;
 using UnityEngine;
 using NaughtyAttributes;
 using UnityEngine.UI;
+using System;
 
 public partial class Minigame : MonoBehaviour
 {
-    public enum State { None, Spawn, Play, Fail }
+    public enum State { None, Spawn, Play, Fail, Success }
 
     [SerializeField, ReadOnly] State state = State.None;
     [SerializeField, ReadOnly] private Input input;
@@ -41,6 +42,11 @@ public partial class Minigame : MonoBehaviour
     //public float beatTime => TempoManager.GetTimeToBeatCount(1) * 2.33f;
     public float beatTime => 60f / 140f;
 
+    public static event Action OnMinigameStart;
+    public static event Action<State> OnMinigameEnd;
+
+    private static event Action<List<BeatSequence>> OnGameEventStart;
+
     private void Awake()
     {
         visual.OpenPanel(false);
@@ -49,11 +55,13 @@ public partial class Minigame : MonoBehaviour
     private void OnEnable()
     {
         TempoManager.OnBeat += TempoManager_OnBeat;
+        OnGameEventStart += StartMiniGame;
     }
 
     private void OnDisable()
     {
         TempoManager.OnBeat -= TempoManager_OnBeat;
+        OnGameEventStart -= StartMiniGame;
     }
 
     private void Update()
@@ -62,11 +70,20 @@ public partial class Minigame : MonoBehaviour
             input.Process(beatCount);
     }
 
-    public void StartGame(List<BeatSequence> data)
+    public static void StartGame(List<BeatSequence> data) => OnGameEventStart?.Invoke(data);
+
+    public void StartMiniGame(List<BeatSequence> data)
     {
         this.data = data;
 
+        OnMinigameStart?.Invoke();
         visual.OpenPanel(true);
+
+        speakerHealth = 3;
+        amplifierHealth = 3;
+
+        visual.SetSpeakerHP(speakerHealth);
+        visual.SetAmplifierHP(speakerHealth);
 
         CheckLevel();
     }
@@ -86,34 +103,87 @@ public partial class Minigame : MonoBehaviour
         else
         {
             // End
+            if (amplifierHealth <= 0)
+            {
+                visual.OpenPanel(false);
+                state = State.Success;
+                OnMinigameEnd?.Invoke(state);
+            }
         }
     }
 
     private void InitSetup()
     {
         ResetMiniGame();
-        SpawnNotes(level);
 
-        state = State.Spawn;
+        if (speakerHealth > 0 && amplifierHealth > 0)
+        {
+            SpawnNotes(level);
+            state = State.Spawn;
+        }
+        else
+        {
+            level = 0;
+            state = State.None;
+        }
+    }
+
+    private void OnComboSuccess()
+    {
+        amplifierHealth--;
+
+        visual.SetSpeakerImg(SpeakerStatus.Success);
+
+        VibrateManager.instance.Rumble(5, 10, beatTime);
+        visual.ShakeAmplifierHP();
+        visual.SetAmplifierHP(amplifierHealth, null);
+    }
+
+    private void OnSuccess()
+    {
+        visual.SetSpeakerImg(SpeakerStatus.On);
+        visual.PlaySucessVFX();
     }
 
     private void OnFail(string msg)
     {
-        state = State.Fail;
-        mover.Cancel(speaker);
+        speakerHealth--;
 
-        int index = 0;
-
-        if (beatCount > 0)
-            index = beatCount - 1;
-
-        beatPaths[Mathf.Clamp(index, 0, beatPaths.Count - 1)].Cancel();
-        beatCount = 0;
-
+        VibrateManager.instance.Rumble(5, 10, beatTime);
+        visual.SetSpeakerImg(SpeakerStatus.Off);
+        visual.PlayFailVFX();
         visual.SetPromptText(msg);
+        visual.ShakeSpeakerHP();
+        visual.SetSpeakerHP(speakerHealth, null);
+
+        if (speakerHealth > 0)
+        {
+            state = State.Fail;
+            mover.Cancel(speaker);
+
+            int index = 0;
+
+            if (beatCount > 0)
+                index = beatCount - 1;
+
+            beatPaths[Mathf.Clamp(index, 0, beatPaths.Count - 1)].Cancel();
+            beatCount = 0;
+        }
+        else
+        {
+            // Lose
+
+            Invoke(nameof(SetFail), beatTime * 3);
 
 
-        //InitSetup();
+        }
+    }
+
+    void SetFail()
+    {
+        visual.OpenPanel(false);
+        state = State.Fail;
+        OnMinigameEnd?.Invoke(state);
     }
 
     private void TempoManager_OnBeat()
@@ -140,8 +210,10 @@ public partial class Minigame : MonoBehaviour
             if (beatCount <= -1)
             {
                 input = new Input(inputReference);
-                input.Init(this, beatDatas, speaker);
-                input.OnFailure += OnFail;
+                input.Init(beatDatas, speaker);
+                input.OnComboSuccess += OnComboSuccess;
+                input.OnBeatSuccess += OnSuccess;
+                input.OnBeatFailure += OnFail;
                 input.startTrace = true;
                 visual.EnableCountdown(false);
             }
@@ -152,11 +224,7 @@ public partial class Minigame : MonoBehaviour
             if (beatCount < beatPaths.Count && beatCount >= 0)
                 beatPaths[beatCount].SetPathValue(0, 1, beatTime);
 
-            int b = beatCount;
-
             beatCount++;
-
-            Debug.Log($"prev {b}, after: {beatCount}");
 
             if (beatCount < beatDatas.Count)
             {
@@ -171,10 +239,11 @@ public partial class Minigame : MonoBehaviour
         {
             beatCount++;
 
-            visual.SetPromptText("");
-
-            if (beatCount >= 1)
+            if (beatCount >= 3)
+            {
+                visual.SetPromptText("");
                 InitSetup();
+            }
         }
     }
 
@@ -219,12 +288,15 @@ public partial class Minigame : MonoBehaviour
     #endregion
 
     #region Reset
+
     [Button]
     private void ResetMiniGame()
     {
         beatCount = 0;
 
         ClearNotes();
+
+        visual.SetSpeakerImg(SpeakerStatus.Ready);
 
         mover.MoveLocal(speaker, speakerOriPos.localPosition, beatTime);
         mover.MoveLocal(amp, beatDatas[beatDatas.Count - 1].position, beatTime);

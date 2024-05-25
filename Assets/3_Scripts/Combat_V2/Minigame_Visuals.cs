@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System;
 using AYellowpaper.SerializedCollections;
 using UnityEngine.UI.Extensions;
+using static Minigame;
 
 public class Minigame_Visuals : MonoBehaviour
 {
@@ -33,10 +34,7 @@ public class Minigame_Visuals : MonoBehaviour
     [SerializeField] List<CustomSlider> amplifierSliders = new List<CustomSlider>();
 
     [Header("[Speaker Sprites]")]
-    [SerializeField] Sprite speakerReady;
-    [SerializeField] Sprite speakerOn;
-    [SerializeField] Sprite speakerOff;
-    [SerializeField] Sprite speakerSuccess;
+    [SerializeField] SerializedDictionary<SpeakerStatus, Sprite> speakerStates = new();
 
     [Header("[Prefabs]")]
     [SerializeField] BeatNote beatNotePrefab;
@@ -54,13 +52,19 @@ public class Minigame_Visuals : MonoBehaviour
     [SerializeField] private UIParticleSystem failParticle;
     #endregion
 
+    public void OpenPanel(bool enabled) => panel.SetActive(enabled);
+
     #region Health Sliders
-    public void SetSpeakerHealth(int curHealth, Action onComplete)
+    public void ShakeSpeakerHP() => speakerHealthBar.Shake();
+
+    public void ShakeAmplifierHP() => amplifierHealthBar.Shake();
+
+    public void SetSpeakerHP(int curHealth, Action onComplete = null)
     {
         StartCoroutine(SetSliders(speakerSliders, curHealth, onComplete));
     }
 
-    public void SetAmplifierHealth(int curHealth, Action onComplete)
+    public void SetAmplifierHP(int curHealth, Action onComplete = null)
     {
         StartCoroutine(SetSliders(amplifierSliders, curHealth, onComplete));
     }
@@ -79,7 +83,7 @@ public class Minigame_Visuals : MonoBehaviour
 
     private IEnumerator SetSliders(List<CustomSlider> sliders, int health, Action onComplete)
     {
-        float timeToNextBeat = TempoManager.GetTimeToBeatCount(1);
+        float timeToNextBeat = 60f / TempoManager.staticBPM;
         int prevHealth = GetHealth(sliders);
         float healthDiff = Mathf.Abs(health - prevHealth);
         float lerpTime = timeToNextBeat / healthDiff;
@@ -163,5 +167,20 @@ public class Minigame_Visuals : MonoBehaviour
     public void SetPromptText(string text) => promptText.SetText(text);
     #endregion
 
-    public void OpenPanel(bool enabled) => panel.SetActive(enabled);
+    #region VFX
+    public void PlaySucessVFX()
+    {
+        successParticle.StartParticleEmission();
+    }
+
+    public void PlayFailVFX()
+    {
+        failParticle.StartParticleEmission();
+    }
+    #endregion
+
+    public void SetSpeakerImg(SpeakerStatus status)
+    {
+        speakerImg.sprite = speakerStates[status];
+    }
 }
