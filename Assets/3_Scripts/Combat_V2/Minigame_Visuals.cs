@@ -47,10 +47,17 @@ public class Minigame_Visuals : MonoBehaviour
     [Header("[Input Sprites]")]
     [SerializeField] SerializedDictionary<KeyInput, InputSprite> inputSprites = new();
 
-    [Header("Visuals")]
+    [Header("[Visuals]")]
     [SerializeField] private UIParticleSystem successParticle;
     [SerializeField] private UIParticleSystem failParticle;
+    [SerializeField] private UIParticleSystem arrowPrefab;
+    private UIParticleSystem arrowRect;
     #endregion
+
+    private void Awake()
+    {
+        arrowRect = Instantiate(arrowPrefab, panel.transform);
+    }
 
     public void OpenPanel(bool enabled) => panel.SetActive(enabled);
 
@@ -176,6 +183,30 @@ public class Minigame_Visuals : MonoBehaviour
     public void PlayFailVFX()
     {
         failParticle.StartParticleEmission();
+    }
+
+    public void LerpArrow(Vector2 from, Vector2 to, float duration)
+    {
+        arrowRect.StartParticleEmission();
+
+        Vector2 dir = (to - from).normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        var rect = arrowRect.transform as RectTransform;
+        rect.eulerAngles = new Vector3(0, 0, angle);
+        //
+        StartCoroutine(Lerp());
+
+        IEnumerator Lerp()
+        {
+            float timer = 0;
+
+            while (timer < duration)
+            {
+                timer += Time.deltaTime;
+                rect.anchoredPosition = Vector2.Lerp(from, to, timer / duration);
+                yield return null;
+            }
+        }//
     }
     #endregion
 

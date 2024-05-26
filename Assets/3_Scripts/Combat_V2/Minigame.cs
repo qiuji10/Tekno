@@ -79,6 +79,8 @@ public partial class Minigame : MonoBehaviour
         OnMinigameStart?.Invoke();
         visual.OpenPanel(true);
 
+        beatCount = 0;
+        level = 0;
         speakerHealth = 3;
         amplifierHealth = 3;
 
@@ -155,27 +157,25 @@ public partial class Minigame : MonoBehaviour
         visual.SetPromptText(msg);
         visual.ShakeSpeakerHP();
         visual.SetSpeakerHP(speakerHealth, null);
+        mover.Cancel(speaker);
 
+        state = State.Fail;
+
+        int index = 0;
+
+        if (beatCount > 0)
+            index = beatCount - 1;
+
+        beatPaths[Mathf.Clamp(index, 0, beatPaths.Count - 1)].Cancel();
+        
         if (speakerHealth > 0)
         {
-            state = State.Fail;
-            mover.Cancel(speaker);
-
-            int index = 0;
-
-            if (beatCount > 0)
-                index = beatCount - 1;
-
-            beatPaths[Mathf.Clamp(index, 0, beatPaths.Count - 1)].Cancel();
             beatCount = 0;
         }
         else
         {
             // Lose
-
             Invoke(nameof(SetFail), beatTime * 3);
-
-
         }
     }
 
@@ -196,6 +196,9 @@ public partial class Minigame : MonoBehaviour
                 beatPaths[beatCount].SetPreviewValue(0, 1, beatTime);
 
             beatCount++;
+
+            if (beatCount < beatDatas.Count)
+                visual.LerpArrow(beatDatas[beatCount - 1].position, beatDatas[beatCount].position, beatTime);
 
             Countdown();
 

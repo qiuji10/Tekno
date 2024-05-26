@@ -212,6 +212,42 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &556152547883054274
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4985772434735610086}
+  m_Layer: 5
+  m_Name: Speaker Position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4985772434735610086
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556152547883054274}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7152331075851282697}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 191.45, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &739212451899811465
 GameObject:
   m_ObjectHideFlags: 0
@@ -1862,6 +1898,7 @@ RectTransform:
   - {fileID: 7152331076336193412}
   - {fileID: 7152331076061315353}
   - {fileID: 7152331075815366922}
+  - {fileID: 4985772434735610086}
   m_Father: {fileID: 2024565344130167865}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11861,6 +11898,7 @@ GameObject:
   - component: {fileID: 7152331077886593157}
   - component: {fileID: 1289595595258812752}
   - component: {fileID: 3128991204294358571}
+  - component: {fileID: 6455218816950527584}
   m_Layer: 5
   m_Name: Beatmap Canvas
   m_TagString: Untagged
@@ -11977,10 +12015,6 @@ MonoBehaviour:
   - {fileID: 4445418521590813181}
   - {fileID: 1313140110444272576}
   - {fileID: 970937377086739429}
-  speakerReady: {fileID: 21300000, guid: 55b84ea40024b3f4281d063f4254ab14, type: 3}
-  speakerOn: {fileID: 21300000, guid: 879e942cc79a331418f6edce2bef73ab, type: 3}
-  speakerOff: {fileID: 21300000, guid: 6857aace61ff2e84e9bc5d12eaa7c43b, type: 3}
-  speakerSuccess: {fileID: 21300000, guid: e3eb397ad9eb5b8418e743964c13bf9e, type: 3}
   speakerStates:
     _serializedList:
     - Key: 0
@@ -12021,6 +12055,8 @@ MonoBehaviour:
         color: {r: 0.2901961, g: 0.85882354, b: 0.48235294, a: 1}
   successParticle: {fileID: 7152331077391403500}
   failParticle: {fileID: 7152331077741692626}
+  arrowPrefab: {fileID: 5643340189755047393, guid: 5c0e0b9fecf39e043a0cc3a9f4815d35,
+    type: 3}
 --- !u!114 &3128991204294358571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12051,7 +12087,7 @@ MonoBehaviour:
   data: []
   beatDatas: []
   visual: {fileID: 1289595595258812752}
-  mover: {fileID: 0}
+  mover: {fileID: 6455218816950527584}
   inputReference:
     circle: {fileID: 0}
     cross: {fileID: 0}
@@ -12060,6 +12096,18 @@ MonoBehaviour:
   speaker: {fileID: 7152331075815366922}
   speakerOriPos: {fileID: 0}
   amp: {fileID: 7152331076442929466}
+--- !u!114 &6455218816950527584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7152331077886593158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 933ddfce31bb2ed45906859b9006d2da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7991052265943340124
 GameObject:
   m_ObjectHideFlags: 0
