@@ -7,10 +7,11 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Body
-  m_Shader: {fileID: -6465566751694194690, guid: 0308663ba1af5ad438e2273c9cbd56fb,
+  m_Name: Body Halftone
+  m_Shader: {fileID: -6465566751694194690, guid: 043daa9bea979cd43b40cf86f62282ac,
     type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _USE_SCREEN_SPACE
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -29,6 +30,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Base_Texture:
+        m_Texture: {fileID: 2800000, guid: 81fccbcf2048f3447bcabe7a219d9b25, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -43,6 +48,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DetailNormalMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Diffuse_Texture:
+        m_Texture: {fileID: 2800000, guid: 81fccbcf2048f3447bcabe7a219d9b25, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
@@ -109,8 +118,10 @@ Material:
     m_Floats:
     - PixelSnap: 0
     - _AlphaClip: 0
+    - _AmbientStrength: 0.5
     - _Blend: 0
     - _BumpScale: 1
+    - _CircleDensity: 100
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _ColorGlitchOn: 1
@@ -125,8 +136,11 @@ Material:
     - _DispProbability: 0.022
     - _DstBlend: 0
     - _EnvironmentReflections: 1
+    - _FalloffAmount: 0.1
+    - _FalloffThreshold: 1
     - _First_Edge: 3.61
     - _Float: 0.5
+    - _FresnelSize: 0.35
     - _Fresnel_Power: 0.631
     - _GlitchInterval: 0.16
     - _GlitchPower: 0
@@ -136,6 +150,8 @@ Material:
     - _GlossyReflections: 0
     - _Inverse_Amount: -50
     - _Invser: 100.1
+    - _LightingCutoff: 0.1
+    - _Lit_Threshold: 0.5
     - _Main_Edge: -1.37
     - _Main_Second_Edge: 2.72
     - _Metallic: 0
@@ -148,15 +164,19 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Rotation: 0.5
     - _Second_Edge: -2.51
-    - _Smoothness: 0.5
+    - _ShadingMultiplier: 2
+    - _Smoothness: 10
     - _SmoothnessTextureChannel: 0
+    - _Softness: 0.135
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
     - _Tex_Edge: -7.45
     - _Tex_Second_Edge: 1.36
     - _Toon_Factor: 1.43
+    - _USE_SCREEN_SPACE: 1
     - _UseEmission: 0
     - _UseTexture: 1
     - _WorkflowMode: 1
@@ -167,14 +187,17 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Dark_Color: {r: 0.35849056, g: 0, b: 0, a: 0}
+    - _DiffuseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Emission: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Freshnel_Tint: {r: 0.6415094, g: 0.40245637, b: 0.40245637, a: 0}
+    - _FresnelColor: {r: 0.3529412, g: 0.67058825, b: 0.8078432, a: 1}
     - _Fresnel_Tint: {r: 0, g: 0, b: 0, a: 0}
     - _Main_Tint: {r: 0.56765074, g: 0.56765074, b: 0.56765074, a: 1}
     - _Offset: {r: 5, g: 5, b: 0, a: 0}
     - _Second_Tint: {r: 0.83137256, g: 0.83137256, b: 0.83137256, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _SpecularColor: {r: 0.14217694, g: 0.2988561, b: 0.4245283, a: 1}
     - _Test: {r: 1, g: 0, b: 0, a: 0}
     - _TextureColor: {r: 1, g: 1, b: 1, a: 0}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
