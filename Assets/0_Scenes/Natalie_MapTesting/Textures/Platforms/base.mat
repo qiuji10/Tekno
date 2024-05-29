@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: base
-  m_Shader: {fileID: -6465566751694194690, guid: 0308663ba1af5ad438e2273c9cbd56fb,
+  m_Shader: {fileID: -6465566751694194690, guid: 0e8532b0838254e48bc73793b0674718,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -38,6 +38,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Diffuse_Texture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -92,6 +96,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 0
+    - _AmbientStrength: 0.5
     - _Blend: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
@@ -102,11 +107,14 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
+    - _FalloffAmount: 0.05
+    - _FresnelSize: 0.1
     - _Fresnel_Power: 0.46
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Inverse_Amount: -0.5
+    - _LightingCutoff: 0.31
     - _Main_Edge: 1.69
     - _Main_Second_Edge: 8.18
     - _Metallic: 0
@@ -128,11 +136,14 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseColor: {r: 0.14509805, g: 0.21176472, b: 0.2392157, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FresnelColor: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
     - _Fresnel_Tint: {r: 0.245283, g: 0.245283, b: 0.245283, a: 0}
     - _Main_Tint: {r: 0.094280906, g: 0.094280906, b: 0.094280906, a: 0}
     - _Second_Tint: {r: 2.1185474, g: 2.1185474, b: 2.1185474, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _SpecularColor: {r: 0.14117648, g: 0.20784315, b: 0.23137257, a: 1}
     - _test: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &717946713602945092

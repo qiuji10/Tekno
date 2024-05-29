@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: building_S_06_VAR1
-  m_Shader: {fileID: -6465566751694194690, guid: 0308663ba1af5ad438e2273c9cbd56fb,
+  m_Shader: {fileID: -6465566751694194690, guid: 0e8532b0838254e48bc73793b0674718,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -38,6 +38,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 5c8d2cd349052a6429717ad41be312b2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Base_Texture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 87062a1ab2ce18846a0db1e642057efd, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -52,6 +56,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DetailNormalMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Diffuse_Texture:
+        m_Texture: {fileID: 2800000, guid: 5c8d2cd349052a6429717ad41be312b2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
@@ -105,8 +113,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 0
+    - _AmbientStrength: 3
     - _Blend: 0
     - _BumpScale: 1
+    - _CircleDensity: 5
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -115,11 +125,16 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
+    - _FalloffAmount: 0.05
+    - _FalloffThreshold: 2.5
+    - _FresnelSize: 0.1
     - _Fresnel_Power: 0.631
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Inverse_Amount: -78.6
+    - _LightingCutoff: 0.31
+    - _Lit_Threshold: 1
     - _Main_Edge: -1.37
     - _Main_Second_Edge: 2.72
     - _Metallic: 0
@@ -131,20 +146,27 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Rotation: 0
+    - _ShadingMultiplier: 0.1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
+    - _Softness: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
+    - _USE_SCREEN_SPACE: 1
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
     - _Fresnel_Tint: {r: 0, g: 0, b: 0, a: 0}
     - _Main_Tint: {r: 2, g: 2, b: 2, a: 1}
     - _Second_Tint: {r: 0.83137256, g: 0.83137256, b: 0.83137256, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _test: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
