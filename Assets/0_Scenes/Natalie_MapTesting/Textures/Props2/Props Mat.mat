@@ -8,9 +8,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Props Mat
-  m_Shader: {fileID: -6465566751694194690, guid: 0e8532b0838254e48bc73793b0674718,
+  m_Shader: {fileID: -6465566751694194690, guid: 043daa9bea979cd43b40cf86f62282ac,
     type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _USE_SCREEN_SPACE
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -23,6 +24,10 @@ Material:
     m_TexEnvs:
     - _BaseMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Base_Texture:
+        m_Texture: {fileID: 2800000, guid: c3f5e7ad16a3fbd4aa6dccc346d7bcfb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -87,6 +92,7 @@ Material:
     - _AmbientStrength: 2
     - _Blend: 0
     - _BumpScale: 1
+    - _CircleDensity: 50
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -96,26 +102,32 @@ Material:
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _FalloffAmount: 0.05
+    - _FalloffThreshold: 1.13
     - _FresnelSize: 0.1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _LightingCutoff: 0.31
+    - _Lit_Threshold: 1.19
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Rotation: 45
+    - _ShadingMultiplier: 0.5
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
+    - _Softness: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
+    - _USE_SCREEN_SPACE: 1
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DiffuseColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

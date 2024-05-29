@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Material #3172
-  m_Shader: {fileID: -6465566751694194690, guid: 0308663ba1af5ad438e2273c9cbd56fb,
+  m_Shader: {fileID: -6465566751694194690, guid: 0e8532b0838254e48bc73793b0674718,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -41,6 +41,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Diffuse_Texture:
+        m_Texture: {fileID: 2800000, guid: 2b536d836ae297a4fb38446085557aad, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -50,7 +54,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Main_Tex:
-        m_Texture: {fileID: 2800000, guid: 0fc903daafa4f414996b88e16a0c144a, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2b536d836ae297a4fb38446085557aad, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Metallic:
@@ -92,6 +96,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 0
+    - _AmbientStrength: 0.5
     - _Blend: 0
     - _BumpScale: 0.3
     - _ClearCoatMask: 0
@@ -102,11 +107,14 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
+    - _FalloffAmount: 1
+    - _FresnelSize: 0.1
     - _Fresnel_Power: 0.35
     - _GlossMapScale: 1
     - _Glossiness: 0.14142135
     - _GlossyReflections: 1
     - _Inverse_Amount: -1
+    - _LightingCutoff: 0.2
     - _Main_Edge: 0
     - _Main_Second_Edge: 1
     - _Metallic: 0
@@ -119,7 +127,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0.14142135
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -130,11 +138,14 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
     - _Fresnel_Tint: {r: 0.245283, g: 0.245283, b: 0.245283, a: 0}
     - _Main_Tint: {r: 0.53588676, g: 0.53588676, b: 0.53588676, a: 0}
     - _Second_Tint: {r: 0.53588676, g: 0.53588676, b: 0.53588676, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _test: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &9049298650808662452

@@ -8,9 +8,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: chair
-  m_Shader: {fileID: -6465566751694194690, guid: 0308663ba1af5ad438e2273c9cbd56fb,
+  m_Shader: {fileID: -6465566751694194690, guid: 043daa9bea979cd43b40cf86f62282ac,
     type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _USE_SCREEN_SPACE
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -22,6 +23,10 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 6f86a27354926624a8eccdbf2227f13a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Base_Texture:
         m_Texture: {fileID: 2800000, guid: 6f86a27354926624a8eccdbf2227f13a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -94,6 +99,7 @@ Material:
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
+    - _CircleDensity: 5
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -102,11 +108,13 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
+    - _FalloffThreshold: 2.5
     - _Fresnel_Power: 0.35
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Inverse_Amount: -1
+    - _Lit_Threshold: 1
     - _Main_Edge: 0
     - _Main_Second_Edge: 1
     - _Metallic: 0
@@ -118,11 +126,15 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Rotation: 0
+    - _ShadingMultiplier: 0.1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
+    - _Softness: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
+    - _USE_SCREEN_SPACE: 1
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
