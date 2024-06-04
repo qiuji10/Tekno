@@ -25,7 +25,6 @@ public class BeatNote : MonoBehaviour
 
     public void ShrinkRing()
     {
-        Debug.Log("srhink");
         StartCoroutine(Appear());
         StartCoroutine(Shrink());
 

@@ -204,7 +204,7 @@ public class Minigame_Visuals : MonoBehaviour
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         var rect = arrowRect.transform as RectTransform;
         rect.eulerAngles = new Vector3(0, 0, angle);
-        //
+        
         StartCoroutine(Lerp());
 
         IEnumerator Lerp()
@@ -217,7 +217,7 @@ public class Minigame_Visuals : MonoBehaviour
                 rect.anchoredPosition = Vector2.Lerp(from, to, timer / duration);
                 yield return null;
             }
-        }//
+        }
     }
     #endregion
 
