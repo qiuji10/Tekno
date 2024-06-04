@@ -36,13 +36,25 @@ public partial class Minigame
         public Vector2 prevHitPos;
         public RectTransform area;
 
+        private int curBeat;
+        private int totalInput, successInput;
+
+        private InputReference inputRef;
+
+        [SerializeField] bool keyPressed;
+        [SerializeField] KeyInput pressedKey;
+
+        [SerializeField] float gracePeriod = 0.6f;
+        [SerializeField] float earlyPeriod = 0.15f;
+
+        [SerializeField] List<InputData> inputs = new();
+
         public event Action OnComboSuccess;
         public event Action OnBeatSuccess;
         public event Action<string> OnBeatFailure;
 
-        private int totalInput, successInput;
-
-        private InputReference inputRef;
+        public bool done => successInput == totalInput;
+        private float secPerBeat => 60f / TempoManager.staticBPM;
 
         public Input(InputReference inputRef)
         {
@@ -86,22 +98,14 @@ public partial class Minigame
             }
         }
 
-        [SerializeField] bool keyPressed;
-        [SerializeField] KeyInput pressedKey;
-
-        [SerializeField] float gracePeriod = 0.4f;
-        [SerializeField] float earlyPeriod = 0.15f;
-
-        [SerializeField] List<InputData> inputs = new();
-
-        float secPerBeat => 60f / TempoManager.staticBPM;
-
-        int curBeat;
-
         public void Process(int syncCurBeat)
         {
+            if (syncCurBeat >= inputs.Count && !done)
+                FalseInput("<color=red>Last Beat Time Out</color>");
+
             if (curBeat < syncCurBeat)
-                curBeat = Mathf.Clamp(syncCurBeat, -1, inputs.Count);
+                curBeat = Mathf.Clamp(syncCurBeat, 0, inputs.Count - 1);
+                //curBeat = Mathf.Clamp(syncCurBeat, -1, inputs.Count);
 
             if (!startTrace) return;
 
@@ -109,11 +113,50 @@ public partial class Minigame
             {
                 KeyInput curKey = inputs[curBeat].key;
                 float earlyTime = inputs[curBeat].beatTime + secPerBeat + secPerBeat - earlyPeriod;
+                //float earlyTime = inputs[curBeat].beatTime + secPerBeat - earlyPeriod;
                 bool noKey = inputs[curBeat].key == KeyInput.None;
                 bool early = Time.time < earlyTime;
 
+                //Debug.Log($"b: {syncCurBeat}, earlyTime: {earlyTime}, curTime: {Time.time}");
+
                 keyPressed = false;
-                inputs[curBeat].pressed = true;
+
+
+                InputData prevInput = null;
+
+                if (curBeat > 0)
+                {
+                    prevInput = inputs[curBeat - 1];
+                }
+
+                if (prevInput != null && prevInput.key != KeyInput.None && !prevInput.pressed)
+                {
+                    prevInput.pressed = true;
+                    early = false;
+
+                    if (pressedKey == prevInput.key)
+                    {
+                        successInput++;
+                        OnBeatSuccess?.Invoke();
+
+                        if (successInput == totalInput)
+                        {
+                            OnComboSuccess?.Invoke();
+                            startTrace = false;
+                        }
+                    }
+                    else
+                    {
+                        FalseInput($"<color=yellow>Wrong Key {prevInput.key} - {pressedKey}</color>");
+                        return;
+                    }
+
+                    return;
+                }
+                else
+                {
+                    inputs[curBeat].pressed = true;
+                }
 
                 if (noKey) return;
 
@@ -136,7 +179,7 @@ public partial class Minigame
                 }
                 else
                 {
-                    FalseInput($"<color=red>Wrong Key Pressed {pressedKey} - {curKey}</color>");
+                    FalseInput($"<color=red>Wrong Key Pressed {curKey} - {pressedKey}</color>");
                 }
             }
             else
@@ -144,13 +187,15 @@ public partial class Minigame
                 if (curBeat <= 0 || curBeat > inputs.Count + 1)
                     return;
 
-                float lateTime = inputs[curBeat - 1].beatTime + secPerBeat  + gracePeriod;
+                int beat = Mathf.Clamp(curBeat, 0, inputs.Count - 1);
+
+                float lateTime = inputs[beat].beatTime /*+ secPerBeat  */+ gracePeriod;
                 bool timeout = Time.time > lateTime;
                 bool haveKey = inputs[curBeat - 1].key != KeyInput.None;
                 bool inputPressed = inputs[curBeat - 1].pressed;
 
                 if (haveKey && timeout && !inputPressed)
-                    FalseInput($"<color=red>Timeout {curBeat - 1} {Time.time} - {lateTime}</color>");
+                    FalseInput($"<color=red>Timeout {curBeat} {Time.time} - {lateTime}</color>");
             }
         }
 

@@ -36,7 +36,7 @@ public partial class Minigame : MonoBehaviour
     private int level;
     private int beatCount;
 
-    private List<GameObject> beatNotes = new();
+    private List<BeatNote> beatNotes = new();
     private List<BeatPath> beatPaths = new();
 
     //public float beatTime => TempoManager.GetTimeToBeatCount(1) * 2.33f;
@@ -143,6 +143,15 @@ public partial class Minigame : MonoBehaviour
 
     private void OnSuccess()
     {
+        float diff = Time.time - (TempoManager._lastBeatTime + beatTime);
+
+        if (diff < -0.1f)
+            visual.SetPromptText("Good", Color.green);
+        else if (diff >= -0.1f && diff <= 0.1f)
+            visual.SetPromptText("Excellent", Color.green);
+        else if (diff > 0.1f)
+            visual.SetPromptText("Well Done", Color.green);
+
         visual.SetSpeakerImg(SpeakerStatus.On);
         visual.PlaySucessVFX();
     }
@@ -154,7 +163,7 @@ public partial class Minigame : MonoBehaviour
         VibrateManager.instance.Rumble(5, 10, beatTime);
         visual.SetSpeakerImg(SpeakerStatus.Off);
         visual.PlayFailVFX();
-        visual.SetPromptText(msg);
+        visual.SetPromptText(msg, Color.red);
         visual.ShakeSpeakerHP();
         visual.SetSpeakerHP(speakerHealth, null);
         mover.Cancel(speaker);
@@ -190,7 +199,9 @@ public partial class Minigame : MonoBehaviour
     {
         if (state == State.Spawn)
         {
-            beatNotes[beatCount].SetActive(true);
+            visual.SetPromptText("Hacking In Progress...");
+
+            beatNotes[beatCount].gameObject.SetActive(true);
 
             if (beatCount < beatPaths.Count)
                 beatPaths[beatCount].SetPreviewValue(0, 1, beatTime);
@@ -210,6 +221,7 @@ public partial class Minigame : MonoBehaviour
         }
         else if (state == State.Play)
         {
+
             if (beatCount <= -1)
             {
                 input = new Input(inputReference);
@@ -221,12 +233,16 @@ public partial class Minigame : MonoBehaviour
                 visual.EnableCountdown(false);
             }
 
+            if (beatCount < beatNotes.Count - 1 && beatDatas[beatCount + 1].key != KeyInput.None)
+                beatNotes[beatCount + 1].ShrinkRing();
+
             if (beatCount < beatNotes.Count && beatCount >= 0)
                 beatNotes[beatCount].gameObject.SetActive(true);
 
             if (beatCount < beatPaths.Count && beatCount >= 0)
                 beatPaths[beatCount].SetPathValue(0, 1, beatTime);
 
+            //Debug.Log($"curBeat: {beatCount}, beatTime: {Time.time}");
             beatCount++;
 
             if (beatCount < beatDatas.Count)
@@ -255,7 +271,7 @@ public partial class Minigame : MonoBehaviour
     {
         for (int i = 0; i < beatDatas.Count; i++)
         {
-            GameObject beatNote = visual.GetBeatNote(beatDatas[i]);
+            BeatNote beatNote = visual.GetBeatNote(beatDatas[i]);
             beatNotes.Add(beatNote);
 
             if (i < beatDatas.Count - 1)

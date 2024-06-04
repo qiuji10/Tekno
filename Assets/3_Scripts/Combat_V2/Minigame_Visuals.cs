@@ -142,14 +142,14 @@ public class Minigame_Visuals : MonoBehaviour
         beatVisualParent.DestroyChildrens();
     }
 
-    public GameObject GetBeatNote(BeatData beatData)
+    public BeatNote GetBeatNote(BeatData beatData)
     {
         BeatNote beatNote = Instantiate(beatNotePrefab, beatVisualParent);
         beatNote.gameObject.SetActive(false);
         beatNote.SetPosition(beatData.position);
         beatNote.SetSprite(inputSprites[beatData.key].sprite);
         beatNote.SetColor(inputSprites[beatData.key].color);
-        return beatNote.gameObject;
+        return beatNote;
     }
     #endregion
 
@@ -171,7 +171,18 @@ public class Minigame_Visuals : MonoBehaviour
     public void EnableCountdown(bool enabled) => countdownText.gameObject.SetActive(enabled);
 
     public void SetCountdownText(string text) => countdownText.SetText(text);
-    public void SetPromptText(string text) => promptText.SetText(text);
+
+    public void SetPromptText(string text)
+    {
+        promptText.color = Color.blue;
+        promptText.SetText(text);
+    }
+
+    public void SetPromptText(string text, Color color)
+    {
+        promptText.color = color;
+        promptText.SetText(text);
+    }
     #endregion
 
     #region VFX
