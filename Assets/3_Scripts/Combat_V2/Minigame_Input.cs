@@ -156,6 +156,13 @@ public partial class Minigame
                 else
                 {
                     inputs[curBeat].pressed = true;
+
+                    if (curKey == KeyInput.None)
+                    {
+                        FalseInput($"<color=yellow>Wrong Key {curKey} - {pressedKey}</color>");
+                        return;
+                    }
+
                 }
 
                 if (noKey) return;

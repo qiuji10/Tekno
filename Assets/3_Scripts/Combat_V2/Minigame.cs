@@ -154,6 +154,8 @@ public partial class Minigame : MonoBehaviour
 
         visual.SetSpeakerImg(SpeakerStatus.On);
         visual.PlaySucessVFX();
+
+        beatNotes[beatCount].SetRingColor(Color.green);
     }
 
     private void OnFail(string msg)
@@ -168,6 +170,8 @@ public partial class Minigame : MonoBehaviour
         visual.SetSpeakerHP(speakerHealth, null);
         mover.Cancel(speaker);
 
+        beatNotes[beatCount].SetRingColor(Color.red);
+
         state = State.Fail;
 
         int index = 0;
@@ -176,6 +180,11 @@ public partial class Minigame : MonoBehaviour
             index = beatCount - 1;
 
         beatPaths[Mathf.Clamp(index, 0, beatPaths.Count - 1)].Cancel();
+
+        for (int i = 0; i < beatNotes.Count; i++)
+        {
+            beatNotes[i].StopShrink();
+        }
         
         if (speakerHealth > 0)
         {

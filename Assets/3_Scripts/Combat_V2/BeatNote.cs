@@ -7,6 +7,14 @@ public class BeatNote : MonoBehaviour
 {
     [SerializeField] Image image;
     [SerializeField] CanvasGroup group;
+    private Image ring;
+
+    private Coroutine shrinkRoutine;
+
+    private void Awake()
+    {
+        ring = group.GetComponent<Image>();
+    }
 
     public void SetPosition(Vector2 anchoredPosition)
     {
@@ -23,10 +31,21 @@ public class BeatNote : MonoBehaviour
         image.color = color;
     }
 
+    public void SetRingColor(Color color)
+    {
+        ring.color = color;
+    }
+
+    public void StopShrink()
+    {
+        if (shrinkRoutine != null)
+            StopCoroutine(shrinkRoutine);
+    }
+
     public void ShrinkRing()
     {
         StartCoroutine(Appear());
-        StartCoroutine(Shrink());
+        shrinkRoutine = StartCoroutine(Shrink());
 
         IEnumerator Shrink()
         {
