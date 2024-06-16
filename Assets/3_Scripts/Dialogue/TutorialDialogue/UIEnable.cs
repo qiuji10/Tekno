@@ -6,12 +6,12 @@ using UnityEngine;
 public class UIEnable : MonoBehaviour
 {
 
-    [SerializeField] private InputActionReference interactKey;
+   // [SerializeField] private InputActionReference interactKey;
     [SerializeField] private bool disablePlayerControl = false;
     public GameObject healthCanvas, stanceManagerCanvas;
     public GameObject healthUIReference, stanceManagerUIReference;
-    [SerializeField] private PlayerController playerController;
-    [SerializeField] private GameObject player;
+    //[SerializeField] private PlayerController playerController;
+    //[SerializeField] private GameObject player;
     [SerializeField] private float triggerDelay,enableDelay = 0.9f;
 
     private bool healthCanvasEnabledRecently = false;
@@ -21,19 +21,19 @@ public class UIEnable : MonoBehaviour
     {
         healthUIReference = GameObject.Find("Health Spectrum Canvas");
         stanceManagerUIReference = GameObject.Find("Stance Canvas");
-        player = GameObject.Find("Player");
-        playerController = player.GetComponent<PlayerController>();
+        //player = GameObject.Find("Player");
+        //playerController = player.GetComponent<PlayerController>();
     }
 
-    private void OnEnable()
-    {
-        interactKey.action.performed += Interact;
-    }
+    //private void OnEnable()
+    //{
+    //    interactKey.action.performed += Interact;
+    //}
 
-    private void OnDisable()
-    {
-        interactKey.action.performed -= Interact;
-    }
+    //private void OnDisable()
+    //{
+    //    interactKey.action.performed -= Interact;
+    //}
 
     private void Interact(InputAction.CallbackContext context)
     {
@@ -59,14 +59,15 @@ public class UIEnable : MonoBehaviour
         yield return new WaitForSeconds(enableDelay);
         healthUIReference.GetComponent<Canvas>().enabled = true;
         healthCanvas.GetComponent<Canvas>().enabled = true;
+        healthCanvasEnabledRecently = true;
 
-        if (disablePlayerControl == false)
-        {
-            playerController.DisableAction();
-            disablePlayerControl = true; 
-            yield return new WaitForSeconds(triggerDelay);
-            healthCanvasEnabledRecently = true;
-        }
+        //if (disablePlayerControl == false)
+        //{
+        //    playerController.DisableAction();
+        //    disablePlayerControl = true; 
+        //    yield return new WaitForSeconds(triggerDelay);
+            
+        //}
        
        
     }
@@ -76,13 +77,14 @@ public class UIEnable : MonoBehaviour
         yield return new WaitForSeconds(enableDelay);
         stanceManagerUIReference.GetComponent<Canvas>().enabled = true;
         stanceManagerCanvas.GetComponent<Canvas>().enabled = true;
-        if (disablePlayerControl == false)
-        {
-            playerController.DisableAction();
-            disablePlayerControl = true;
-            yield return new WaitForSeconds(triggerDelay);
-            stanceManagerCanvasEnabledRecently = true;
-        }
+       stanceManagerCanvasEnabledRecently = true;
+        //if (disablePlayerControl == false)
+        //{
+        //    playerController.DisableAction();
+        //    disablePlayerControl = true;
+        //    yield return new WaitForSeconds(triggerDelay);
+            
+        //}
        
     }
 
@@ -96,6 +98,8 @@ public class UIEnable : MonoBehaviour
         {
             healthUIReference = null;
         }
+
+        StartCoroutine(DisableCanvas());
     }
 
     public void EnableStanceManagerUI()
@@ -108,17 +112,23 @@ public class UIEnable : MonoBehaviour
         {
             stanceManagerUIReference = null;
         }
+
+        StartCoroutine(DisableCanvas());
     }
 
-    public void DisableCanvas()
+    public IEnumerator DisableCanvas()
     {
+        yield return new WaitForSeconds(triggerDelay);
         healthCanvas.GetComponent<Canvas>().enabled = false;
         stanceManagerCanvas.GetComponent<Canvas>().enabled = false;
-        if (disablePlayerControl)
-        {
-            playerController.EnableAction();
-            disablePlayerControl = false;
-        }
+      
+        
+        //if (disablePlayerControl)
+        //{
+           
+        //    playerController.EnableAction();
+        //    disablePlayerControl = false;
+        //}
     }
 
   

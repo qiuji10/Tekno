@@ -11,11 +11,12 @@ public class PlatformDrop : MonoBehaviour, IPlatform
     public float shakeTimer = 0;
     public float dropDistance = 10;
     private float originalY;
-    [SerializeField]private bool isDropping;
+    [SerializeField] private bool isDropping;
 
     public GameObject parental;
     private Rigidbody rb;
     [SerializeField]private Collider platformCollider;
+
     public Transform player { get; set; }
     public bool PlayerOnPlatform { get; set; }
 
@@ -29,20 +30,17 @@ public class PlatformDrop : MonoBehaviour, IPlatform
 
     void Update()
     {
-      
         if (PlayerOnPlatform)
         {
             isDropping = true;
             StartCoroutine(ShakeAndDropPlatform());
         }
       
-      
     }
 
 
     public void DropPlatform()
     {
-        //isDropping = true;
         if(isDropping)
         {
             transform.position += new Vector3(0, -1, 0);
@@ -64,22 +62,6 @@ public class PlatformDrop : MonoBehaviour, IPlatform
             isDropping = false;
         }
 
-
-        //else if (!isDropping && transform.position.y == originalY)
-        //{
-
-        //    isDropping = true;
-        //}
-
-        //if (transform.position.y >= originalY)
-        //{
-        //    parental.SetActive(true);
-        //    isDropping = false;
-        //    platformCollider.enabled = true;
-        //    transform.position = new Vector3(transform.position.x, originalY, transform.position.z);
-        //    shakeTimer = 0;
-        //}
-
     }
 
     void ResetPlatform()
@@ -91,8 +73,6 @@ public class PlatformDrop : MonoBehaviour, IPlatform
         shakeTimer = 0;
         
     }
-
-
 
     private IEnumerator ShakeAndDropPlatform() 
     {
