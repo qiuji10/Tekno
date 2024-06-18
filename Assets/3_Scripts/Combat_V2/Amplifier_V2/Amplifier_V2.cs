@@ -92,8 +92,7 @@ public class Amplifier_V2 : MonoBehaviour
         if (isPlaying)
         {
             PauseMenu.canPause = false;
-            StanceManager.AllowPlayerSwitchStance = false;
-            PlayerController.allowedInput = false;
+            EventManager.ExecuteEvent(EventManager.GAMEPLAY_INPUT, false);
             eventInvoker.enabled = false;
         }
     }
@@ -103,8 +102,7 @@ public class Amplifier_V2 : MonoBehaviour
         if (isPlaying)
         {
             PauseMenu.canPause = true;
-            StanceManager.AllowPlayerSwitchStance = true;
-            PlayerController.allowedInput = true;
+            EventManager.ExecuteEvent(EventManager.GAMEPLAY_INPUT, true);
 
             if (state == Minigame.State.Success)
             {

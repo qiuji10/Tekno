@@ -21,11 +21,11 @@ public class PlayerData : MonoBehaviour
             controller = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         }
 
-        controller.enabled = true;
+        controller.EnableAction();
     }
 
     public void DisablePlayerController()
     {
-        controller.enabled = false;
+        controller.DisableAction();
     }
 }

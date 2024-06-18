@@ -93,7 +93,7 @@ public class NewHook : MonoBehaviour
                 //_cam.enabled = false;
                 _playerController.Anim.SetTrigger("StartSwing");
                 //_playerController.enabled = false;
-                PlayerController.allowedInput = false;
+                EventManager.ExecuteEvent(EventManager.GAMEPLAY_INPUT, false);
                 hookSlider.value = timer = 0;
                 hookSlider.maxValue = hookTime;
 
@@ -151,7 +151,7 @@ public class NewHook : MonoBehaviour
         _playerController.transform.SetParent(null);
 
         //_cam.enabled = true;
-        PlayerController.allowedInput = true;
+        EventManager.ExecuteEvent(EventManager.GAMEPLAY_INPUT, true);
         //_playerController.enabled = true;
         _playerController.transform.eulerAngles = Vector3.zero;
         _playerController.Anim.SetTrigger("EndSwing");

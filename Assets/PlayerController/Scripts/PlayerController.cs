@@ -5,6 +5,7 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
+using System;
 
 public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 {
@@ -12,7 +13,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     [SerializeField] private Transform orientation;
 
     [SerializeField] private CinemachineInputProvider camInput;
-    public static bool allowedInput = true;
+    [SerializeField] public bool allowedInput = true;
     public static bool allowedAction { get; set; } = true;
     public static bool allowedJump = true;
 
@@ -114,6 +115,21 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         DialogueManager.OnDialogueEnd += DialogueManager_OnDialogueEnd;
     }
 
+    private void OnEnable()
+    {
+        cacheSpeed = moveSpeed;
+        jumpAction.action.performed += Jump;
+        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
+        EventManager.RegisterEvent<bool>(EventManager.GAMEPLAY_INPUT, EnableGameplayInput);
+    }
+
+    private void OnDisable()
+    {
+        jumpAction.action.performed -= Jump;
+        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
+        EventManager.UnregisterEvent<bool>(EventManager.GAMEPLAY_INPUT, EnableGameplayInput);
+    }
+
     private void OnDestroy()
     {
         DialogueManager.OnDialogueStart -= DialogueManager_OnDialogueStart;
@@ -129,19 +145,6 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     private void DialogueManager_OnDialogueStart()
     {
         DisableAction();
-    }
-
-    private void OnEnable()
-    {
-        cacheSpeed = moveSpeed;
-        jumpAction.action.performed += Jump;
-        StanceManager.OnStanceChangeStart += StanceManager_OnStanceChange;
-    }
-
-    private void OnDisable()
-    {
-        jumpAction.action.performed -= Jump;
-        StanceManager.OnStanceChangeStart -= StanceManager_OnStanceChange;
     }
 
     private void StanceManager_OnStanceChange(Track track)
@@ -168,6 +171,14 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
                 break;
         }
 
+    }
+
+    private void EnableGameplayInput(bool enabled)
+    {
+        if (enabled)
+            EnableAction();
+        else
+            DisableAction();
     }
 
     public void DisableAction()
@@ -298,6 +309,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
 
         if (_moveDir == Vector3.zero)
         {
+            _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
             _rb.angularVelocity = Vector3.zero;
             // velocity for animation blend
             if (velocity > 0)

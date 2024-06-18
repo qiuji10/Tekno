@@ -194,9 +194,9 @@ public class StanceManager : MonoBehaviour
     private IEnumerator EnableInput(float time)
     {
         AllowPlayerSwitchStance = false;
-        PlayerController.allowedInput = false;
+        EventManager.ExecuteEvent(EventManager.GAMEPLAY_INPUT, false);
         yield return new WaitForSeconds(time);
-        PlayerController.allowedInput = true;
+        EventManager.ExecuteEvent(EventManager.GAMEPLAY_INPUT, true);
         AllowPlayerSwitchStance = true;
         isChangingStance = false;
         //if (director) director.enabled = false;
