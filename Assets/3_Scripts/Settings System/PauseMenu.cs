@@ -22,6 +22,8 @@ public class PauseMenu : MonoBehaviour
    
     private DepthOfField dofComponent;
     private PlayerController playerController;
+    private Coroutine ensureUIRoutine;
+    [SerializeField, ReadOnly] private GameObject lastSelectedUI;
 
     private void Awake()
     {
@@ -43,6 +45,9 @@ public class PauseMenu : MonoBehaviour
         canPause = true;
     }
 
+    // IMPORTANT TODO:
+    // Reassign back the set selected gameobject to the settings button, in scene
+
     private void Action_performed(InputAction.CallbackContext obj)
     {
         if (DialogueManager.IsRunning)
@@ -59,6 +64,29 @@ public class PauseMenu : MonoBehaviour
         
     }
 
+    private void TryStopRoutine()
+    {
+        if (ensureUIRoutine != null)
+            StopCoroutine(ensureUIRoutine);
+    }
+
+    private IEnumerator EnsureLastSelectedObjectRoutine()
+    {
+        while (true)
+        {
+            if (EventSystem.current.currentSelectedGameObject != null)
+            {
+                lastSelectedUI = EventSystem.current.currentSelectedGameObject;
+            }
+            else
+            {
+                EventSystem.current.SetSelectedGameObject(lastSelectedUI);
+            }
+
+            yield return null;
+        }
+    }
+
     [Button]
     public void PauseGame()
     {
@@ -70,6 +98,10 @@ public class PauseMenu : MonoBehaviour
         playerController.DisableAction();
         EventSystem.current.SetSelectedGameObject(objToBeSelected);
         Time.timeScale = 0;
+
+        TryStopRoutine();
+
+        ensureUIRoutine = StartCoroutine(EnsureLastSelectedObjectRoutine());
     }
 
     [Button]
@@ -81,6 +113,8 @@ public class PauseMenu : MonoBehaviour
         playerController.EnableAction();
         EventSystem.current.SetSelectedGameObject(null);
         Time.timeScale = 1;
+
+        TryStopRoutine();
     }
 
     public void BackToLobby()
