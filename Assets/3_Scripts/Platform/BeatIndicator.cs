@@ -57,6 +57,7 @@ public class BeatIndicator : MonoBehaviour
     private void OnMusicEvent(KoreographyEvent evt, int sampleTime, int sampleDelta, DeltaSlice deltaSlice)
     {
         int intValueEvt = evt.GetIntValue();
+        currentBeat = intValueEvt;
 
         // Check if the intValueEvt is within the valid range of the sequence array
         if (intValueEvt >= 0 && intValueEvt < sequence.Length)
@@ -68,8 +69,7 @@ public class BeatIndicator : MonoBehaviour
             }
 
             // Change the material of the current beat
-            ChangeMaterial(intValueEvt);
-            currentBeat = intValueEvt;
+            ChangeMaterial(intValueEvt);          
         }
     }
 

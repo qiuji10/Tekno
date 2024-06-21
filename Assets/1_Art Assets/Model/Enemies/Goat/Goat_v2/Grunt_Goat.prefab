@@ -405,7 +405,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -7459553496305071546, guid: c4da1b6fac7840d45a46f94b74747bc7, type: 3}
+  - {fileID: 2100000, guid: 078aab3a2dcb5f747aaa6c4bec1edfc0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1404,7 +1404,7 @@ MonoBehaviour:
   _parentBlackboard: {fileID: 0}
   _serializedBlackboard: '{"_variables":{"Grunt Animator":{"_value":1,"_name":"Grunt
     Animator","_id":"0bd87b07-d24c-474a-aae6-63961d9f0928","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.Animator,
-    UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"WaypointNode":{"_value":[null,null,null,null,null],"_name":"WaypointNode","_id":"d4afc8df-2b99-49d4-9581-15bca499df78","$type":"NodeCanvas.Framework.Variable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject,
+    UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"WaypointNode":{"_value":[null,null,null,null],"_name":"WaypointNode","_id":"d4afc8df-2b99-49d4-9581-15bca499df78","$type":"NodeCanvas.Framework.Variable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject,
     UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]],
     mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}}}'
   _objectReferences:
@@ -1416,7 +1416,7 @@ MonoBehaviour:
     _references:
     - {fileID: 0}
     - {fileID: 6826137511667264578}
-  - _json: '{"_value":[null,null,null,null,null],"_name":"WaypointNode","_id":"d4afc8df-2b99-49d4-9581-15bca499df78","$type":"NodeCanvas.Framework.Variable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject,
+  - _json: '{"_value":[null,null,null,null],"_name":"WaypointNode","_id":"d4afc8df-2b99-49d4-9581-15bca499df78","$type":"NodeCanvas.Framework.Variable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject,
       UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]],
       mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
     _references: []
@@ -1672,6 +1672,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6826137511667264579}
   - component: {fileID: 6826137511667264578}
+  - component: {fileID: 2180426588128202352}
   m_Layer: 10
   m_Name: Goat Model
   m_TagString: Untagged
@@ -1716,6 +1717,48 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!23 &2180426588128202352
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6192624628219066105}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6382644237963528646
 GameObject:
   m_ObjectHideFlags: 0
@@ -2245,10 +2288,20 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 1486712162788090703, guid: 55f1a3021d382274490ded9fe9827c4d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1486712163372575147, guid: 55f1a3021d382274490ded9fe9827c4d,
         type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1486712163372575147, guid: 55f1a3021d382274490ded9fe9827c4d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 55f1a3021d382274490ded9fe9827c4d, type: 3}
