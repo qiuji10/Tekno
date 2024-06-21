@@ -164,9 +164,13 @@ public class PlayerStatus : MonoBehaviour
 
     private IEnumerator DeathCutscene()
     {
-        deathCamSetter.LoadCam();
-        _anim.SetTrigger("IsDeath");
-        yield return new WaitForSeconds(6f);
+        if (deathCamSetter)
+        {
+            deathCamSetter.LoadCam();
+            _anim.SetTrigger("IsDeath");
+            yield return new WaitForSeconds(6f);
+        }
+
         deathCanvas.SetActive(true);
     }
 
@@ -188,7 +192,8 @@ public class PlayerStatus : MonoBehaviour
         MaterialModifier modifier = GetComponentInChildren<MaterialModifier>();
         modifier.ResetMaterial();
 
-        FadeCanvas.Instance.FadeOut();
+        if (FadeCanvas.Instance)
+            FadeCanvas.Instance.FadeOut();
         yield return new WaitForSeconds(1f);
 
         SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().name);

@@ -60,6 +60,8 @@ public class StanceManager : MonoBehaviour
     [SerializeField] private Transform spawnPos;
     public static float particleSystemTime = 1.2f;
 
+    private PlayerController pc;
+
     private bool firstTimeIgnored;
 
     private void OnEnable()
@@ -82,6 +84,7 @@ public class StanceManager : MonoBehaviour
 
     private void Awake()
     {
+        pc = FindObjectOfType<PlayerController>();
         AllowPlayerSwitchStance = true;
         //cart = director.GetComponent<CinemachineDollyCart>();
         musicPlayer = GetComponent<SimpleMusicPlayer>();
@@ -91,7 +94,7 @@ public class StanceManager : MonoBehaviour
 
     private void SkipTrack(InputAction.CallbackContext context)
     {
-        if (!AllowPlayerSwitchStance) return;
+        if (!AllowPlayerSwitchStance || !pc.IsGround) return;
 
         stanceAudio.time = 0;
         trackIndex++;
@@ -101,7 +104,7 @@ public class StanceManager : MonoBehaviour
 
     private void RewindTrack(InputAction.CallbackContext context)
     {
-        if (!AllowPlayerSwitchStance) return;
+        if (!AllowPlayerSwitchStance || !pc.IsGround) return;
 
         stanceAudio.time = 0;
         trackIndex = (trackIndex + tracks.Count - 1) % tracks.Count;

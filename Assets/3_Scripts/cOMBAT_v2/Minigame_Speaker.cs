@@ -108,7 +108,7 @@ public class Minigame_Speaker : MonoBehaviour
         float currentInputTime = Time.time;
         float currentDelay = currentInputTime - expectedBeatTime;
         float inputDelay = currentDelay * 1000f; // Convert to milliseconds
-        Debug.Log("Input Delay: " + inputDelay.ToString("F2") + "ms");
+        //Debug.Log("Input Delay: " + inputDelay.ToString("F2") + "ms");
 
         string actionName = context.action.name;
         KeyInput inputKey = (KeyInput)Enum.Parse(typeof(KeyInput), actionName, ignoreCase: true);

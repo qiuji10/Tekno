@@ -73,6 +73,8 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
     [SerializeField] private float groundedOffset = -0.11f;
     [SerializeField] private bool isGround;
 
+    public bool IsGround => isGround;
+
     [Header("Animation Blend")]
     [SerializeField] private float animMoveSpeed = 0.8f;
     [SerializeField] private float acceleration = 20f;
@@ -207,6 +209,27 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         StanceManager.AllowPlayerSwitchStance = false;
     }
 
+    public void EnableActionNormal()
+    {
+        allowedInput = true;
+        Anim.enabled = true;
+
+        camInput.enabled = true;
+
+        StanceManager.AllowPlayerSwitchStance = true;
+    }
+
+    public void EnableWithRestrictionNormal()
+    {
+        allowedInput = true;
+        Anim.enabled = true;
+
+        camInput.enabled = true;
+        allowedJump = false;
+        StanceManager.AllowPlayerSwitchStance = false;
+    }
+
+
     private IEnumerator EnableRB()
     {
         yield return new WaitForSeconds(1.5f);
@@ -222,7 +245,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         }
 
         Rotation();
-        IsGround();
+        CheckIsGround();
     }
 
     private void FixedUpdate()
@@ -239,7 +262,7 @@ public class PlayerController : MonoBehaviour, IDamagable, IKnockable
         Movement();
     }
 
-    private void IsGround()
+    private void CheckIsGround()
     {
         //isGround = Physics.Raycast(transform.position, Vector3.down, transform.localScale.y * 0.5f + 0.2f, groundLayer);
 
