@@ -170,16 +170,18 @@ public partial class Minigame : MonoBehaviour
         visual.SetSpeakerHP(speakerHealth, null);
         mover.Cancel(speaker);
 
-        beatNotes[beatCount].SetRingColor(Color.red);
-
-        state = State.Fail;
-
         int index = 0;
 
         if (beatCount > 0)
             index = beatCount - 1;
 
-        beatPaths[Mathf.Clamp(index, 0, beatPaths.Count - 1)].Cancel();
+    	int clampedBeat = Mathf.Clamp(index, 0, beatPaths.Count - 1);
+
+        beatNotes[clampedBeat].SetRingColor(Color.red);
+
+        state = State.Fail;
+
+        beatPaths[clampedBeat].Cancel();
 
         for (int i = 0; i < beatNotes.Count; i++)
         {
