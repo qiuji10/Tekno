@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 149372813398263030}
   - component: {fileID: 3872381396676463443}
   - component: {fileID: 1322229892362518425}
+  - component: {fileID: 658427364623485}
+  - component: {fileID: 6177611046537446022}
   m_Layer: 0
   m_Name: SM_Speaker_01
   m_TagString: Untagged
@@ -25,14 +27,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 673707491259063884}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 58.77285, y: 0.089910634, z: -112.09911}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &3872381396676463443
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -84,3 +86,49 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &658427364623485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673707491259063884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aaddd301c38cfd4da372ed7fbe90369, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventID: 
+  sequence:
+  - {fileID: 0}
+  normalMat: {fileID: 2100000, guid: cf5b0f1eb00de6e439c86122e0f231b9, type: 2}
+  houseMaterial: {fileID: 2100000, guid: cf5b0f1eb00de6e439c86122e0f231b9, type: 2}
+  technoMaterial: {fileID: 2100000, guid: cf5b0f1eb00de6e439c86122e0f231b9, type: 2}
+  electronicMaterial: {fileID: 2100000, guid: cf5b0f1eb00de6e439c86122e0f231b9, type: 2}
+  ScaleSelection: 1
+  RotationSelection: 0
+  MoveSelection: 0
+  ScaleX: 1
+  ScaleY: 1
+  ScaleZ: 1
+  RotateX: 0
+  RotateY: 0
+  RotateZ: 0
+  scaleMod: {x: 0.5, y: 0.5, z: 0.5}
+  MoveX: 0
+  MoveY: 0
+  MoveZ: 0
+  moveMod: {x: 1, y: 1, z: 1}
+--- !u!114 &6177611046537446022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673707491259063884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4f5a37d7c4c4ab40947734c0569f315, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameSceneManager: {fileID: 0}
