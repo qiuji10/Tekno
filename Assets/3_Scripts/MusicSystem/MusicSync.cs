@@ -22,14 +22,17 @@ public class MusicSync : MonoBehaviour
 
     private Vector3 scale = Vector3.one;
     private float speed; // movement speed 
+
     [Header("How Do you want your Gameobject React To The Music")]
     public bool ScaleSelection;
     public bool RotationSelection;
     public bool MoveSelection;
+
     [Header("Scale Settings")]
     public bool ScaleX;
     public bool ScaleY;
     public bool ScaleZ;
+
     [Header("Rotation Options")]
     public bool RotateX;
     public bool RotateY;

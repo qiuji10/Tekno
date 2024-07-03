@@ -13,15 +13,15 @@ public class DNDObject : MonoBehaviour
 
     public void OnSceneChange()
     {
-        if (gameSceneManager.IsLoading == true)
+        if (GameSceneManager.IsLoading == true)
         {
             DontDestroyOnLoad(this.gameObject);
-            Debug.Log("Loading Next Scene, not destroying object");
+            Debug.Log("Current Scene Manager before changing scenes: " + GameSceneManager.IsLoading);
         }
         else
         {
-            gameSceneManager.IsLoading = false;
-            Debug.Log("Next Scene Loaded");
+            GameSceneManager.IsLoading = false;
+            Debug.Log("Current Scene Manager after changing scenes: " + GameSceneManager.IsLoading);
         }
     }
 }

@@ -14,7 +14,7 @@ public class GameSceneManager : MonoBehaviour
 
     public List<GameObject> objectsToBeTransfer = new List<GameObject>();
 
-    public bool IsLoading = false;
+    public static bool IsLoading = false;
 
     private void Awake()
     {
