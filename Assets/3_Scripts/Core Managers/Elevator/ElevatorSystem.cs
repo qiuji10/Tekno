@@ -32,13 +32,19 @@ public class ElevatorSystem : MonoBehaviour
 
     public Dictionary<ElevatorDestination, Vector3> destinationData; // the vector3 is holding local position
 
+    [Header("Elevator Destination")]
+    public Vector3 tutorialDestination = new Vector3(0, 40, 0);
+    public Vector3 lobbyDestination = new Vector3(0, 0, 0);
+    public Vector3 cityDestination = new Vector3(0, -60, 0);
+
+
     private void Awake()
     {
         destinationData = new Dictionary<ElevatorDestination, Vector3>
         {
-            { ElevatorDestination.Tutorial, new Vector3(0, 40, 0) },
-            { ElevatorDestination.Lobby, new Vector3(0, 0, 0) },
-            { ElevatorDestination.Gameplay, new Vector3(0, -60, 0) }
+            { ElevatorDestination.Tutorial, tutorialDestination },
+            { ElevatorDestination.Lobby, lobbyDestination },
+            { ElevatorDestination.Gameplay, cityDestination }
         };
 
         currentElevatorPlacement = ElevatorDestination.Lobby;
