@@ -15582,6 +15582,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   continueButton: {fileID: 982978019}
   newGameButton: {fileID: 2071055534}
+  lastSelectedUI: {fileID: 0}
 --- !u!1 &292988326
 GameObject:
   m_ObjectHideFlags: 0
@@ -40321,6 +40322,9 @@ MonoBehaviour:
   - {fileID: 1124818902}
   inactiveList: []
   dissolveDuration: 1
+  player: {fileID: 0}
+  playerController: {fileID: 0}
+  stopPlayerMovement: 0
 --- !u!114 &982978022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40449,18 +40453,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 976539441}
-        m_TargetAssemblyTypeName: PlayerData, Assembly-CSharp
-        m_MethodName: EnablePlayerController
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 570331200}
         m_TargetAssemblyTypeName: CameraSetter, Assembly-CSharp
         m_MethodName: UnloadCam
@@ -40501,6 +40493,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 976539441}
+        m_TargetAssemblyTypeName: PlayerData, Assembly-CSharp
+        m_MethodName: EnablePlayerController
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -85363,6 +85367,9 @@ MonoBehaviour:
   - {fileID: 1124818902}
   inactiveList: []
   dissolveDuration: 1
+  player: {fileID: 0}
+  playerController: {fileID: 0}
+  stopPlayerMovement: 0
 --- !u!1 &2072269532
 GameObject:
   m_ObjectHideFlags: 0

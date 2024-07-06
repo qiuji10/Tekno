@@ -157,11 +157,11 @@ public class MaterialModifier : MonoBehaviour
 
         if (increment)
         {
-            while (m_Materials[0].GetFloat(property) < value)
+            while (m_Materials[1].GetFloat(property) < value)
             {
                 timer += Time.deltaTime;
                 float ratio = Mathf.Clamp(timer / fadeTime, 0f, 1f);
-                m_Materials[0].SetFloat(property, ratio);
+                //m_Materials[0].SetFloat(property, ratio);
                 m_Materials[1].SetFloat(property, ratio);
                 m_Materials[2].SetFloat(property, ratio);
                 yield return null;
@@ -169,18 +169,18 @@ public class MaterialModifier : MonoBehaviour
         }
         else
         {
-            while (m_Materials[0].GetFloat(property) > value)
+            while (m_Materials[1].GetFloat(property) > value)
             {
                 timer -= Time.deltaTime;
                 float ratio = Mathf.Clamp(timer / fadeTime, 0f, 1f);
-                m_Materials[0].SetFloat(property, ratio);
+                //m_Materials[0].SetFloat(property, ratio);
                 m_Materials[1].SetFloat(property, ratio);
                 m_Materials[2].SetFloat(property, ratio);
                 yield return null;
             }
         }
 
-        m_Materials[0].SetFloat(property, value);
+        //m_Materials[0].SetFloat(property, value);
         m_Materials[1].SetFloat(property, value);
         m_Materials[2].SetFloat(property, value);
     }

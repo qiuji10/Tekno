@@ -106,7 +106,7 @@ public class SlidingRailAbility : MonoBehaviour
     public void StartSlidingPipe()
     {
         isGrindingRail = true;
-        PlayerController.allowedInput = false;
+        EventManager.ExecuteEvent(EventManager.GAMEPLAY_INPUT, false);
         ThirdPerCam.allowedRotation = false;
         rb.isKinematic = true;
         _collider.enabled = false;
@@ -116,7 +116,7 @@ public class SlidingRailAbility : MonoBehaviour
     {
         if (isGrindingRail)
         {
-            PlayerController.allowedInput = true;
+            EventManager.ExecuteEvent(EventManager.GAMEPLAY_INPUT, true);
             ThirdPerCam.allowedRotation = true;
             rb.isKinematic = false;
             transform.parent = null;

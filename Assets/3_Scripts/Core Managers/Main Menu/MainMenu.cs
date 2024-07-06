@@ -1,19 +1,27 @@
+using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
     public GameObject continueButton;
     public GameObject newGameButton;
 
+    [SerializeField, ReadOnly] private GameObject lastSelectedUI;
+
+    private Coroutine ensureUIRoutine;
+
     public static event Action NewGameSelected;
 
     private void Awake()
     {
         ValidateStatus(false);
+        continueButton.GetComponent<Button>().onClick.AddListener(TryStopRoutine);
+        newGameButton.GetComponent<Button>().onClick.AddListener(TryStopRoutine);
     }
 
     public void StartNewGame()
@@ -42,6 +50,33 @@ public class MainMenu : MonoBehaviour
 
             if (selectButton)
                 EventSystem.current.SetSelectedGameObject(newGameButton);
+        }
+
+        TryStopRoutine();
+
+        ensureUIRoutine = StartCoroutine(EnsureLastSelectedObjectRoutine());
+    }
+
+    private void TryStopRoutine()
+    {
+        if (ensureUIRoutine != null)
+            StopCoroutine(ensureUIRoutine);
+    }
+
+    private IEnumerator EnsureLastSelectedObjectRoutine()
+    {
+        while (true)
+        {
+            if (EventSystem.current.currentSelectedGameObject != null)
+            {
+                lastSelectedUI = EventSystem.current.currentSelectedGameObject;
+            }
+            else
+            {
+                EventSystem.current.SetSelectedGameObject(lastSelectedUI);
+            }
+
+            yield return null;
         }
     }
 

@@ -7,6 +7,17 @@ public class GameobjectSetActive : MonoBehaviour
     public List<GameObject> activeList; // the list of gameobjects to activate when player steps on collider
     public List<GameObject> inactiveList; // the list of gameobjects to deactivate when player steps on collider
     public float dissolveDuration = 1f;// the duration of the dissolve animation in seconds
+    [SerializeField] private GameObject player;
+    [SerializeField] private PlayerController playerController;
+    public bool stopPlayerMovement;
+    private bool wasActionDisabled = false;
+
+    private void Start()
+    {
+        player = GameObject.Find("Player");
+        playerController = player.GetComponent<PlayerController>();
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -18,6 +29,12 @@ public class GameobjectSetActive : MonoBehaviour
 
     IEnumerator DissolveInactiveList()
     {
+        if (stopPlayerMovement == true)
+        {
+                playerController.DisableAction();
+                wasActionDisabled = true; 
+        }
+
         // Dissolve inactiveList game objects
         foreach (GameObject obj in inactiveList)
         {
@@ -30,6 +47,12 @@ public class GameobjectSetActive : MonoBehaviour
 
         yield return new WaitForSeconds(dissolveDuration); // wait for the dissolve animation to finish
 
+
+        if (wasActionDisabled)
+        {
+            playerController.EnableAction();
+            wasActionDisabled = false;
+        }
         foreach (GameObject obj in inactiveList)
         {
             obj.SetActive(false); // deactivate the object

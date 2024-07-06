@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: props_light
-  m_Shader: {fileID: -6465566751694194690, guid: 31836659a24663741aa23775979d513d,
+  m_Shader: {fileID: -6465566751694194690, guid: 0308663ba1af5ad438e2273c9cbd56fb,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -62,7 +62,19 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Main_Tex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Metallic:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -96,6 +108,7 @@ Material:
     - _Blend: 0
     - _BottomLine: 1
     - _BumpScale: 1
+    - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -104,12 +117,19 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
+    - _Fresnel_Power: 0.46
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Inner_Glow_Amount: 5
+    - _Inverse_Amount: -0.6
+    - _Main_Edge: 2.55
+    - _Main_Second_Edge: 0.92
     - _Metallic: 0
     - _OcclusionStrength: 1
+    - _Offset: -0.41
+    - _Optional_Edge: 5.5
+    - _Optional_Edge_2: 5.1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
@@ -121,7 +141,9 @@ Material:
     - _Surface: 0
     - _TopLine: 1
     - _WorkflowMode: 1
+    - _ZTest: 4
     - _ZWrite: 1
+    - _ZWriteControl: 0
     m_Colors:
     - _BGColor: {r: 21.361254, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
@@ -129,7 +151,11 @@ Material:
     - _Bottom_Color: {r: 2.7479386, g: 2.2306745, b: 0.9177077, a: 1}
     - _Color: {r: 1, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Fresnel_Tint: {r: 0.245283, g: 0.245283, b: 0.245283, a: 0}
+    - _Main_Tint: {r: 0, g: 0.0627451, b: 1.4980392, a: 0}
     - _Outer_Glow: {r: 2, g: 0, b: 0, a: 0}
+    - _Second_Tint: {r: 0, g: 2.0440023, b: 3.9999995, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _TopColor: {r: 0.01568626, g: 0.24099672, b: 0.5176471, a: 1}
+    - _test: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []

@@ -79,7 +79,7 @@ public class TeleportAbility : MonoBehaviour
             counter++;
         }
         
-        Debug.Log(counter);
+        // Debug.Log(counter);
 
         if (counter == 0 || counter == 5)
         {

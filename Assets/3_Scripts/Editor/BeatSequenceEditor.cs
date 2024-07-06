@@ -1,3 +1,4 @@
+using TMPro.EditorUtilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,13 +7,14 @@ public class BeatSequenceEditor : Editor
 {
     private const float WindowRatio = 16f / 9f;
     private const float BeatSize = 30f;
-    private Texture2D circleTexture, crossTexture, squareTexture, triangleTexture, skipTexture;
+    private Texture2D circleTexture, crossTexture, squareTexture, triangleTexture, skipTexture, speakerTex;
 
     private bool isDraggingBeat = false;
     private int beatBeingDragged = -1;
 
     private SerializedProperty objectProperty;
     private Vector2 scrollPosition;
+    private Vector2 speakerPos = new Vector2(-768.55f, 0f);
 
     private void OnEnable()
     {
@@ -21,6 +23,7 @@ public class BeatSequenceEditor : Editor
         squareTexture = Resources.Load<Texture2D>("Textures/PS4_Square");
         triangleTexture = Resources.Load<Texture2D>("Textures/PS4_Triangle");
         skipTexture = Resources.Load<Texture2D>("Textures/skip");
+        speakerTex = Resources.Load<Texture2D>("Textures/Speaker");
 
         objectProperty = serializedObject.FindProperty("beatSettings");
     }
@@ -40,21 +43,17 @@ public class BeatSequenceEditor : Editor
         Handles.DrawWireCube(winRect.center, new Vector3(winRect.width, winRect.height, 0f));
 
         GUI.Box(winRect, GUIContent.none);
-        
+
         // Calculate the size of the simulated quadrant
         float quadrantWidth = windowWidth / 2f;
         float quadrantHeight = windowHeight / 2f;
+
+        DrawSpeaker(winRect, quadrantWidth, quadrantHeight);
 
         // Draw each BeatSettings object in the window box
         for (int i = 0; i < beatSequence.beatSettings.Count; i++)
         {
             BeatData beat = beatSequence.beatSettings[i];
-
-            // Calculate the position of the beat in the simulated quadrant
-            float x = beat.position.x / 1920f * quadrantWidth * 2;
-            float y = beat.position.y / 1080f * quadrantHeight * 2;
-
-            Vector2 beatPos = winRect.center + new Vector2(x, -y);
 
             // Clamp the beat position within the window box
             float minX = winRect.xMin + BeatSize / 2f;
@@ -62,11 +61,8 @@ public class BeatSequenceEditor : Editor
             float minY = winRect.yMin + BeatSize / 2f;
             float maxY = winRect.yMax - BeatSize / 2f;
 
-            beatPos.x = Mathf.Clamp(beatPos.x, minX - BeatSize, maxX);
-            beatPos.y = Mathf.Clamp(beatPos.y, minY - BeatSize, maxY);
-
             // Draw a circle at the beat position
-            Rect textureRect = new Rect(beatPos.x - BeatSize / 2f, beatPos.y - BeatSize / 2f, BeatSize, BeatSize);
+            Rect textureRect = DrawRect(winRect, beat.position, quadrantWidth, quadrantHeight);
 
             SerializedProperty elementProperty = objectProperty.GetArrayElementAtIndex(i);
             SerializedProperty positionProperty = elementProperty.FindPropertyRelative("position");
@@ -131,7 +127,7 @@ public class BeatSequenceEditor : Editor
             
             // Add a label for the beatSettings index
             Rect labelRect = new Rect(textureRect.x - BeatSize / 2f, textureRect.yMax, 60f, 20f);
-            GUI.Label(labelRect, "Beat " + beat.beat, EditorStyles.centeredGreyMiniLabel);
+            GUI.Label(labelRect, "Beat " + i, EditorStyles.centeredGreyMiniLabel);
         }
         
 
@@ -149,6 +145,31 @@ public class BeatSequenceEditor : Editor
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndScrollView();
 
+    }
+
+    private void DrawSpeaker(Rect winRect, float quadrantWidth, float quadrantHeight)
+    {
+        Rect speakerRect = DrawRect(winRect, speakerPos, quadrantWidth, quadrantHeight);
+        GUI.DrawTexture(speakerRect, speakerTex);
+    }
+
+    private Rect DrawRect(Rect winRect, Vector2 pos, float quadrantWidth, float quadrantHeight)
+    {
+        float x = pos.x / 1920f * quadrantWidth * 2;
+        float y = pos.y / 1080f * quadrantHeight * 2;
+
+        Vector2 beatPos = winRect.center + new Vector2(x, -y);
+
+        // Clamp the beat position within the window box
+        float minX = winRect.xMin + BeatSize / 2f;
+        float maxX = winRect.xMax - BeatSize / 2f;
+        float minY = winRect.yMin + BeatSize / 2f;
+        float maxY = winRect.yMax - BeatSize / 2f;
+
+        beatPos.x = Mathf.Clamp(beatPos.x, minX - BeatSize, maxX);
+        beatPos.y = Mathf.Clamp(beatPos.y, minY - BeatSize, maxY);
+
+        return new Rect(beatPos.x - BeatSize / 2f, beatPos.y - BeatSize / 2f, BeatSize, BeatSize);
     }
     
     private Texture GetTextureForInputKey(KeyInput key)
