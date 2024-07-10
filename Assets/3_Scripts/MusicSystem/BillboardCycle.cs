@@ -19,18 +19,12 @@ public class BillboardCycle : MonoBehaviour
 
     private Track track;
     public static Track currentTrack;
-    public DNDObject dndObject;
 
     private void Awake()
     {
         // Set the track field to the current track
         StanceManager_OnStanceChange(StanceManager.curTrack);
         track = currentTrack;
-    }
-
-    private void Update()
-    {
-        dndObject.OnSceneChange();
     }
 
     private void OnEnable()
