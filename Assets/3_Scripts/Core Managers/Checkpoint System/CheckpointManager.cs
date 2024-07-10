@@ -9,15 +9,7 @@ public class CheckpointManager : MonoBehaviour {
 
     public Checkpoint GetLatestCheckpoint()
     {
-        for (int i = 0; i < checkpoints.Count; i++)
-        {
-            if (i + 1 != checkpoints.Count && checkpoints[i].pass && !checkpoints[i + 1].pass)
-            {
-                return checkpoints[i];
-            }
-        }
-
-        return checkpoints[checkpoints.Count - 1];
+        return Checkpoint.latest;
     }
 
     /// This may be no needed based on certain situation
