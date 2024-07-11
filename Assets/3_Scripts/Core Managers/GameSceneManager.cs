@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.Events;
+using UnityEngine.Rendering.Universal;
 
 public class GameSceneManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class GameSceneManager : MonoBehaviour
     public UnityEvent OnSceneInitialization;
 
     public List<GameObject> objectsToBeTransfer = new List<GameObject>();
+
+    public static bool IsLoading = false;
 
     private void Awake()
     {
@@ -26,6 +29,7 @@ public class GameSceneManager : MonoBehaviour
     public void LoadSceneAdditive(string sceneName)
     {
         StartCoroutine(StartLoadingScene(sceneName, LoadSceneMode.Additive));
+        IsLoading = false;
     }
 
     #region Dump
@@ -105,7 +109,7 @@ public class GameSceneManager : MonoBehaviour
 
     public void UnloadScene(string sceneName)
     {
-
+        IsLoading = true;
         StartCoroutine(StartUnloadScene(sceneName));
         
     }

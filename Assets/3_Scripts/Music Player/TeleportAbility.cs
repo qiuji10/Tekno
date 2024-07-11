@@ -43,6 +43,7 @@ public class TeleportAbility : MonoBehaviour
     private bool canTeleport = false;
     public float delayTime;
     private bool pauseCounter = false;
+    private bool pressed = false;
     
 
     private void OnEnable()
@@ -122,51 +123,59 @@ public class TeleportAbility : MonoBehaviour
         
         if (motherNode != null)
         {
-            StanceManager.AllowPlayerSwitchStance = false;
-            pc.enabled = false;
-            pauseCounter = false;
-            chargeSlider.gameObject.SetActive(true);
-            numOfNodes = motherNode.teleportPoints.Count;
+            if (!pressed)
+            {
+                StanceManager.AllowPlayerSwitchStance = false;
+                pc.enabled = false;
+                pauseCounter = false;
+                chargeSlider.gameObject.SetActive(true);
+                numOfNodes = motherNode.teleportPoints.Count;
 
-            if (counter == randIndex)
-            {
-                success = true;
-                successPress++;
-                pauseCounter = true;
-                Debug.Log("Success");
-                StartCoroutine(ChangeSprite());
-                StartCoroutine(ChangeTarget());
-                motherNode.InvokeOnSuccess(successPress - 1);
-            }
-            else if(successPress == -1 && counter != randIndex)
-            {
-                success = true;
-                successPress++;
-            }
-            else
-            {
-                
-                success = false;
-                pauseCounter = true;
-                Debug.Log("Fail");
-                StartCoroutine(ChangeSprite());
-                StartCoroutine(ChangeTarget());
+                if (counter == randIndex)
+                {
+                    pressed = true;
+                    success = true;
+                    successPress++;
+                    pauseCounter = true;
+                    Debug.Log("Success");
+                    StartCoroutine(ChangeSprite());
+                    StartCoroutine(ChangeTarget());
+                    motherNode.InvokeOnSuccess(successPress - 1);
 
-            }
 
-            if (numOfNodes == 0)
-            {
-                StanceManager.AllowPlayerSwitchStance = true;
-                canTeleport = false;
-                return;
-            }
-            else if (successPress == numOfNodes)
-            {
-                StanceManager.AllowPlayerSwitchStance = true;
-                canTeleport = true;
-                Debug.Log("Here");
-                Teleport();
-                
+                }
+                else if (successPress == -1 && counter != randIndex && !pressed)
+                {
+                    pressed = true;
+                    success = true;
+                    successPress++;
+                }
+                else
+                {
+                    pressed = true;
+                    success = false;
+                    pauseCounter = true;
+                    Debug.Log("Fail");
+                    StartCoroutine(ChangeSprite());
+                    StartCoroutine(ChangeTarget());
+
+                }
+
+                if (numOfNodes == 0)
+                {
+                    StanceManager.AllowPlayerSwitchStance = true;
+                    canTeleport = false;
+                    return;
+                }
+                else if (successPress == numOfNodes)
+                {
+                    StanceManager.AllowPlayerSwitchStance = true;
+                    canTeleport = true;
+                    Debug.Log("Here");
+                    Teleport();
+
+                }
+
             }
 
         }
@@ -190,6 +199,7 @@ public class TeleportAbility : MonoBehaviour
                 progressNode[i].gameObject.GetComponent<Image>().color = Color.green;
         }
 
+        StartCoroutine(WaitForPress());
         previousValue = randIndex;
     }
 
@@ -273,6 +283,17 @@ public class TeleportAbility : MonoBehaviour
         barNormal.sprite = defaultBar.sprite;
         barNormal.color = Color.green;
         handleImage.gameObject.SetActive(true);
+    }
+
+    IEnumerator WaitForPress()
+    {
+        if(pressed)
+        {
+            yield return new WaitForSeconds(1);
+
+            pressed = false;
+        }
+        
     }
 
 

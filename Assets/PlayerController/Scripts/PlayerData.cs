@@ -22,10 +22,11 @@ public class PlayerData : MonoBehaviour
         }
 
         controller.enabled = true;
+        controller.EnableAction();
     }
 
     public void DisablePlayerController()
     {
-        controller.enabled = false;
+        controller.DisableAction();
     }
 }

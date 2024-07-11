@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class Checkpoint : MonoBehaviour {
-    
-    public bool pass { get; set; }
+public class Checkpoint : MonoBehaviour
+{
+    public bool pass;
+    public static Checkpoint latest; 
 
     public Transform spawnPoint;
 
@@ -10,6 +11,7 @@ public class Checkpoint : MonoBehaviour {
     {
         if (!pass && other.CompareTag("Player"))
         {
+            latest = this;
             pass = true;
         }
     }

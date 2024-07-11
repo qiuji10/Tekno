@@ -15,16 +15,16 @@ MonoBehaviour:
   active: 1
   color:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.03875834, b: 0, a: 1}
+    m_Value: {r: 1, g: 0, b: 0, a: 1}
   center:
     m_OverrideState: 0
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.734
+    m_Value: 0.191
   smoothness:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.369
   rounded:
     m_OverrideState: 1
     m_Value: 1
@@ -44,6 +44,31 @@ MonoBehaviour:
   intensity:
     m_OverrideState: 1
     m_Value: 1
+--- !u!114 &-2621717728555486626
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29fa0085f50d5e54f8144f766051a691, type: 3}
+  m_Name: FilmGrain
+  m_EditorClassIdentifier: 
+  active: 1
+  type:
+    m_OverrideState: 1
+    m_Value: 2
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  response:
+    m_OverrideState: 1
+    m_Value: 0.187
+  texture:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
 --- !u!114 &-1215017080081192104
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -62,7 +87,7 @@ MonoBehaviour:
     m_Value: 1
   cropToFit:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,6 +106,7 @@ MonoBehaviour:
   - {fileID: -1215017080081192104}
   - {fileID: -5383064287084352228}
   - {fileID: 6787504599956053436}
+  - {fileID: -2621717728555486626}
 --- !u!114 &2062031475366271625
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -96,7 +122,7 @@ MonoBehaviour:
   active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0.35
+    m_Value: -0.446
   xMultiplier:
     m_OverrideState: 0
     m_Value: 1
@@ -123,26 +149,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   redOutRedIn:
-    m_OverrideState: 0
-    m_Value: 100
+    m_OverrideState: 1
+    m_Value: 200
   redOutGreenIn:
     m_OverrideState: 0
     m_Value: 0
   redOutBlueIn:
     m_OverrideState: 1
-    m_Value: 149
+    m_Value: 38
   greenOutRedIn:
     m_OverrideState: 0
     m_Value: 0
   greenOutGreenIn:
     m_OverrideState: 1
-    m_Value: 78
+    m_Value: 70
   greenOutBlueIn:
     m_OverrideState: 0
     m_Value: 0
   blueOutRedIn:
     m_OverrideState: 1
-    m_Value: 5
+    m_Value: -42
   blueOutGreenIn:
     m_OverrideState: 0
     m_Value: 0
