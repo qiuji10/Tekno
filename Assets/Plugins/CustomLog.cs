@@ -28,7 +28,7 @@ public class CustomLog : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKey(KeyCode.Tab) && Input.GetKey(KeyCode.Escape) && Input.GetKeyDown(KeyCode.P))
         {
             showLogWindow = !showLogWindow;
         }

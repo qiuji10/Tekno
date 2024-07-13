@@ -8,6 +8,7 @@ using System;
 public class SlidingRailAbility : MonoBehaviour
 {
     [SerializeField] private CinemachinePathBase m_Path;
+    [SerializeField] private GameObject railVFX;
     [SerializeField] private float slidingSpeed = 30;
     
     [Header("Input Action")]
@@ -42,6 +43,8 @@ public class SlidingRailAbility : MonoBehaviour
     void FixedUpdate()
     {
         _anim.SetBool("IsSliding", isGrindingRail);
+
+        railVFX.SetActive(isGrindingRail);
 
         if (isGrindingRail)
         {
