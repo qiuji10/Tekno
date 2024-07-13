@@ -20,7 +20,7 @@ public class BillboardCycle : MonoBehaviour
     private Track track;
     public static Track currentTrack;
 
-    private void Awake()
+    private void Start()
     {
         // Set the track field to the current track
         StanceManager_OnStanceChange(StanceManager.curTrack);

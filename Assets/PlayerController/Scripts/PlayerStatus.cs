@@ -3,6 +3,7 @@ using NodeCanvas.BehaviourTrees;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class PlayerStatus : MonoBehaviour 
 {
@@ -28,6 +29,8 @@ public class PlayerStatus : MonoBehaviour
     HookAbility hk;
     TeleportAbility tp;
     Attack at;
+
+    public static event Action OnPlayerDeath;
 
     private void Awake()
     {
@@ -132,6 +135,8 @@ public class PlayerStatus : MonoBehaviour
 
             if (!isDead)
             {
+                OnPlayerDeath?.Invoke();
+
                 isDead = true;
 
                 GetComponent<Rigidbody>().velocity = Vector3.zero;

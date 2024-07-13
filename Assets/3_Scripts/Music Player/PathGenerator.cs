@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class PathGenerator : MonoBehaviour
 {
     [Header("Base Settings")]
@@ -39,9 +43,17 @@ public class PathGenerator : MonoBehaviour
             Vector3 position = path.EvaluatePositionAtUnit(unit, CinemachinePathBase.PositionUnits.Normalized);
             Quaternion rotation = path.EvaluateOrientationAtUnit(unit, CinemachinePathBase.PositionUnits.Normalized);
 
+#if UNITY_EDITOR
+            GameObject pathObject = (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(item as GameObject);
+            pathObject.transform.position = position;
+            pathObject.transform.rotation = rotation;
+            pathObject.transform.SetParent(railwaysParent);
+#else
             GameObject pathObject = Instantiate(item, position, rotation, railwaysParent.transform);
+#endif
             pathObject.isStatic = true;
             unit += unitInterval;
+
         }
     }
 

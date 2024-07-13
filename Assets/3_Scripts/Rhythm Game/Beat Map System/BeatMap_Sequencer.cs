@@ -21,6 +21,7 @@ public class BeatMap_Sequencer : MonoBehaviour
     [SerializeField] private UnityEvent OnRhythmGameEnd;
 
     bool startedPlay;
+    bool fail;
 
     private void Awake()
     {
@@ -35,6 +36,26 @@ public class BeatMap_Sequencer : MonoBehaviour
 
         _audio.clip = mediumAudioClip;
         generator.DestroyPool();
+    }
+
+    void OnEnable()
+    {
+        PlayerStatus.OnPlayerDeath += SetFail;
+    }
+
+    void OnDisable()
+    {
+        PlayerStatus.OnPlayerDeath -= SetFail;
+    }
+
+    void SetFail()
+    {
+        fail = true;
+    }
+
+    [Button]
+    public void StartPlay()
+    {
         Sequencer_PlaceNotes(mediumBeatmap);
     }
 
@@ -152,7 +173,7 @@ public class BeatMap_Sequencer : MonoBehaviour
 
         if (startedPlay)
         {
-            if (!_audio.isPlaying)
+            if (!_audio.isPlaying && !fail)
             {
                 OnRhythmGameEnd?.Invoke();
 

@@ -8,6 +8,7 @@ public class CameraSetter : MonoBehaviour
 {
     [Header("Init Settings")]
     [SerializeField] private CinemachineVirtualCameraBase InUsedCam;
+    [SerializeField] private bool useTrigger;
     [SerializeField] private bool isFollow;
     [SerializeField] private bool isLook;
 
@@ -45,5 +46,21 @@ public class CameraSetter : MonoBehaviour
         UnloadCam();
         InUsedCam = newVcam;
         LoadCam();
+    }
+
+    public void OnTriggerEnter(Collider col)
+    {
+        if (useTrigger && col.CompareTag("Player"))
+        {
+            LoadCam();
+        }
+    }
+
+    public void OnTriggerExit(Collider col)
+    {
+        if (useTrigger && col.CompareTag("Player"))
+        {
+            UnloadCam();
+        }
     }
 }

@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class RhythmVisual : MonoBehaviour
 {
+    [SerializeField] private int index = 1;
+    [SerializeField] private string colorKeyword = "_Main_Tint";
+    
     [SerializeField] MeshRenderer _renderer;
     [SerializeField] StanceColor stanceColor;
 
@@ -25,12 +28,25 @@ public class RhythmVisual : MonoBehaviour
         StanceManager.OnStanceChangeStart += ChangeMaterialColor;
     }
 
+        private void OnDisable()
+    {
+        StanceManager.OnStanceChangeStart -= ChangeMaterialColor;
+    }
+
     private void ChangeMaterialColor(Track track)
     {
         MaterialPropertyBlock property = new();
 
-        _renderer.GetPropertyBlock(property, 1);
-        property.SetColor("_Main_Tint", colors[track.genre]);
-        _renderer.SetPropertyBlock(property, 1);
+        if (index < 0)
+            _renderer.GetPropertyBlock(property);
+        else
+            _renderer.GetPropertyBlock(property, index);
+
+        property.SetColor(colorKeyword, colors[track.genre]);
+
+        if (index < 0)
+            _renderer.GetPropertyBlock(property);
+        else
+            _renderer.SetPropertyBlock(property, index);
     }
 }

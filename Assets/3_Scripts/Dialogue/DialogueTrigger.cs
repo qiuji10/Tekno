@@ -10,6 +10,7 @@ public enum SaveState { None, PlayerPrefs }
 public class DialogueTrigger : MonoBehaviour
 {
     [Header("Basic Settings")]
+    [SerializeField] private DialogueData dialogue;
     [SerializeField, ShowIf("IS_PLAYER_PREFS")] private string dialogueName;
     [SerializeField] private SaveState saveState = SaveState.None;
     [SerializeField] private bool markAsPlayerPrefs;
@@ -45,6 +46,14 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (interactKey) interactKey.action.performed -= Interact;
         DialogueManager.OnDialogueEnd -= DialogueManager_OnDialogueEnd;
+    }
+
+    public void OpenDialogue()
+    {
+        if (dialogue != null)
+        {
+            DialogueManager.StartDialogue(dialogue);
+        }
     }
 
     private bool CheckPlayerPrefs()
@@ -97,6 +106,11 @@ public class DialogueTrigger : MonoBehaviour
                 }
                 
                 OnInteract?.Invoke();
+
+                if (dialogue != null)
+                {
+                    DialogueManager.StartDialogue(dialogue);
+                }
 
                 if (saveState == SaveState.PlayerPrefs)
                 {

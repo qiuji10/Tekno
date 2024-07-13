@@ -172,4 +172,9 @@ public class GameSceneManager : MonoBehaviour
 
         return false;
     }
+
+    public static bool IsCurrentScene(string sceneName)
+    {
+        return SceneManager.GetActiveScene().name == sceneName;
+    }
 }

@@ -17,12 +17,14 @@ public class SlidingRailAbility : MonoBehaviour
     private float m_Position;
     private bool isGrindingRail;
 
+    private Animator _anim;
     private Rigidbody rb;
     private Collider _collider;
     private CinemachinePathBase.PositionUnits m_PositionUnits = CinemachinePathBase.PositionUnits.Distance;
 
     private void Awake()
     {
+        _anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
         _collider = GetComponent<Collider>();
     }
@@ -39,6 +41,8 @@ public class SlidingRailAbility : MonoBehaviour
 
     void FixedUpdate()
     {
+        _anim.SetBool("IsSliding", isGrindingRail);
+
         if (isGrindingRail)
         {
             if (m_Position >= m_Path.PathLength)
@@ -108,6 +112,7 @@ public class SlidingRailAbility : MonoBehaviour
         isGrindingRail = true;
         EventManager.ExecuteEvent(EventManager.GAMEPLAY_INPUT, false);
         ThirdPerCam.allowedRotation = false;
+        _anim.SetTrigger("StartSlide");
         rb.isKinematic = true;
         _collider.enabled = false;
     }

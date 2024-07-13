@@ -7,6 +7,7 @@ using static UnityEngine.InputSystem.PlayerInput;
 public class EventManager : MonoBehaviour
 {
     public const string GAMEPLAY_INPUT = "OnEnableGameplayInput";
+    public const string GAMEPLAY_DIALOGUE = "OnEnableDialogue";
 
     public static Dictionary<string, List<ActionEventBase>> actions = new();
 

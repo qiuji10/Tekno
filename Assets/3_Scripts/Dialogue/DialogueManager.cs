@@ -78,17 +78,20 @@ public class DialogueManager : MonoBehaviour
     private Coroutine typingCoroutine, endCoroutine;
     private Queue<Dialogue> dialogues = new Queue<Dialogue>();
 
+    private static event Action<DialogueData> OnDialogueTriggered;
     public static event Action OnDialogueStart;
     public static event Action OnDialogueEnd;
     public static bool IsRunning;
 
     private void OnEnable()
     {
+        OnDialogueTriggered += ExecuteDialogue;
         interactAction.action.performed += Action_performed;
     }
 
     private void OnDisable()
     {
+        OnDialogueTriggered -= ExecuteDialogue;
         interactAction.action.performed -= Action_performed;
     }
 
@@ -110,13 +113,21 @@ public class DialogueManager : MonoBehaviour
         DisplayNextSentence();
     }
 
+    public static void StartDialogue(DialogueData dialogue) => OnDialogueTriggered?.Invoke(dialogue);
+
     public void StartDialogue(string dialogueName)
     {
-        OnDialogueStart?.Invoke();
-
         IsRunning = true;
 
         DialogueData dialogueData = GetDialogue(dialogueName);
+
+        ExecuteDialogue(dialogueData);
+    }
+
+    public void ExecuteDialogue(DialogueData dialogueData)
+    {
+        OnDialogueStart?.Invoke();
+        EventManager.ExecuteEvent<bool>(EventManager.GAMEPLAY_DIALOGUE, true);
 
         if (dialogues.Count > 0) dialogues.Clear();
 
@@ -181,6 +192,9 @@ public class DialogueManager : MonoBehaviour
 
         StopAllCoroutines();
         OnDialogueEnd?.Invoke();
+
+        if (!GameSceneManager.IsCurrentScene("Rhythm Game Framework Test"))
+            EventManager.ExecuteEvent<bool>(EventManager.GAMEPLAY_DIALOGUE, false);
         characterNameText.text = "";
         dialogueText.text = "";
         endCoroutine = StartCoroutine(IntroOutroAnimation(false));
@@ -274,6 +288,12 @@ public class DialogueManager : MonoBehaviour
 
         for (int i = 0; i < characters.Count; i++)
         {
+            if (characters[i].spriteData == null)
+            {
+                characters[i].SetImageActive(false);
+                continue;
+            }
+
             bool isCharacter = characters[i].spriteData.characterName == talkingCharacter;
 
             if (isCharacter)
