@@ -8,19 +8,16 @@ public class Pendulum : MonoBehaviour
     [Range(-1f, 1f)] public float startSineRatio = 0f;
     public float lerpRatio;
     public bool isForward;
-    public bool isMaxHeight;
 
     private float angle = 0f;
     private float elapsedTime;
     public Rigidbody rb;
-    [SerializeField] private Vector3 forward;
 
 
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        rb.transform.forward = forward;
     }
 
     private void FixedUpdate()
@@ -51,45 +48,6 @@ public class Pendulum : MonoBehaviour
 
 
         Debug.Log(lerpRatio);
-    }
-
-    private void CheckAndFlipDirection()
-    {
-        // Detect if pendulum is at max height
-        if (lerpRatio >= 0.99f || lerpRatio <= 0.01f)
-        {
-            Debug.Log("Is Max height");
-            if (!isMaxHeight)
-            {
-                isMaxHeight = true;
-                //FlipForwardDirection();
-            }
-        }
-        else
-        {
-            isMaxHeight = false;
-        }
-    }
-
-    public void CheckMaxHeight()
-    {
-        if(lerpRatio >= 0.99f || lerpRatio <= 0.01f)
-        {
-            Debug.Log("max height");
-            isMaxHeight = true;
-        }
-        else
-        {
-            Debug.Log("not max height");
-            isMaxHeight = false;
-        }
-    }
-
-    public void FlipForwardDirection(float degree, Rigidbody flip)
-    {
-        // Flip the rigidbody's forward direction by rotating 180 degrees around the vertical axis
-        flip.transform.Rotate(0f, 0f, 0f); 
-        
     }
 
     public void ResetPendulum(float startRatio)
