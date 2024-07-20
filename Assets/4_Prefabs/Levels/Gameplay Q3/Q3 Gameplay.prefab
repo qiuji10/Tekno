@@ -44,8 +44,8 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 39.5
+  m_Color: {r: 0, g: 0.61397314, b: 1, a: 1}
+  m_Intensity: 594.8
   m_Range: 69.5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -45325,7 +45325,6 @@ GameObject:
   - component: {fileID: 5432337724335264107}
   - component: {fileID: 5432337724335264108}
   - component: {fileID: 5432337724335264109}
-  - component: {fileID: 5432337724335264110}
   m_Layer: 0
   m_Name: Fog
   m_TagString: Untagged
@@ -45398,20 +45397,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5432337724335264110
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5432337724335264111}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &5432337724338491239
 GameObject:
   m_ObjectHideFlags: 0
@@ -76619,8 +76604,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3416866321354405144, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
+      propertyPath: beatSequence.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 81658626761519942b9db82ceb6c2184,
+        type: 2}
+    - target: {fileID: 3416866321354405144, guid: bd79399e129fc474984d433d9c633591,
+        type: 3}
+      propertyPath: beatSequence.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 48f8de3ad83fbb246950105896785f59,
+        type: 2}
+    - target: {fileID: 3416866321354405144, guid: bd79399e129fc474984d433d9c633591,
+        type: 3}
+      propertyPath: beatSequence.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: e6b72e7682429b044a0ba234ef942c50,
+        type: 2}
+    - target: {fileID: 3416866321354405144, guid: bd79399e129fc474984d433d9c633591,
+        type: 3}
       propertyPath: OnHijackSucceed.m_PersistentCalls.m_Calls.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3416866321354405144, guid: bd79399e129fc474984d433d9c633591,
         type: 3}
@@ -77723,12 +77726,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building_SmallRoofTop
       objectReference: {fileID: 0}
-    - target: {fileID: 1370442282958723484, guid: 257f6b40d87d62643b3b566591c1ac27,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 643260398798755839, guid: b5ac9035871d2e44ba1d4b6b7dbf6e82,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 257f6b40d87d62643b3b566591c1ac27, type: 3}
 --- !u!4 &3874321837672626465 stripped
@@ -87044,12 +87041,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3930444063356051927}
     m_Modifications:
-    - target: {fileID: 365609414711790561, guid: 738d84b11b86c614e8d583bd3951b79f,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 643260398798755839, guid: b5ac9035871d2e44ba1d4b6b7dbf6e82,
-        type: 3}
     - target: {fileID: 1386627958662542380, guid: 738d84b11b86c614e8d583bd3951b79f,
         type: 3}
       propertyPath: m_RootOrder
