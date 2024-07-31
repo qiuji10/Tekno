@@ -125,8 +125,6 @@ public class PauseMenu : MonoBehaviour
 
     private IEnumerator BackToLobby_Coroutine()
     {
-        Destroy(FindObjectOfType<PlayerController>().gameObject);
-
         BehaviourTreeOwner[] enemies = FindObjectsOfType<BehaviourTreeOwner>();
 
         foreach (BehaviourTreeOwner item in enemies)
