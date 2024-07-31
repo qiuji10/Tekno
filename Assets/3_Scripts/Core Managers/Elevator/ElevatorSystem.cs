@@ -44,7 +44,7 @@ public class ElevatorSystem : MonoBehaviour
         {
             { ElevatorDestination.Tutorial, tutorialDestination },
             { ElevatorDestination.Lobby, lobbyDestination },
-            { ElevatorDestination.Gameplay, cityDestination }
+            { ElevatorDestination.Gameplay, tutorialDestination }
         };
 
         currentElevatorPlacement = ElevatorDestination.Lobby;
@@ -61,12 +61,12 @@ public class ElevatorSystem : MonoBehaviour
 
     private void Start()
     {
-        MainMenu.NewGameSelected += UpdateOption;
+        //MainMenu.NewGameSelected += UpdateOption;
     }
 
     private void OnDestroy()
     {
-        MainMenu.NewGameSelected -= UpdateOption;
+        //MainMenu.NewGameSelected -= UpdateOption;
     }
 
     public void SetDestination(string destination)
